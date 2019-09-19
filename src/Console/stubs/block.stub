@@ -1,0 +1,61 @@
+<?php
+
+namespace DummyNamespace;
+
+use Log1x\AcfComposer\Block;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class DummyClass extends Block {
+    /**
+     * Data to be passed to the block before registering.
+     *
+     * @return array
+     */
+    public function register()
+    {
+        return [
+            'name' => 'DummyClass',
+            'description' => 'Lorem ipsum',
+            'category' => 'formatting',
+        ];
+    }
+
+    /**
+     * Fields to be attached to the block.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $DummySlug = new FieldsBuilder('DummySlug');
+
+        $DummySlug
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $DummySlug->build();
+    }
+
+    /**
+     * Data to be passed to the rendered block.
+     *
+     * @return array
+     */
+    public function with()
+    {
+        return [
+            'items' => $this->items(),
+        ];
+    }
+
+    /**
+     * Returns the items field.
+     *
+     * @return array
+     */
+    public function items()
+    {
+        return get_field('items') ?? [];
+    }
+}

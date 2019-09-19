@@ -1,0 +1,37 @@
+<?php
+
+namespace DummyNamespace;
+
+use Log1x\AcfComposer\Field;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class DummyClass extends Field {
+    /**
+     * Data to be passed to the block before registering.
+     *
+     * @return array
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
+     * Fields to be attached to the block.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $DummySlug = new FieldsBuilder('DummySlug');
+
+        $DummySlug
+            ->addText('label')
+            ->addTextarea('description')
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $DummySlug->build();
+    }
+}
