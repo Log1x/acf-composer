@@ -189,10 +189,10 @@ abstract class Block
     {
         if (file_exists($view = $this->app->resourcePath("views/blocks/{$this->slug}.blade.php"))) {
             echo view($view, $this->with());
-        } elseif (file_exists($notFound = $this->app->resourcePath("views/blocks/404.blade.php"))) {
+        } elseif (file_exists($notFound = $this->app->resourcePath('views/blocks/view-404.blade.php'))) {
             echo view($notFound, ['view' => $view]);
         } else {
-            echo view(__DIR__ . '/views/view-404.blade.php', ['view' => $view]);
+            echo view(__DIR__ . '/resources/views/view-404.blade.php', ['view' => $view]);
         }
     }
 
