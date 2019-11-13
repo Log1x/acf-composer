@@ -7,17 +7,7 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Field {
     /**
-     * Data to be passed to the block before registering.
-     *
-     * @return array
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
-     * Fields to be attached to the block.
+     * Fields to be registered with the application.
      *
      * @return array
      */

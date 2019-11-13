@@ -26,6 +26,13 @@ abstract class Block
     protected $name = '';
 
     /**
+     * The slug of the block.
+     *
+     * @var string
+     */
+    protected $slug = '';
+
+    /**
      * The description of the block.
      *
      * @var string
@@ -94,6 +101,20 @@ abstract class Block
      * @var boolean
      */
     protected $enabled = true;
+
+    /**
+     * The blocks fields.
+     *
+     * @var array
+     */
+    protected $fields;
+
+    /**
+     * The block namespace.
+     *
+     * @var string
+     */
+    protected $namespace;
 
     /**
      * The block prefix.
