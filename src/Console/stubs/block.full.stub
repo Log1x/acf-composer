@@ -66,6 +66,6 @@ class DummyClass extends Block {
      */
     public function items()
     {
-        return get_field('items') ?? [];
+        return get_field('items') ?: [];
     }
 }
