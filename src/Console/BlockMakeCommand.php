@@ -13,7 +13,7 @@ class BlockMakeCommand extends GeneratorCommand
      * @var string
      */
     protected $signature = 'acf:block {name* : The name of the block}
-                            {--with-view : Create a corrosponding view for the block}
+                            {--with-view : Create a corresponding view for the block}
                             {--full : Scaffold a block that contains the complete configuration.}';
 
     /**
