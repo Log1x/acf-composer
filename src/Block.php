@@ -204,12 +204,13 @@ abstract class Block
     /**
      * View used for rendering the block.
      *
+     * @param  array $block
      * @return string
      */
-    public function view()
+    public function view($block)
     {
         if (file_exists($view = $this->app->resourcePath("views/blocks/{$this->slug}.blade.php"))) {
-            echo view($view, $this->with());
+            echo view($view, array_merge(['block' => $block], $this->with()));
         } elseif (file_exists($notFound = $this->app->resourcePath('views/blocks/view-404.blade.php'))) {
             echo view($notFound, ['view' => $view]);
         } else {
