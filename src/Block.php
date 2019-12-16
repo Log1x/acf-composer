@@ -124,6 +124,13 @@ abstract class Block
     protected $prefix = 'acf/';
 
     /**
+     * The block properties.
+     *
+     * @var array
+     */
+    protected $block;
+
+    /**
      * Create a new ACF Composer Block instance.
      *
      * @param  \Roots\Acorn\Application $app
@@ -209,8 +216,10 @@ abstract class Block
      */
     public function view($block)
     {
+        $this->block = (object) $block;
+
         if (file_exists($view = $this->app->resourcePath("views/blocks/{$this->slug}.blade.php"))) {
-            echo view($view, array_merge(['block' => $block], $this->with()));
+            echo view($view, array_merge($this->with(), ['block' => $this->block]));
         } elseif (file_exists($notFound = $this->app->resourcePath('views/blocks/view-404.blade.php'))) {
             echo view($notFound, ['view' => $view]);
         } else {
