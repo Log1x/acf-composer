@@ -1,0 +1,25 @@
+<?php
+
+namespace Log1x\AcfComposer;
+
+use Illuminate\Support\Str;
+
+trait BlockClasses {
+
+    public function getBlockClasses() {
+        return $this->processBlockClasses();
+    }
+
+    public function processBlockClasses() {
+        $block   = $this->block;
+        $align   = !empty($block->align) ? 'align' . $block->align : '';
+        $title   = $this->getBlockPrefix() . '-' . Str::slug($block->title);
+        $classes = $block->className ?? '';
+
+        return preg_replace('/ {2,}/', ' ', trim($classes . ' ' . $title . ' ' . $align));
+    }
+
+    private function getBlockPrefix() {
+        return $this->blockPrefix ?? 'wp';
+    }
+}
