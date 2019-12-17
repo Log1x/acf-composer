@@ -13,13 +13,9 @@ trait BlockClasses {
     public function processBlockClasses() {
         $block   = $this->block;
         $align   = !empty($block->align) ? 'align' . $block->align : '';
-        $title   = $this->getBlockPrefix() . '-' . Str::slug($block->title);
+        $title   = 'wp-block-' . '-' . Str::slug($block->title);
         $classes = $block->className ?? '';
 
         return preg_replace('/ {2,}/', ' ', trim($classes . ' ' . $title . ' ' . $align));
-    }
-
-    private function getBlockPrefix() {
-        return $this->blockPrefix ?? 'wp';
     }
 }
