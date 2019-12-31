@@ -190,7 +190,9 @@ abstract class Block
                 'align'           => $this->align,
                 'supports'        => $this->supports,
                 'enqueue_assets'  => [$this, 'assets'],
-                'render_callback' => [$this, 'view'],
+                'render_callback' => function ($block) {
+                    echo $this->view($block);
+                }
             ]);
 
             if (! empty($this->fields)) {
@@ -215,14 +217,16 @@ abstract class Block
         }
 
         return collect($this->fields)->map(function ($value, $key) {
-            if ($key !== 'fields') {
+            if (! Str::is('fields', $key)) {
                 return $value;
             }
 
             foreach ($value as $field) {
-                if ($this->defaults->has($field['type'])) {
-                    return [array_merge($field, $this->defaults->get($field['type']))];
+                if (! $this->defaults->has($field['type'])) {
+                    return;
                 }
+
+                return [array_merge($field, $this->defaults->get($field['type']))];
             }
 
             return $value;
@@ -253,13 +257,24 @@ abstract class Block
     {
         $this->block = (object) $block;
 
-        if (file_exists($view = $this->app->resourcePath("views/blocks/{$this->slug}.blade.php"))) {
-            echo view($view, array_merge($this->with(), ['block' => $this->block]));
-        } elseif (file_exists($notFound = $this->app->resourcePath('views/blocks/view-404.blade.php'))) {
-            echo view($notFound, ['view' => $view]);
-        } else {
-            echo view(__DIR__ . '/resources/views/view-404.blade.php', ['view' => $view]);
+        if (view($view = $this->app->resourcePath("views/blocks/{$this->slug}.blade.php"))) {
+            return view(
+                $view,
+                array_merge($this->with(), ['block' => $this->block])
+            )->render();
         }
+
+        if (view()->exists($this->app->resourcePath('views/blocks/view-404.blade.php'))) {
+            return view(
+                $this->app->resourcePath('views/blocks/view-404.blade.php'),
+                ['view' => $view]
+            )->render();
+        }
+
+        return view(
+            __DIR__ . '/../resources/views/view-404.blade.php',
+            ['view' => $view]
+        )->render();
     }
 
     /**

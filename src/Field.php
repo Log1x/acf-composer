@@ -65,14 +65,16 @@ abstract class Field
     protected function build()
     {
         return collect($this->fields())->map(function ($value, $key) {
-            if ($key !== 'fields') {
+            if (! Str::is('fields', $key)) {
                 return $value;
             }
 
             foreach ($value as $field) {
-                if ($this->defaults->has($field['type'])) {
-                    return [array_merge($field, $this->defaults->get($field['type']))];
+                if (! $this->defaults->has($field['type'])) {
+                    return;
                 }
+
+                return [array_merge($field, $this->defaults->get($field['type']))];
             }
 
             return $value;
