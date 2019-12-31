@@ -2,6 +2,7 @@
 
 namespace Log1x\AcfComposer;
 
+use Roots\Acorn\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -9,6 +10,13 @@ use function Roots\app_path;
 
 abstract class Field
 {
+    /**
+     * Acorn Container
+     *
+     * @var \Roots\Acorn\Application
+     */
+    protected $app;
+
     /**
      * Default field type settings.
      *
