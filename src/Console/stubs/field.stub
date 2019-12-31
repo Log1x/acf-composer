@@ -11,11 +11,7 @@ class DummyClass extends Field {
      *
      * @return array
      */
-    protected $config = [
-        'TrueFalse' => [
-            'ui' => 1,
-        ],
-    ];
+    protected $defaults = [];
 
     /**
      * Fields to be registered with the application.

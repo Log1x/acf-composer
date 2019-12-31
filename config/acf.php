@@ -29,4 +29,18 @@ return [
     'blocks' => [
         // App\Blocks\Example::class,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Field Type Settings
+    |--------------------------------------------------------------------------
+    |
+    | Here you can set default field type settings that are automatically
+    | applied to the field types when built.
+    |
+    */
+
+    'defaults' => [
+        'trueFalse' => ['ui' => 1],
+    ],
 ];

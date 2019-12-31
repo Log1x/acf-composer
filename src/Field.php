@@ -10,11 +10,22 @@ use function Roots\app_path;
 abstract class Field
 {
     /**
-     * Default field type configuration.
+     * Default field type settings.
      *
      * @return array
      */
-    protected $config = [];
+    protected $defaults = [];
+
+    /**
+     * Create a new Field instance.
+     *
+     * @param  \Roots\Acorn\Application $app
+     * @return void
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Compose the field.
@@ -27,7 +38,9 @@ abstract class Field
             return;
         }
 
-        $this->config = collect($this->config)->mapWithKeys(function ($value, $key) {
+        $this->defaults = collect(
+            $this->app->config->get('acf.defaults')
+        )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
             return [Str::snake($key) => $value];
         });
 
@@ -49,8 +62,8 @@ abstract class Field
             }
 
             foreach ($value as $field) {
-                if ($this->config->has($field['type'])) {
-                    return [array_merge($field, $this->config->get($field['type']))];
+                if ($this->defaults->has($field['type'])) {
+                    return [array_merge($field, $this->defaults->get($field['type']))];
                 }
             }
 
