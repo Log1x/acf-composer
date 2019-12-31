@@ -19,6 +19,13 @@ abstract class Block
     protected $app;
 
     /**
+     * Default field type settings.
+     *
+     * @return array
+     */
+    protected $defaults = [];
+
+    /**
      * The display name of the block.
      *
      * @var string
@@ -131,7 +138,7 @@ abstract class Block
     protected $block;
 
     /**
-     * Create a new ACF Composer Block instance.
+     * Create a new Block instance.
      *
      * @param  \Roots\Acorn\Application $app
      * @return void
@@ -154,6 +161,12 @@ abstract class Block
 
         collect($this->register())->each(function ($value, $name) {
             $this->{$name} = $value;
+        });
+
+        $this->defaults = collect(
+            $this->app->config->get('acf.defaults')
+        )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
+            return [Str::snake($key) => $value];
         });
 
         $this->slug = Str::slug($this->name);
@@ -181,17 +194,39 @@ abstract class Block
             ]);
 
             if (! empty($this->fields)) {
-                if (! Arr::has($this->fields, 'location.0.0')) {
-                    Arr::set($this->fields, 'location.0.0', [
-                        'param' => 'block',
-                        'operator' => '==',
-                        'value' => $this->namespace,
-                    ]);
-                }
-
-                acf_add_local_field_group($this->fields);
+                acf_add_local_field_group($this->build());
             }
         }, 20);
+    }
+
+    /**
+     * Build the field group with our default field type settings.
+     *
+     * @return array
+     */
+    protected function build()
+    {
+        if (! Arr::has($this->fields, 'location.0.0')) {
+            Arr::set($this->fields, 'location.0.0', [
+                'param' => 'block',
+                'operator' => '==',
+                'value' => $this->namespace,
+            ]);
+        }
+
+        return collect($this->fields)->map(function ($value, $key) {
+            if ($key !== 'fields') {
+                return $value;
+            }
+
+            foreach ($value as $field) {
+                if ($this->defaults->has($field['type'])) {
+                    return [array_merge($field, $this->defaults->get($field['type']))];
+                }
+            }
+
+            return $value;
+        })->all();
     }
 
     /**

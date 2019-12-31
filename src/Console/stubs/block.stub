@@ -7,6 +7,13 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Block {
     /**
+     * Default field type configuration.
+     *
+     * @return array
+     */
+    protected $defaults = [];
+
+    /**
      * Data to be passed to the block before registering.
      *
      * @return array

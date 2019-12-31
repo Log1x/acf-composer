@@ -41,8 +41,10 @@ class AcfComposerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
-            __DIR__ . '/../resources/views/view-404.blade.php' => $this->app->resourcePath('views/blocks/view-404.blade.php'), // phpcs:disable Generic.Files.LineLength
-        ]);
+            __DIR__ . '/../../resources/views/view-404.blade.php' => $this->app->resourcePath(
+                'views/blocks/view-404.blade.php'
+            ),
+        ], 'acf-composer');
 
         $this->commands([
             \Log1x\AcfComposer\Console\BlockMakeCommand::class,

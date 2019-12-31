@@ -6,14 +6,10 @@
 
 ACF Composer assists you with ~~creating~~ **composing** Fields and Blocks using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
 
-**This is a work in progress and may contain bugs. Report them!**
-
 ## Requirements
 
 - [Sage](https://github.com/roots/sage) >= 10.0
 - [ACF](https://www.advancedcustomfields.com/) >= 5.8.0
-- [PHP](https://secure.php.net/manual/en/install.php) >= 7.1.3
-- [Composer](https://getcomposer.org/download/)
 
 ## Installation
 
@@ -29,7 +25,7 @@ $ composer require log1x/acf-composer
 $ wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerServiceProvider"
 ```
 
-Initialize fields & blocks in `config/acf.php`.
+Initialize fields, blocks, and default field type values in `config/acf.php`.
 
 ### Create a Block or Field
 
