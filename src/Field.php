@@ -61,7 +61,7 @@ abstract class Field
         });
 
         add_action('init', function () {
-            acf_add_local_field_group(dd($this->build()));
+            acf_add_local_field_group($this->build());
         }, 20);
     }
 
