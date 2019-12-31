@@ -12,7 +12,7 @@ use function Roots\view;
 abstract class Block
 {
     /**
-     * Acorn Container
+     * The application instance.
      *
      * @var \Roots\Acorn\Application
      */
@@ -110,7 +110,7 @@ abstract class Block
     protected $enabled = true;
 
     /**
-     * The blocks fields.
+     * The block field groups.
      *
      * @var array
      */
@@ -222,6 +222,14 @@ abstract class Block
             ]);
 
             if (! empty($this->fields)) {
+                if (! Arr::has($this->fields, 'location.0.0')) {
+                    Arr::set($this->fields, 'location.0.0', [
+                        'param' => 'block',
+                        'operator' => '==',
+                        'value' => $this->namespace,
+                    ]);
+                }
+
                 acf_add_local_field_group($this->build());
             }
         }, 20);
@@ -230,26 +238,22 @@ abstract class Block
     /**
      * Build the field group with our default field type settings.
      *
+     * @param  array $fields
      * @return array
      */
-    protected function build()
+    protected function build($fields = [])
     {
-        if (! Arr::has($this->fields, 'location.0.0')) {
-            Arr::set($this->fields, 'location.0.0', [
-                'param' => 'block',
-                'operator' => '==',
-                'value' => $this->namespace,
-            ]);
-        }
-
-        return collect($this->fields)->map(function ($value, $key) {
-            if (! Str::is('fields', $key)) {
+        return collect($fields ?: $this->fields)->map(function ($value, $key) use ($fields) {
+            if (
+                ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
+                (Str::is($key, 'type') && ! $this->defaults->has($value))
+            ) {
                 return $value;
             }
 
             foreach ($value as $field) {
-                if (! $this->defaults->has($field['type'])) {
-                    return;
+                if (collect($field)->keys()->intersect(['fields', 'sub_fields', 'layouts'])->isNotEmpty()) {
+                    return [$this->build($field)];
                 }
 
                 return [array_merge($this->defaults->get($field['type']), $field)];

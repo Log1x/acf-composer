@@ -11,18 +11,27 @@ use function Roots\app_path;
 abstract class Field
 {
     /**
-     * Acorn Container
+     * The application instance.
      *
      * @var \Roots\Acorn\Application
      */
     protected $app;
 
     /**
+     * The field group.
+     *
+     * @var array
+     */
+    protected $fields;
+
+    /**
      * Default field type settings.
      *
      * @return array
      */
-    protected $defaults = [];
+    protected $defaults = [
+        'true_false' => ['ui' => 1]
+    ];
 
     /**
      * Create a new Field instance.
@@ -46,6 +55,7 @@ abstract class Field
             return;
         }
 
+        $this->fields = $this->fields();
         $this->defaults = collect(
             $this->app->config->get('acf.defaults')
         )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
@@ -53,25 +63,29 @@ abstract class Field
         });
 
         add_action('init', function () {
-            acf_add_local_field_group($this->build());
+            acf_add_local_field_group(dd($this->build()));
         }, 20);
     }
 
     /**
      * Build the field group with our field type defaults.
      *
+     * @param  array $fields
      * @return array
      */
-    protected function build()
+    protected function build($fields = [])
     {
-        return collect($this->fields())->map(function ($value, $key) {
-            if (! Str::is('fields', $key)) {
+        return collect($fields ?: $this->fields)->map(function ($value, $key) use ($fields) {
+            if (
+                ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
+                (Str::is($key, 'type') && ! $this->defaults->has($value))
+            ) {
                 return $value;
             }
 
             foreach ($value as $field) {
-                if (! $this->defaults->has($field['type'])) {
-                    return;
+                if (collect($field)->keys()->intersect(['fields', 'sub_fields', 'layouts'])->isNotEmpty()) {
+                    return [$this->build($field)];
                 }
 
                 return [array_merge($this->defaults->get($field['type']), $field)];
