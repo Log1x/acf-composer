@@ -251,15 +251,13 @@ abstract class Block
                 return $value;
             }
 
-            foreach ($value as $field) {
+            return array_map(function ($field) {
                 if (collect($field)->keys()->intersect(['fields', 'sub_fields', 'layouts'])->isNotEmpty()) {
-                    return [$this->build($field)];
+                    return $this->build($field);
                 }
 
-                return [array_merge($this->defaults->get($field['type']), $field)];
-            }
-
-            return $value;
+                return array_merge($this->defaults->get($field['type'], []), $field);
+            }, $value);
         })->all();
     }
 

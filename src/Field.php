@@ -66,7 +66,7 @@ abstract class Field
     }
 
     /**
-     * Build the field group with our field type defaults.
+     * Build the field group with our default field type settings.
      *
      * @param  array $fields
      * @return array
@@ -81,15 +81,13 @@ abstract class Field
                 return $value;
             }
 
-            foreach ($value as $field) {
+            return array_map(function ($field) {
                 if (collect($field)->keys()->intersect(['fields', 'sub_fields', 'layouts'])->isNotEmpty()) {
-                    return [$this->build($field)];
+                    return $this->build($field);
                 }
 
-                return [array_merge($this->defaults->get($field['type']), $field)];
-            }
-
-            return $value;
+                return array_merge($this->defaults->get($field['type'], []), $field);
+            }, $value);
         })->all();
     }
 
