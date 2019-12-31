@@ -252,7 +252,7 @@ abstract class Block
                     return;
                 }
 
-                return [array_merge($field, $this->defaults->get($field['type']))];
+                return [array_merge($this->defaults->get($field['type']), $field)];
             }
 
             return $value;
