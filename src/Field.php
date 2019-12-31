@@ -29,9 +29,7 @@ abstract class Field
      *
      * @return array
      */
-    protected $defaults = [
-        'true_false' => ['ui' => 1]
-    ];
+    protected $defaults = [];
 
     /**
      * Create a new Field instance.
