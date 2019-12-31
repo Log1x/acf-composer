@@ -7,6 +7,17 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Field {
     /**
+     * Default field type configuration.
+     *
+     * @return array
+     */
+    protected $config = [
+        'TrueFalse' => [
+            'ui' => 1,
+        ],
+    ];
+
+    /**
      * Fields to be registered with the application.
      *
      * @return array
@@ -16,6 +27,7 @@ class DummyClass extends Field {
         $DummySlug = new FieldsBuilder('DummySlug');
 
         $DummySlug
+            ->addTrueFalse('enabled')
             ->addText('label')
             ->addTextarea('description')
             ->addRepeater('items')
