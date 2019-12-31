@@ -138,6 +138,27 @@ abstract class Block
     protected $block;
 
     /**
+     * The block content.
+     *
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * The block preview status.
+     *
+     * @var bool
+     */
+    protected $preview;
+
+    /**
+     * The current post ID.
+     *
+     * @param int
+     */
+    protected $post;
+
+    /**
      * Create a new Block instance.
      *
      * @param  \Roots\Acorn\Application $app
@@ -190,8 +211,13 @@ abstract class Block
                 'align'           => $this->align,
                 'supports'        => $this->supports,
                 'enqueue_assets'  => [$this, 'assets'],
-                'render_callback' => function ($block) {
-                    echo $this->view($block);
+                'render_callback' => function ($block, $content = '', $preview = false, $post = 0) {
+                    $this->block = (object) $block;
+                    $this->content = $content;
+                    $this->preview = $preview;
+                    $this->post = $post;
+
+                    echo $this->view();
                 }
             ]);
 
@@ -250,13 +276,10 @@ abstract class Block
     /**
      * View used for rendering the block.
      *
-     * @param  array $block
      * @return string
      */
-    public function view($block)
+    public function view()
     {
-        $this->block = (object) $block;
-
         if (view($view = $this->app->resourcePath("views/blocks/{$this->slug}.blade.php"))) {
             return view(
                 $view,
