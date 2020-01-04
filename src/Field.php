@@ -73,6 +73,10 @@ abstract class Field
      */
     protected function build($fields = [])
     {
+        if (empty($fields) && $this->defaults->has('field_group')) {
+            $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
+        }
+
         return collect($fields ?: $this->fields)->map(function ($value, $key) use ($fields) {
             if (
                 ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
