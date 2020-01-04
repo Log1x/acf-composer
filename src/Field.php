@@ -54,15 +54,22 @@ abstract class Field
         }
 
         $this->fields = $this->fields();
+
         $this->defaults = collect(
             $this->app->config->get('acf.defaults')
         )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
             return [Str::snake($key) => $value];
         });
 
-        add_action('init', function () {
-            acf_add_local_field_group($this->build());
-        }, 20);
+        if (! empty($this->fields)) {
+            add_action('init', function () {
+                if ($this->defaults->has('field_group')) {
+                    $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
+                }
+
+                acf_add_local_field_group($this->build());
+            }, 20);
+        }
     }
 
     /**
@@ -73,10 +80,6 @@ abstract class Field
      */
     protected function build($fields = [])
     {
-        if (empty($fields) && $this->defaults->has('field_group')) {
-            $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
-        }
-
         return collect($fields ?: $this->fields)->map(function ($value, $key) use ($fields) {
             if (
                 ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||

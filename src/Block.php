@@ -222,6 +222,10 @@ abstract class Block
             ]);
 
             if (! empty($this->fields)) {
+                if ($this->defaults->has('field_group')) {
+                    $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
+                }
+
                 if (! Arr::has($this->fields, 'location.0.0')) {
                     Arr::set($this->fields, 'location.0.0', [
                         'param' => 'block',
@@ -243,10 +247,6 @@ abstract class Block
      */
     protected function build($fields = [])
     {
-        if (empty($fields) && $this->defaults->has('field_group')) {
-            $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
-        }
-
         return collect($fields ?: $this->fields)->map(function ($value, $key) use ($fields) {
             if (
                 ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
