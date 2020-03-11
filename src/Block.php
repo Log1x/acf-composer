@@ -150,29 +150,42 @@ abstract class Block extends Composer
             }
         });
 
-        add_filter('init', function () {
-            acf_register_block([
-                'name'            => $this->slug,
-                'title'           => $this->name,
-                'description'     => $this->description,
-                'category'        => $this->category,
-                'icon'            => $this->icon,
-                'keywords'        => $this->keywords,
-                'post_types'      => $this->post_types,
-                'mode'            => $this->mode,
-                'align'           => $this->align,
-                'supports'        => $this->supports,
-                'enqueue_assets'  => [$this, 'assets'],
-                'render_callback' => function ($block, $content = '', $preview = false, $post = 0) {
-                    $this->block = (object) $block;
-                    $this->content = $content;
-                    $this->preview = $preview;
-                    $this->post = $post;
+        acf_register_block([
+            'name' => $this->slug,
+            'title' => $this->name,
+            'description' => $this->description,
+            'category' => $this->category,
+            'icon' => $this->icon,
+            'keywords' => $this->keywords,
+            'post_types' => $this->post_types,
+            'mode' => $this->mode,
+            'align' => $this->align,
+            'supports' => $this->supports,
+            'enqueue_assets' => [$this,'assets'],
+            'render_callback' => [$this, 'render']
+        ]);
+    }
 
-                    echo $this->view("views.blocks.{$this->slug}");
-                }
-            ]);
-        }, 20);
+    /**
+     * Render the block with ACF using Blade.
+     *
+     * @param  array $block
+     * @param  string $content
+     * @param  bool $preview
+     * @param  int $post
+     * @return void
+     */
+    public function render($block, $content = '', $preview = false, $post = 0)
+    {
+        $this->block = (object) $block;
+        $this->content = $content;
+        $this->preview = $preview;
+        $this->post = $post;
+
+        echo $this->view(
+            Str::finish('views.blocks.', $this->slug),
+            ['block' => $this]
+        );
     }
 
     /**

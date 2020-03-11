@@ -4,9 +4,31 @@ namespace Log1x\AcfComposer;
 
 use WP_Widget;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 abstract class Widget extends Composer
 {
+    /**
+     * The registered widget arguments.
+     *
+     * @var array
+     */
+    public $widget;
+
+    /**
+     * The title of the widget.
+     *
+     * @var string
+     */
+    public $title;
+
+    /**
+     * The ID of the widget.
+     *
+     * @var string
+     */
+    public $id;
+
     /**
      * The display name of the widget.
      *
@@ -29,6 +51,16 @@ abstract class Widget extends Composer
     public $description;
 
     /**
+     * Returns the widget title.
+     *
+     * @return string
+     */
+    public function title()
+    {
+        //
+    }
+
+    /**
      * Compose and register the defined field groups with ACF.
      *
      * @param  callback $callback
@@ -37,6 +69,15 @@ abstract class Widget extends Composer
     public function compose($callback = null)
     {
         parent::compose(function () {
+            $this->widget = (object) collect(
+                Arr::get($GLOBALS, 'wp_registered_widgets')
+            )->filter(function ($value) {
+                return $value['name'] == $this->name;
+            })->pop();
+
+            $this->title = $this->title();
+            $this->id = Str::start($this->widget->id, 'widget_');
+
             if (! Arr::has($this->fields, 'location.0.0')) {
                 Arr::set($this->fields, 'location.0.0', [
                     'param' => 'widget',
@@ -48,7 +89,7 @@ abstract class Widget extends Composer
 
         add_filter('widgets_init', function () {
             register_widget($this->widget());
-        });
+        }, 20);
     }
 
     /**
@@ -79,30 +120,38 @@ abstract class Widget extends Composer
              * Render the widget for WordPress.
              *
              * @param  array $args
-             * @param  void  $instance
+             * @param  array $instance
              * @return void
              */
             public function widget($args, $instance)
             {
-                echo collect(
-                    Arr::get($args, 'before_widget'),
-                    Arr::get($args, 'before_title'),
-                    $this->widget->title(),
-                    Arr::get($args, 'after_title'),
-                    $this->widget->view("views.widgets.{$this->widget->slug}"),
-                    Arr::get($args, 'after_widget'),
-                )->implode(PHP_EOL);
+                echo Arr::get($args, 'before_widget');
+
+                if (! empty($this->widget->title)) {
+                    echo collect([
+                        Arr::get($args, 'before_title'),
+                        $this->widget->title,
+                        Arr::get($args, 'after_title')
+                    ])->implode('');
+                }
+
+                echo $this->widget->view("views.widgets.{$this->widget->slug}", [
+                    'widget' => $this->widget
+                ]);
+
+                echo Arr::get($args, 'after_widget');
+            }
+
+            /**
+             * Output the widget settings update form.
+             * This is intentionally blank due to it being set by ACF.
+             *
+             * @param  array $instance
+             * @return void
+             */
+            public function form($instance) {
+                //
             }
         });
-    }
-
-    /**
-     * Returns the widget title.
-     *
-     * @return string
-     */
-    public function title()
-    {
-        //
     }
 }

@@ -122,11 +122,11 @@ class Composer
             )
         );
 
-        if (! view()->exists($view)) {
+        if (! file_exists($view)) {
             return;
         }
 
-        return view(
+        return $this->app->make('view')->file(
             $view,
             array_merge($this->with(), $with)
         )->render();
@@ -147,7 +147,12 @@ class Composer
         ]);
         $path = Str::finish($path, '/');
 
-        include $this->app->path("{$path}{$name}.php");
+        include $this->app->path(
+            Str::finish(
+                Str::finish($path, $name),
+                '.php'
+            )
+        );
     }
 
     /**
@@ -163,6 +168,13 @@ class Composer
             get_theme_file_uri(),
             home_url($path)
         );
+    }
+
+    /**
+     * Set a configuration option.
+     */
+    public function set($key, $value) {
+        $this->{$key} = $value;
     }
 
     /**
