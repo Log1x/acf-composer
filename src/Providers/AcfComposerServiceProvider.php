@@ -13,6 +13,10 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if (! function_exists('acf')) {
+            return;
+        }
+
         collect($this->app->config->get('acf.blocks'))
             ->each(function ($block) {
                 if (is_string($block)) {
@@ -30,6 +34,15 @@ class AcfComposerServiceProvider extends ServiceProvider
 
                 $field->compose();
             });
+
+       collect($this->app->config->get('acf.widgets'))
+           ->each(function ($widget) {
+               if (is_string($widget)) {
+                   $widget = new $widget($this->app);
+               }
+
+               $widget->compose();
+           });
     }
 
     /**
@@ -41,14 +54,12 @@ class AcfComposerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
-            __DIR__ . '/../../resources/views/view-404.blade.php' => $this->app->resourcePath(
-                'views/blocks/view-404.blade.php'
-            ),
         ], 'acf-composer');
 
         $this->commands([
-            \Log1x\AcfComposer\Console\BlockMakeCommand::class,
             \Log1x\AcfComposer\Console\FieldMakeCommand::class,
+            \Log1x\AcfComposer\Console\BlockMakeCommand::class,
+            \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
         ]);
     }
 }

@@ -2,28 +2,61 @@
 
 namespace Log1x\AcfComposer;
 
-use Roots\Acorn\Application;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 
 use function Roots\asset;
-use function Roots\view;
 
-abstract class Block
+abstract class Block extends Composer
 {
     /**
-     * The application instance.
+     * The block properties.
      *
-     * @var \Roots\Acorn\Application
+     * @var array
      */
-    protected $app;
+    protected $block;
 
     /**
-     * Default field type settings.
+     * The block content.
      *
-     * @return array
+     * @var string
      */
-    protected $defaults = [];
+    protected $content;
+
+    /**
+     * The block preview status.
+     *
+     * @var bool
+     */
+    protected $preview;
+
+    /**
+     * The current post ID.
+     *
+     * @param int
+     */
+    protected $post;
+
+    /**
+     * The block prefix.
+     *
+     * @var string
+     */
+    protected $prefix = 'acf/';
+
+    /**
+     * Assets enqueued when the block is shown.
+     *
+     * @var array
+     */
+    protected $assets = [];
+
+    /**
+     * The block namespace.
+     *
+     * @var string
+     */
+    protected $namespace;
 
     /**
      * The display name of the block.
@@ -96,109 +129,28 @@ abstract class Block
     protected $supports = [];
 
     /**
-     * Assets enqueued when the block is shown.
+     * Compose and register the defined field groups with ACF.
      *
-     * @var array
-     */
-    protected $assets = [];
-
-    /**
-     * The blocks status.
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
-     * The block field groups.
-     *
-     * @var array
-     */
-    protected $fields;
-
-    /**
-     * The block namespace.
-     *
-     * @var string
-     */
-    protected $namespace;
-
-    /**
-     * The block prefix.
-     *
-     * @var string
-     */
-    protected $prefix = 'acf/';
-
-    /**
-     * The block properties.
-     *
-     * @var array
-     */
-    protected $block;
-
-    /**
-     * The block content.
-     *
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * The block preview status.
-     *
-     * @var bool
-     */
-    protected $preview;
-
-    /**
-     * The current post ID.
-     *
-     * @param int
-     */
-    protected $post;
-
-    /**
-     * Create a new Block instance.
-     *
-     * @param  \Roots\Acorn\Application $app
+     * @param  callback $callback
      * @return void
      */
-    public function __construct(Application $app)
+    public function compose($callback = null)
     {
-        $this->app = $app;
-    }
-
-    /**
-     * Compose the block.
-     *
-     * @return void
-     */
-    public function compose()
-    {
-        if (! $this->register() || ! function_exists('acf')) {
-            return;
+        if (empty($this->namespace)) {
+            $this->namespace = Str::start($this->slug, $this->prefix);
         }
 
-        collect($this->register())->each(function ($value, $name) {
-            $this->{$name} = $value;
+        parent::compose(function () {
+            if (! Arr::has($this->fields, 'location.0.0')) {
+                Arr::set($this->fields, 'location.0.0', [
+                    'param' => 'block',
+                    'operator' => '==',
+                    'value' => $this->namespace,
+                ]);
+            }
         });
 
-        $this->defaults = collect(
-            $this->app->config->get('acf.defaults')
-        )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
-            return [Str::snake($key) => $value];
-        });
-
-        $this->slug = Str::slug($this->name);
-        $this->namespace = $this->prefix . $this->slug;
-        $this->fields = $this->fields();
-
-        if (! $this->enabled) {
-            return;
-        }
-
-        add_action('init', function () {
+        add_filter('init', function () {
             acf_register_block([
                 'name'            => $this->slug,
                 'title'           => $this->name,
@@ -217,93 +169,10 @@ abstract class Block
                     $this->preview = $preview;
                     $this->post = $post;
 
-                    echo $this->view();
+                    echo $this->view("views.blocks.{$this->slug}");
                 }
             ]);
-
-            if (! empty($this->fields)) {
-                if ($this->defaults->has('field_group')) {
-                    $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
-                }
-
-                if (! Arr::has($this->fields, 'location.0.0')) {
-                    Arr::set($this->fields, 'location.0.0', [
-                        'param' => 'block',
-                        'operator' => '==',
-                        'value' => $this->namespace,
-                    ]);
-                }
-
-                acf_add_local_field_group($this->build());
-            }
         }, 20);
-    }
-
-    /**
-     * Build the field group with our default field type settings.
-     *
-     * @param  array $fields
-     * @return array
-     */
-    protected function build($fields = [])
-    {
-        return collect($fields ?: $this->fields)->map(function ($value, $key) use ($fields) {
-            if (
-                ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
-                (Str::is($key, 'type') && ! $this->defaults->has($value))
-            ) {
-                return $value;
-            }
-
-            return array_map(function ($field) {
-                if (collect($field)->keys()->intersect(['fields', 'sub_fields', 'layouts'])->isNotEmpty()) {
-                    return $this->build($field);
-                }
-
-                return array_merge($this->defaults->get($field['type'], []), $field);
-            }, $value);
-        })->all();
-    }
-
-    /**
-     * URI for the block.
-     *
-     * @return string
-     */
-    protected function uri($path = '')
-    {
-        return str_replace(
-            get_theme_file_path(),
-            get_theme_file_uri(),
-            home_url($path)
-        );
-    }
-
-    /**
-     * View used for rendering the block.
-     *
-     * @return string
-     */
-    public function view()
-    {
-        if (view($view = $this->app->resourcePath("views/blocks/{$this->slug}.blade.php"))) {
-            return view(
-                $view,
-                array_merge($this->with(), ['block' => $this->block])
-            )->render();
-        }
-
-        if (view()->exists($this->app->resourcePath('views/blocks/view-404.blade.php'))) {
-            return view(
-                $this->app->resourcePath('views/blocks/view-404.blade.php'),
-                ['view' => $view]
-            )->render();
-        }
-
-        return view(
-            __DIR__ . '/../resources/views/view-404.blade.php',
-            ['view' => $view]
-        )->render();
     }
 
     /**
@@ -346,35 +215,5 @@ abstract class Block
                 wp_enqueue_script($this->namespace, asset($script)->uri(), null, null, true);
             }
         }
-    }
-
-    /**
-     * Data to be passed to the block before registering.
-     *
-     * @return array
-     */
-    public function register()
-    {
-        return [];
-    }
-
-    /**
-     * Fields to be attached to the block.
-     *
-     * @return array
-     */
-    public function fields()
-    {
-        return [];
-    }
-
-    /**
-     * Data to be passed to the rendered block.
-     *
-     * @return array
-     */
-    public function with()
-    {
-        return [];
     }
 }
