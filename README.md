@@ -75,7 +75,31 @@ Like the Field generator, the example block contains a simple list repeater and 
 
 ### Generating a Widget
 
-...
+Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade. Batteries included.
+
+Start by creating a Widget using Acorn:
+
+```bash
+$ wp acorn acf:widget Example
+```
+
+Once finished, simply add `App\Widgets\Example::class` to the `widgets` key in `config/acf.php`
+
+Similar to Blocks, Widgets are also accompanied by a view generated in `resources/views/widgets`.
+
+Out of the box, the Example widget is ready to go and should appear in the backend.
+
+### Generating an Options Page
+
+When creating a field, you have the option of populating the `$options` variable automatically generating an Options page as well as automatically setting your field group location to the option page.
+
+Start by creating an option page using Acorn:
+
+```bash
+$ wp acorn acf:options Options
+```
+
+Outside of the `$options` variable being set in the options stub, it is effectively a Field. That being said, `App\Fields\Options::class` should be registered in the `fields` array in `config/acf.php`
 
 ## Bug Reports
 
