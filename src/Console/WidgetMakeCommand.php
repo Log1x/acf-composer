@@ -87,7 +87,7 @@ class WidgetMakeCommand extends GeneratorCommand
      */
     protected function getViewStub()
     {
-        return __DIR__ . '/stubs/views/widget.stub';
+        return __DIR__ . '/stubs/views/repeater.stub';
     }
 
     /**

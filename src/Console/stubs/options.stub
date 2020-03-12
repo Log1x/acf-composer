@@ -8,6 +8,13 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 class DummyClass extends Field
 {
     /**
+     * Create an options page for this field group.
+     *
+     * @param string|array|bool
+     */
+    protected $options = 'DummySlug';
+
+    /**
      * The field group.
      *
      * @return array
@@ -15,9 +22,6 @@ class DummyClass extends Field
     public function fields()
     {
         $DummySlug = new FieldsBuilder('DummySlug');
-
-        $DummySlug
-            ->setLocation('post_type', '==', 'post');
 
         $DummySlug
             ->addRepeater('items')

@@ -18,31 +18,19 @@ class AcfComposerServiceProvider extends ServiceProvider
         }
 
         collect($this->app->config->get('acf.fields'))
+            ->merge($this->app->config->get('acf.blocks'))
+            ->merge($this->app->config->get('acf.widgets'))
             ->each(function ($field) {
                 if (is_string($field)) {
+                    if (! class_exists($field)) {
+                        return;
+                    }
+
                     $field = new $field($this->app);
                 }
 
                 $field->compose();
             });
-
-        collect($this->app->config->get('acf.blocks'))
-            ->each(function ($block) {
-                if (is_string($block)) {
-                    $block = new $block($this->app);
-                }
-
-                $block->compose();
-            });
-
-        collect($this->app->config->get('acf.widgets'))
-           ->each(function ($widget) {
-               if (is_string($widget)) {
-                   $widget = new $widget($this->app);
-               }
-
-               $widget->compose();
-           });
     }
 
     /**

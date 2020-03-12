@@ -92,7 +92,7 @@ class BlockMakeCommand extends GeneratorCommand
      */
     protected function getViewStub()
     {
-        return __DIR__ . '/stubs/views/block.stub';
+        return __DIR__ . '/stubs/views/repeater.stub';
     }
 
     /**

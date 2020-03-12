@@ -61,6 +61,10 @@ abstract class Widget extends Composer
      */
     public function compose($callback = null)
     {
+        if (empty($this->name)) {
+            return;
+        }
+
         parent::compose(function () {
             $this->widget = (object) collect(
                 Arr::get($GLOBALS, 'wp_registered_widgets')
@@ -70,10 +74,6 @@ abstract class Widget extends Composer
 
             $this->widget->id = Str::start($this->widget->id, 'widget_');
             $this->id = $this->widget->id;
-
-            if (empty($this->slug)) {
-                $this->slug = Str::slug($this->name);
-            }
 
             if (! Arr::has($this->fields, 'location.0.0')) {
                 Arr::set($this->fields, 'location.0.0', [

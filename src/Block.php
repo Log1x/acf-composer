@@ -127,6 +127,10 @@ abstract class Block extends Composer
      */
     public function compose($callback = null)
     {
+        if (empty($this->name)) {
+            return;
+        }
+
         if (empty($this->namespace)) {
             $this->namespace = Str::start($this->slug, $this->prefix);
         }
@@ -158,7 +162,7 @@ abstract class Block extends Composer
     }
 
     /**
-     * Render the block with ACF using Blade.
+     * Render the ACF block.
      *
      * @param  array $block
      * @param  string $content

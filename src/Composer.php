@@ -151,7 +151,7 @@ class Composer
     }
 
     /**
-     * Field groups to be composed.
+     * The field group.
      *
      * @return array
      */
