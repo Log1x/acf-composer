@@ -2,125 +2,88 @@
 
 namespace Log1x\AcfComposer;
 
-use Roots\Acorn\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-use function Roots\app_path;
-
-abstract class Field
+abstract class Field extends Composer
 {
     /**
-     * The application instance.
+     * Create an options page for this field group.
      *
-     * @var \Roots\Acorn\Application
+     * @param string|array|bool
      */
-    protected $app;
+    protected $options = false;
 
     /**
-     * The field group.
+     * Compose and register the defined field groups with ACF.
      *
-     * @var array
-     */
-    protected $fields;
-
-    /**
-     * Default field type settings.
-     *
-     * @return array
-     */
-    protected $defaults = [];
-
-    /**
-     * Create a new Field instance.
-     *
-     * @param  \Roots\Acorn\Application $app
+     * @param  callback $callback
      * @return void
      */
-    public function __construct(Application $app)
+    public function compose($callback = null)
     {
-        $this->app = $app;
-    }
-
-    /**
-     * Compose the field.
-     *
-     * @return void
-     */
-    public function compose()
-    {
-        if (! $this->fields() || ! function_exists('acf')) {
-            return;
+        if (empty($this->options)) {
+            return parent::compose();
         }
 
-        $this->fields = $this->fields();
+        if (is_array($this->options)) {
+            $this->options = collect($this->options);
 
-        $this->defaults = collect(
-            $this->app->config->get('acf.defaults')
-        )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
-            return [Str::snake($key) => $value];
-        });
-
-        if (! empty($this->fields)) {
-            add_action('init', function () {
-                if ($this->defaults->has('field_group')) {
-                    $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
-                }
-
-                acf_add_local_field_group($this->build());
-            }, 20);
-        }
-    }
-
-    /**
-     * Build the field group with our default field type settings.
-     *
-     * @param  array $fields
-     * @return array
-     */
-    protected function build($fields = [])
-    {
-        return collect($fields ?: $this->fields)->map(function ($value, $key) use ($fields) {
-            if (
-                ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
-                (Str::is($key, 'type') && ! $this->defaults->has($value))
-            ) {
-                return $value;
+            if (! $this->options->get('menu_title')) {
+                return parent::compose();
             }
+        }
 
-            return array_map(function ($field) {
-                if (collect($field)->keys()->intersect(['fields', 'sub_fields', 'layouts'])->isNotEmpty()) {
-                    return $this->build($field);
-                }
+        if (is_string($this->options)) {
+            $this->options = collect([
+                'menu_title' => Str::title(Str::slug($this->options, ' ')),
+                'menu_slug' => Str::slug($this->options),
+            ]);
+        }
 
-                return array_merge($this->defaults->get($field['type'], []), $field);
-            }, $value);
-        })->all();
+        if (! $this->options->get('menu_slug')) {
+            $this->options->put('menu_slug', Str::slug($this->options->get('menu_title')));
+        }
+
+        $this->options = array_merge([
+            'page_title' => get_bloginfo('name', 'display'),
+            'capability' => 'edit_theme_options',
+            'position' => PHP_INT_MAX,
+            'autoload' => true
+        ], $this->options->all());
+
+        parent::compose(function () {
+            acf_add_options_page($this->options);
+
+            if (! Arr::has($this->fields, 'location.0.0')) {
+                Arr::set($this->fields, 'location.0.0', [
+                    'param' => 'options_page',
+                    'operator' => '==',
+                    'value' => $this->options['menu_slug'],
+                ]);
+            }
+        });
     }
 
     /**
-     * Get field partial if it exists.
+     * A simple helper method for creating an options page.
      *
      * @param  string $name
-     * @return mixed
+     * @param  array $options
+     * @return void
      */
-    protected function get($name = '')
+    public function options($name, $options = [])
     {
-        $name = strtr($name, [
-            '.php' => '',
-            '.' => '/'
-        ]);
-
-        return include app_path("Fields/{$name}.php");
-    }
-
-    /**
-     * Fields to be attached to the field.
-     *
-     * @return array
-     */
-    public function fields()
-    {
-        return [];
+        acf_add_options_page(
+            collect([
+                'page_title' => get_bloginfo('name'),
+                'menu_title' => Str::title($name),
+                'menu_slug' => Str::slug($name),
+                'update_button' => 'Update Options',
+                'capability' => 'edit_theme_options',
+                'position' => '999',
+                'autoload' => true
+            ])->merge($options)->all()
+        );
     }
 }

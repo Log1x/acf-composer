@@ -5,29 +5,28 @@ namespace Log1x\AcfComposer\Console;
 use Roots\Acorn\Console\Commands\GeneratorCommand;
 use Illuminate\Support\Str;
 
-class BlockMakeCommand extends GeneratorCommand
+class WidgetMakeCommand extends GeneratorCommand
 {
     /**
      * The console command signature.
      *
      * @var string
      */
-    protected $signature = 'acf:block {name* : The name of the block}
-                            {--full : Scaffold a block that contains the complete configuration.}';
+    protected $signature = 'acf:widget {name* : The name of the widget}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new block using ACF.';
+    protected $description = 'Create a new widget using ACF.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Block';
+    protected $type = 'Widget';
 
     /**
      * Execute the console command.
@@ -39,7 +38,7 @@ class BlockMakeCommand extends GeneratorCommand
         parent::handle();
 
         $view = Str::finish(str_replace('.', '/', Str::slug(head($this->argument('name')))), '.blade.php');
-        $path = $this->getPaths() . '/blocks/';
+        $path = $this->getPaths() . '/widgets/';
 
         if (! $this->files->exists($path)) {
             $this->files->makeDirectory($path);
@@ -78,11 +77,7 @@ class BlockMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        if ($this->option('full')) {
-            return __DIR__ . '/stubs/block.full.stub';
-        }
-
-        return __DIR__ . '/stubs/block.stub';
+        return __DIR__ . '/stubs/widget.stub';
     }
 
     /**
@@ -103,6 +98,6 @@ class BlockMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Blocks';
+        return $rootNamespace . '\Widgets';
     }
 }

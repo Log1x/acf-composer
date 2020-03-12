@@ -14,5 +14,11 @@ trim_trailing_whitespace = false
 [*.php]
 indent_size = 4
 
+[src/Console/stubs/*.stub]
+indent_size = 4
+
+[src/Console/stubs/views/*.stub]
+indent_size = 2
+
 [*.blade.php]
 indent_size = 2

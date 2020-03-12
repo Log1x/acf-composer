@@ -2,41 +2,27 @@
 
 namespace DummyNamespace;
 
-use Log1x\AcfComposer\Block;
+use Log1x\AcfComposer\Widget;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class DummyClass extends Block
+class DummyClass extends Widget
 {
     /**
-     * The name of the block.
+     * The display name of the widget.
      *
      * @var string
      */
     protected $name = 'DummyClass';
 
     /**
-     * The block description.
+     * The description of the widget.
      *
      * @var string
      */
     protected $description = 'Lorem ipsum...';
 
     /**
-     * The block category.
-     *
-     * @var string
-     */
-    protected $category = 'common';
-
-    /**
-     * The icon of this block.
-     *
-     * @var string|array
-     */
-    protected $icon = 'star-half';
-
-    /**
-     * Data to be passed to the block before rendering.
+     * Data to be passed to the widget before rendering.
      *
      * @return array
      */
@@ -48,13 +34,25 @@ class DummyClass extends Block
     }
 
     /**
-     * The block field group.
+     * The title of the widget.
+     *
+     * @return string
+     */
+    public function title() {
+        return get_field('title', $this->widget->id);
+    }
+
+    /**
+     * The widget field group.
      *
      * @return array
      */
     public function fields()
     {
         $DummySlug = new FieldsBuilder('DummySlug');
+
+        $DummySlug
+            ->addText('title');
 
         $DummySlug
             ->addRepeater('items')

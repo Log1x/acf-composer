@@ -2,28 +2,52 @@
 
 namespace Log1x\AcfComposer;
 
-use Roots\Acorn\Application;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 
-use function Roots\asset;
-use function Roots\view;
-
-abstract class Block
+abstract class Block extends Composer
 {
     /**
-     * The application instance.
+     * The block properties.
      *
-     * @var \Roots\Acorn\Application
+     * @var array
      */
-    protected $app;
+    protected $block;
 
     /**
-     * Default field type settings.
+     * The block content.
      *
-     * @return array
+     * @var string
      */
-    protected $defaults = [];
+    protected $content;
+
+    /**
+     * The block preview status.
+     *
+     * @var bool
+     */
+    protected $preview;
+
+    /**
+     * The current post ID.
+     *
+     * @param int
+     */
+    protected $post;
+
+    /**
+     * The block prefix.
+     *
+     * @var string
+     */
+    protected $prefix = 'acf/';
+
+    /**
+     * The block namespace.
+     *
+     * @var string
+     */
+    protected $namespace;
 
     /**
      * The display name of the block.
@@ -96,285 +120,76 @@ abstract class Block
     protected $supports = [];
 
     /**
-     * Assets enqueued when the block is shown.
+     * Compose and register the defined field groups with ACF.
      *
-     * @var array
-     */
-    protected $assets = [];
-
-    /**
-     * The blocks status.
-     *
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
-     * The block field groups.
-     *
-     * @var array
-     */
-    protected $fields;
-
-    /**
-     * The block namespace.
-     *
-     * @var string
-     */
-    protected $namespace;
-
-    /**
-     * The block prefix.
-     *
-     * @var string
-     */
-    protected $prefix = 'acf/';
-
-    /**
-     * The block properties.
-     *
-     * @var array
-     */
-    protected $block;
-
-    /**
-     * The block content.
-     *
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * The block preview status.
-     *
-     * @var bool
-     */
-    protected $preview;
-
-    /**
-     * The current post ID.
-     *
-     * @param int
-     */
-    protected $post;
-
-    /**
-     * Create a new Block instance.
-     *
-     * @param  \Roots\Acorn\Application $app
+     * @param  callback $callback
      * @return void
      */
-    public function __construct(Application $app)
+    public function compose($callback = null)
     {
-        $this->app = $app;
-    }
-
-    /**
-     * Compose the block.
-     *
-     * @return void
-     */
-    public function compose()
-    {
-        if (! $this->register() || ! function_exists('acf')) {
+        if (empty($this->name)) {
             return;
         }
 
-        collect($this->register())->each(function ($value, $name) {
-            $this->{$name} = $value;
-        });
-
-        $this->defaults = collect(
-            $this->app->config->get('acf.defaults')
-        )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
-            return [Str::snake($key) => $value];
-        });
-
-        $this->slug = Str::slug($this->name);
-        $this->namespace = $this->prefix . $this->slug;
-        $this->fields = $this->fields();
-
-        if (! $this->enabled) {
-            return;
+        if (empty($this->namespace)) {
+            $this->namespace = Str::start($this->slug, $this->prefix);
         }
 
-        add_action('init', function () {
-            acf_register_block([
-                'name'            => $this->slug,
-                'title'           => $this->name,
-                'description'     => $this->description,
-                'category'        => $this->category,
-                'icon'            => $this->icon,
-                'keywords'        => $this->keywords,
-                'post_types'      => $this->post_types,
-                'mode'            => $this->mode,
-                'align'           => $this->align,
-                'supports'        => $this->supports,
-                'enqueue_assets'  => [$this, 'assets'],
-                'render_callback' => function ($block, $content = '', $preview = false, $post = 0) {
-                    $this->block = (object) $block;
-                    $this->content = $content;
-                    $this->preview = $preview;
-                    $this->post = $post;
-
-                    echo $this->view();
-                }
-            ]);
-
-            if (! empty($this->fields)) {
-                if ($this->defaults->has('field_group')) {
-                    $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
-                }
-
-                if (! Arr::has($this->fields, 'location.0.0')) {
-                    Arr::set($this->fields, 'location.0.0', [
-                        'param' => 'block',
-                        'operator' => '==',
-                        'value' => $this->namespace,
-                    ]);
-                }
-
-                acf_add_local_field_group($this->build());
+        parent::compose(function () {
+            if (! Arr::has($this->fields, 'location.0.0')) {
+                Arr::set($this->fields, 'location.0.0', [
+                    'param' => 'block',
+                    'operator' => '==',
+                    'value' => $this->namespace,
+                ]);
             }
-        }, 20);
+        });
+
+        acf_register_block([
+            'name' => $this->slug,
+            'title' => $this->name,
+            'description' => $this->description,
+            'category' => $this->category,
+            'icon' => $this->icon,
+            'keywords' => $this->keywords,
+            'post_types' => $this->post_types,
+            'mode' => $this->mode,
+            'align' => $this->align,
+            'supports' => $this->supports,
+            'enqueue_assets' => [$this,'assets'],
+            'render_callback' => [$this, 'render']
+        ]);
     }
 
     /**
-     * Build the field group with our default field type settings.
+     * Render the ACF block.
      *
-     * @param  array $fields
-     * @return array
+     * @param  array $block
+     * @param  string $content
+     * @param  bool $preview
+     * @param  int $post
+     * @return void
      */
-    protected function build($fields = [])
+    public function render($block, $content = '', $preview = false, $post = 0)
     {
-        return collect($fields ?: $this->fields)->map(function ($value, $key) use ($fields) {
-            if (
-                ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
-                (Str::is($key, 'type') && ! $this->defaults->has($value))
-            ) {
-                return $value;
-            }
+        $this->block = (object) $block;
+        $this->content = $content;
+        $this->preview = $preview;
+        $this->post = $post;
 
-            return array_map(function ($field) {
-                if (collect($field)->keys()->intersect(['fields', 'sub_fields', 'layouts'])->isNotEmpty()) {
-                    return $this->build($field);
-                }
-
-                return array_merge($this->defaults->get($field['type'], []), $field);
-            }, $value);
-        })->all();
-    }
-
-    /**
-     * URI for the block.
-     *
-     * @return string
-     */
-    protected function uri($path = '')
-    {
-        return str_replace(
-            get_theme_file_path(),
-            get_theme_file_uri(),
-            home_url($path)
+        echo $this->view(
+            Str::finish('views.blocks.', $this->slug),
+            ['block' => $this]
         );
     }
 
     /**
-     * View used for rendering the block.
-     *
-     * @return string
-     */
-    public function view()
-    {
-        if (view($view = $this->app->resourcePath("views/blocks/{$this->slug}.blade.php"))) {
-            return view(
-                $view,
-                array_merge($this->with(), ['block' => $this->block])
-            )->render();
-        }
-
-        if (view()->exists($this->app->resourcePath('views/blocks/view-404.blade.php'))) {
-            return view(
-                $this->app->resourcePath('views/blocks/view-404.blade.php'),
-                ['view' => $view]
-            )->render();
-        }
-
-        return view(
-            __DIR__ . '/../resources/views/view-404.blade.php',
-            ['view' => $view]
-        )->render();
-    }
-
-    /**
-     * Assets used when rendering the block.
+     * Assets enqueued when rendering the block.
      *
      * @return void
      */
-    public function assets()
+    public function enqueue()
     {
-        $styles = [
-            'css/blocks/' . $this->slug . '.css',
-            'styles/blocks/' . $this->slug . '.css',
-        ];
-
-        $scripts = [
-            'js/blocks/' . $this->slug . '.js',
-            'scripts/blocks/' . $this->slug . '.js',
-        ];
-
-        if (! empty($this->assets)) {
-            foreach ($this->assets as $asset) {
-                if (Str::endsWith($asset, '.css')) {
-                    $styles = Arr::prepend($styles, $asset);
-                }
-
-                if (Str::endsWith($asset, '.js')) {
-                    $scripts = Arr::prepend($scripts, $asset);
-                }
-            }
-        }
-
-        foreach ($styles as $style) {
-            if (asset($style)->exists()) {
-                wp_enqueue_style($this->namespace, asset($style)->uri(), false, null);
-            }
-        }
-
-        foreach ($scripts as $script) {
-            if (asset($script)->exists()) {
-                wp_enqueue_script($this->namespace, asset($script)->uri(), null, null, true);
-            }
-        }
-    }
-
-    /**
-     * Data to be passed to the block before registering.
-     *
-     * @return array
-     */
-    public function register()
-    {
-        return [];
-    }
-
-    /**
-     * Fields to be attached to the block.
-     *
-     * @return array
-     */
-    public function fields()
-    {
-        return [];
-    }
-
-    /**
-     * Data to be passed to the rendered block.
-     *
-     * @return array
-     */
-    public function with()
-    {
-        return [];
+        //
     }
 }

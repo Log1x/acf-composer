@@ -7,24 +7,25 @@ use Roots\Acorn\ServiceProvider;
 class AcfComposerServiceProvider extends ServiceProvider
 {
     /**
-     * Register and compose fields.
+     * Register any application services.
      *
      * @return void
      */
     public function register()
     {
-        collect($this->app->config->get('acf.blocks'))
-            ->each(function ($block) {
-                if (is_string($block)) {
-                    $block = new $block($this->app);
-                }
-
-                $block->compose();
-            });
+        if (! function_exists('acf')) {
+            return;
+        }
 
         collect($this->app->config->get('acf.fields'))
+            ->merge($this->app->config->get('acf.blocks'))
+            ->merge($this->app->config->get('acf.widgets'))
             ->each(function ($field) {
                 if (is_string($field)) {
+                    if (! class_exists($field)) {
+                        return;
+                    }
+
                     $field = new $field($this->app);
                 }
 
@@ -41,14 +42,13 @@ class AcfComposerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
-            __DIR__ . '/../../resources/views/view-404.blade.php' => $this->app->resourcePath(
-                'views/blocks/view-404.blade.php'
-            ),
         ], 'acf-composer');
 
         $this->commands([
-            \Log1x\AcfComposer\Console\BlockMakeCommand::class,
             \Log1x\AcfComposer\Console\FieldMakeCommand::class,
+            \Log1x\AcfComposer\Console\BlockMakeCommand::class,
+            \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
+            \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
         ]);
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "log1x/acf-composer",
   "type": "package",
-  "description": "ACF Composer assists you with creating Fields and Blocks with ACF Builder and Roots Sage",
+  "description": "Create fields, blocks, and more using ACF Builder and Roots Sage",
   "license": "MIT",
   "authors": [
     {
@@ -22,7 +22,8 @@
   },
   "suggest": {
     "stoutlogic/acf-builder": "Provides an essential fluid interface for creating ACF fields.",
-    "log1x/sage-directives": "Provides Sage-specific Blade directives for use with WordPress and ACF within your views."
+    "log1x/sage-directives": "Provides Sage-specific Blade directives for use with WordPress and ACF within your views.",
+    "log1x/modern-acf-options": "Gives ACF option pages a much needed design overhaul."
   },
   "extra": {
     "acorn": {
