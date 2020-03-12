@@ -15,18 +15,18 @@ class Composer
     protected $app;
 
     /**
-     * Default field type settings.
-     *
-     * @return array
-     */
-    protected $defaults = [];
-
-    /**
      * The field groups.
      *
      * @var array
      */
     protected $fields;
+
+    /**
+     * Default field type settings.
+     *
+     * @return array
+     */
+    protected $defaults = [];
 
     /**
      * Create a new Field instance.
@@ -42,10 +42,6 @@ class Composer
             $this->app->config->get('acf.defaults')
         )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
             return [Str::snake($key) => $value];
-        });
-
-        collect($this->register())->each(function ($value, $name) {
-            $this->{$name} = $value;
         });
 
         if (! empty($this->name) && empty($this->slug)) {
@@ -145,50 +141,17 @@ class Composer
             '.php' => '',
             '.' => '/'
         ]);
-        $path = Str::finish($path, '/');
 
         include $this->app->path(
             Str::finish(
-                Str::finish($path, $name),
-                '.php'
-            )
+                Str::finish($path, '/'),
+                Str::finish($name, '.php')
+            ),
         );
     }
 
     /**
-     * Convert an absolute path to a URI.
-     *
-     * @param  string $path
-     * @return string
-     */
-    public function uri($path = '')
-    {
-        return str_replace(
-            get_theme_file_path(),
-            get_theme_file_uri(),
-            home_url($path)
-        );
-    }
-
-    /**
-     * Set a configuration option.
-     */
-    public function set($key, $value) {
-        $this->{$key} = $value;
-    }
-
-    /**
-     * Data to be passed to the block before registering.
-     *
-     * @return array
-     */
-    public function register()
-    {
-        return [];
-    }
-
-    /**
-     * Fields to be attached to the block.
+     * Field groups to be composed.
      *
      * @return array
      */
@@ -198,7 +161,7 @@ class Composer
     }
 
     /**
-     * Data to be passed to the rendered block.
+     * Data to be passed to the rendered view.
      *
      * @return array
      */

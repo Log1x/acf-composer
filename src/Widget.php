@@ -9,49 +9,42 @@ use Illuminate\Support\Str;
 abstract class Widget extends Composer
 {
     /**
-     * The registered widget arguments.
+     * The widget instance.
      *
-     * @var array
+     * @var string
      */
     public $widget;
 
     /**
-     * The title of the widget.
-     *
-     * @var string
-     */
-    public $title;
-
-    /**
-     * The ID of the widget.
+     * The widget ID.
      *
      * @var string
      */
     public $id;
 
     /**
-     * The display name of the widget.
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     * The slug of the widget.
+     * The widget slug.
      *
      * @var string
      */
     public $slug;
 
     /**
+     * The name of the widget.
+     *
+     * @var string
+     */
+    public $name = '';
+
+    /**
      * The description of the widget.
      *
      * @var string
      */
-    public $description;
+    public $description = '';
 
     /**
-     * Returns the widget title.
+     * The widget title.
      *
      * @return string
      */
@@ -75,8 +68,12 @@ abstract class Widget extends Composer
                 return $value['name'] == $this->name;
             })->pop();
 
-            $this->title = $this->title();
-            $this->id = Str::start($this->widget->id, 'widget_');
+            $this->widget->id = Str::start($this->widget->id, 'widget_');
+            $this->id = $this->widget->id;
+
+            if (empty($this->slug)) {
+                $this->slug = Str::slug($this->name);
+            }
 
             if (! Arr::has($this->fields, 'location.0.0')) {
                 Arr::set($this->fields, 'location.0.0', [
@@ -127,17 +124,18 @@ abstract class Widget extends Composer
             {
                 echo Arr::get($args, 'before_widget');
 
-                if (! empty($this->widget->title)) {
+                if (! empty($this->widget->title())) {
                     echo collect([
                         Arr::get($args, 'before_title'),
-                        $this->widget->title,
+                        $this->widget->title(),
                         Arr::get($args, 'after_title')
                     ])->implode('');
                 }
 
-                echo $this->widget->view("views.widgets.{$this->widget->slug}", [
-                    'widget' => $this->widget
-                ]);
+                echo $this->widget->view(
+                    Str::finish('views.widgets.', $this->widget->slug),
+                    ['widget' => $this->widget]
+                );
 
                 echo Arr::get($args, 'after_widget');
             }

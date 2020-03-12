@@ -13,7 +13,6 @@ class BlockMakeCommand extends GeneratorCommand
      * @var string
      */
     protected $signature = 'acf:block {name* : The name of the block}
-                            {--with-view : Create a corresponding view for the block}
                             {--full : Scaffold a block that contains the complete configuration.}';
 
     /**
@@ -21,7 +20,7 @@ class BlockMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create a new ACF block.';
+    protected $description = 'Create a new block using ACF.';
 
     /**
      * The type of class being generated.
@@ -38,10 +37,6 @@ class BlockMakeCommand extends GeneratorCommand
     public function handle()
     {
         parent::handle();
-
-        if (! $this->option('with-view')) {
-            return;
-        }
 
         $view = Str::finish(str_replace('.', '/', Str::slug(head($this->argument('name')))), '.blade.php');
         $path = $this->getPaths() . '/blocks/';

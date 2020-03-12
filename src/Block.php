@@ -5,8 +5,6 @@ namespace Log1x\AcfComposer;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 
-use function Roots\asset;
-
 abstract class Block extends Composer
 {
     /**
@@ -43,13 +41,6 @@ abstract class Block extends Composer
      * @var string
      */
     protected $prefix = 'acf/';
-
-    /**
-     * Assets enqueued when the block is shown.
-     *
-     * @var array
-     */
-    protected $assets = [];
 
     /**
      * The block namespace.
@@ -189,44 +180,12 @@ abstract class Block extends Composer
     }
 
     /**
-     * Assets used when rendering the block.
+     * Assets enqueued when rendering the block.
      *
      * @return void
      */
-    public function assets()
+    public function enqueue()
     {
-        $styles = [
-            'css/blocks/' . $this->slug . '.css',
-            'styles/blocks/' . $this->slug . '.css',
-        ];
-
-        $scripts = [
-            'js/blocks/' . $this->slug . '.js',
-            'scripts/blocks/' . $this->slug . '.js',
-        ];
-
-        if (! empty($this->assets)) {
-            foreach ($this->assets as $asset) {
-                if (Str::endsWith($asset, '.css')) {
-                    $styles = Arr::prepend($styles, $asset);
-                }
-
-                if (Str::endsWith($asset, '.js')) {
-                    $scripts = Arr::prepend($scripts, $asset);
-                }
-            }
-        }
-
-        foreach ($styles as $style) {
-            if (asset($style)->exists()) {
-                wp_enqueue_style($this->namespace, asset($style)->uri(), false, null);
-            }
-        }
-
-        foreach ($scripts as $script) {
-            if (asset($script)->exists()) {
-                wp_enqueue_script($this->namespace, asset($script)->uri(), null, null, true);
-            }
-        }
+        //
     }
 }

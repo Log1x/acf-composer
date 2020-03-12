@@ -7,7 +7,7 @@ use Roots\Acorn\ServiceProvider;
 class AcfComposerServiceProvider extends ServiceProvider
 {
     /**
-     * Register and compose fields.
+     * Register any application services.
      *
      * @return void
      */
@@ -16,15 +16,6 @@ class AcfComposerServiceProvider extends ServiceProvider
         if (! function_exists('acf')) {
             return;
         }
-
-        collect($this->app->config->get('acf.blocks'))
-            ->each(function ($block) {
-                if (is_string($block)) {
-                    $block = new $block($this->app);
-                }
-
-                $block->compose();
-            });
 
         collect($this->app->config->get('acf.fields'))
             ->each(function ($field) {
@@ -35,7 +26,16 @@ class AcfComposerServiceProvider extends ServiceProvider
                 $field->compose();
             });
 
-       collect($this->app->config->get('acf.widgets'))
+        collect($this->app->config->get('acf.blocks'))
+            ->each(function ($block) {
+                if (is_string($block)) {
+                    $block = new $block($this->app);
+                }
+
+                $block->compose();
+            });
+
+        collect($this->app->config->get('acf.widgets'))
            ->each(function ($widget) {
                if (is_string($widget)) {
                    $widget = new $widget($this->app);

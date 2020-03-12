@@ -3,6 +3,7 @@
 namespace Log1x\AcfComposer\Console;
 
 use Roots\Acorn\Console\Commands\GeneratorCommand;
+use Illuminate\Support\Str;
 
 class WidgetMakeCommand extends GeneratorCommand
 {
@@ -18,7 +19,7 @@ class WidgetMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create a new widget powered by ACF.';
+    protected $description = 'Create a new widget using ACF.';
 
     /**
      * The type of class being generated.
@@ -28,6 +29,48 @@ class WidgetMakeCommand extends GeneratorCommand
     protected $type = 'Widget';
 
     /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        parent::handle();
+
+        $view = Str::finish(str_replace('.', '/', Str::slug(head($this->argument('name')))), '.blade.php');
+        $path = $this->getPaths() . '/widgets/';
+
+        if (! $this->files->exists($path)) {
+            $this->files->makeDirectory($path);
+        }
+
+        if ($this->files->exists($path . $view)) {
+            return $this->error("File {$view} already exists!");
+        }
+
+        $this->files->put($path . $view, $this->files->get($this->getViewStub()));
+
+        return $this->info("File {$view} created.");
+    }
+
+    /**
+     * Return the applications view path.
+     *
+     * @param  string $name
+     * @return void
+     */
+    protected function getPaths()
+    {
+        $paths = $this->app['view.finder']->getPaths();
+
+        if (count($paths) === 1) {
+            return head($paths);
+        }
+
+        return $this->choice('Where do you want to create the view(s)?', $paths, head($paths));
+    }
+
+    /**
      * Get the stub file for the generator.
      *
      * @return string
@@ -35,6 +78,16 @@ class WidgetMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return __DIR__ . '/stubs/widget.stub';
+    }
+
+    /**
+     * Get the view stub file for the generator.
+     *
+     * @return string
+     */
+    protected function getViewStub()
+    {
+        return __DIR__ . '/stubs/views/widget.stub';
     }
 
     /**

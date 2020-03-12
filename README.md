@@ -4,7 +4,7 @@
 ![CircleCI](https://img.shields.io/circleci/build/gh/Log1x/acf-composer.svg?style=flat-square)
 ![Packagist](https://img.shields.io/packagist/dt/log1x/acf-composer.svg?style=flat-square)
 
-ACF Composer assists you with ~~creating~~ **composing** Fields and Blocks using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
+ACF Composer assists you with ~~creating~~ **composing** Fields, Blocks, and Widgets using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
 
 ## Requirements
 
@@ -25,13 +25,14 @@ $ composer require log1x/acf-composer
 $ wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerServiceProvider"
 ```
 
-Initialize fields, blocks, and default field type values in `config/acf.php`.
+Initialize fields, blocks, widgets, and default field type values in `config/acf.php`.
 
-### Create a Block or Field
+### Creating a new field/block/widget
 
 ```bash
-$ wp acorn acf:block MyBlock
-$ wp acorn acf:field MyField
+$ wp acorn acf:block ExampleBlock
+$ wp acorn acf:field ExampleField
+$ wp acorn acf:widget ExampleWidget
 ```
 
 ## Bug Reports

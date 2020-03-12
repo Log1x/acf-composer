@@ -5,57 +5,73 @@ namespace DummyNamespace;
 use Log1x\AcfComposer\Block;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class DummyClass extends Block {
+class DummyClass extends Block
+{
     /**
-     * Default field type configuration.
+     * The display name of the block.
      *
-     * @return array
+     * @var string
      */
-    protected $defaults = [];
+    protected $name = 'DummyClass';
 
     /**
-     * Data to be passed to the block before registering.
+     * The description of the block.
      *
-     * @return array
+     * @var string
      */
-    public function register()
-    {
-        return [
-            'name' => 'DummyClass',           // Block name
-            'description' => 'Lorem ipsum',   // Block description
-            'category' => 'formatting',       // Block category
-            'icon' => '',                     // Block icon (Dashicons or SVG)
-            'keywords' => [],                 // Block keywords
-            'post_types' => ['post', 'page'], // Block post types
-            'mode' => 'preview',              // Default block mode
-            'align' => '',                    // Default block alignment
-            'assets' => [
-              'scripts/blocks/DummySlug.js',  // Assets enqueued when the block is shown.
-              'styles/blocks/DummySlug.css',  // Defaults to the blocks/DummySlug.{js,css} if they exist.
-            ],
-            'enabled' => true,                // Block status
-        ];
-    }
+    protected $description = 'Lorem ipsum...';
 
     /**
-     * Fields to be attached to the block.
+     * The category this block belongs to.
      *
-     * @return array
+     * @var string
      */
-    public function fields()
-    {
-        $example = new FieldsBuilder('example');
-
-        $example
-            ->addRepeater('items')
-                ->addText('item')
-            ->endRepeater();
-
-        return $example->build();
-    }
+    protected $category = 'common';
 
     /**
-     * Data to be passed to the rendered block.
+     * The icon of this block.
+     *
+     * @var string|array
+     */
+    protected $icon = 'star-half';
+
+    /**
+     * An array of block keywords.
+     *
+     * @var array
+     */
+    protected $keywords = [];
+
+    /**
+     * An array of post types the block will be available to.
+     *
+     * @var array
+     */
+    protected $post_types = ['post', 'page'];
+
+    /**
+     * The default display mode of the block that is shown to the user.
+     *
+     * @var string
+     */
+    protected $mode = 'preview';
+
+    /**
+     * The block alignment class.
+     *
+     * @var string
+     */
+    protected $align = '';
+
+    /**
+     * Features supported by the block.
+     *
+     * @var array
+     */
+    protected $supports = [];
+
+    /**
+     * Data to be passed to the block before rendering.
      *
      * @return array
      */
@@ -67,7 +83,24 @@ class DummyClass extends Block {
     }
 
     /**
-     * Returns the items field.
+     * The block field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $DummySlug = new FieldsBuilder('DummySlug');
+
+        $DummySlug
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $DummySlug->build();
+    }
+
+    /**
+     * Return the items field.
      *
      * @return array
      */

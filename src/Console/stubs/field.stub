@@ -5,16 +5,10 @@ namespace DummyNamespace;
 use Log1x\AcfComposer\Field;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class DummyClass extends Field {
+class DummyClass extends Field
+{
     /**
-     * Default field type configuration.
-     *
-     * @return array
-     */
-    protected $defaults = [];
-
-    /**
-     * Fields to be registered with the application.
+     * The field group.
      *
      * @return array
      */
@@ -23,9 +17,6 @@ class DummyClass extends Field {
         $DummySlug = new FieldsBuilder('DummySlug');
 
         $DummySlug
-            ->addTrueFalse('enabled')
-            ->addText('label')
-            ->addTextarea('description')
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
