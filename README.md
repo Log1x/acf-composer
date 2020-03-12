@@ -91,7 +91,7 @@ Out of the box, the Example widget is ready to go and should appear in the backe
 
 ### Generating an Options Page
 
-When creating a field, you have the option of populating the `$options` variable automatically generating an Options page as well as automatically setting your field group location to the option page.
+When creating a field, you have the option of populating the `$options` variable automatically generating an Options page as well as setting the field group location.
 
 Start by creating an option page using Acorn:
 
@@ -100,6 +100,34 @@ $ wp acorn acf:options Options
 ```
 
 Outside of the `$options` variable being set in the options stub, it is effectively a Field. That being said, `App\Fields\Options::class` should be registered in the `fields` array in `config/acf.php`
+
+### Field Defaults
+
+One of my personal favorite features of ACF Composer is thet ability to set field defaults.
+
+Taking a look at `config/acf.php`, you will see a few pre-configured defaults:
+
+```php
+'defaults' => [
+    'trueFalse' => ['ui' => 1],
+    'select' => ['ui' => 1],
+],
+```
+
+When setting `trueFalse` and `select` to have their `ui` set to `1` by default, it is no longer necessary to repeatedly set `'ui' => 1` on your fields. This takes effect globally and can be overridden by simply setting a different value on a field.
+
+Here are a few others that I personally use:
+
+```php
+'defaults' => [
+    'fieldGroup' => ['instruction_placement' => 'acfe_instructions_tooltip'],
+    'repeater' => ['layout' => 'block', 'acfe_repeater_stylised_button' => 1],
+    'postObject' => ['ui' => 1, 'return_format' => 'object'],
+    'accordion' => ['multi_expand' => 1],
+    'group' => ['layout' => 'table', 'acfe_group_modal' => 1],
+    'tab' => ['placement' => 'left'],
+],
+```
 
 ## Bug Reports
 

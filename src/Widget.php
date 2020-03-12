@@ -96,14 +96,15 @@ abstract class Widget extends Composer
      */
     public function widget()
     {
-        return (new class($this) extends WP_Widget {
+        return (new class ($this) extends WP_Widget {
             /**
              * Create a new WP_Widget instance.
              *
              * @param  \Log1x\AcfComposer\Widget $widget
              * @return void
              */
-            public function __construct($widget) {
+            public function __construct($widget)
+            {
                 $this->widget = $widget;
 
                 parent::__construct(
@@ -147,7 +148,8 @@ abstract class Widget extends Composer
              * @param  array $instance
              * @return void
              */
-            public function form($instance) {
+            public function form($instance)
+            {
                 //
             }
         });

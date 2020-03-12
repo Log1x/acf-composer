@@ -48,6 +48,7 @@ class AcfComposerServiceProvider extends ServiceProvider
             \Log1x\AcfComposer\Console\FieldMakeCommand::class,
             \Log1x\AcfComposer\Console\BlockMakeCommand::class,
             \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
+            \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
         ]);
     }
 }
