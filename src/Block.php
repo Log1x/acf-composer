@@ -2,8 +2,8 @@
 
 namespace Log1x\AcfComposer;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 abstract class Block extends Composer
 {

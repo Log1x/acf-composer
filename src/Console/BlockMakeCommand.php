@@ -2,8 +2,8 @@
 
 namespace Log1x\AcfComposer\Console;
 
-use Roots\Acorn\Console\Commands\GeneratorCommand;
 use Illuminate\Support\Str;
+use Roots\Acorn\Console\Commands\GeneratorCommand;
 
 class BlockMakeCommand extends GeneratorCommand
 {

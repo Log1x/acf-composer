@@ -3,11 +3,10 @@
 namespace Log1x\AcfComposer\Providers;
 
 use ReflectionClass;
-use Roots\Acorn\ServiceProvider;
 use Illuminate\Support\Str;
-use Symfony\Component\Finder\Finder;
-
 use Log1x\AcfComposer\Composer;
+use Roots\Acorn\ServiceProvider;
+use Symfony\Component\Finder\Finder;
 
 class AcfComposerServiceProvider extends ServiceProvider
 {
