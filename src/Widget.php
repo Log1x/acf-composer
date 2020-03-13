@@ -55,6 +55,10 @@ abstract class Widget extends Composer
             return;
         }
 
+        if (empty($this->slug)) {
+            $this->slug = Str::slug($this->name);
+        }
+
         parent::compose(function () {
             $this->widget = (object) collect(
                 Arr::get($GLOBALS, 'wp_registered_widgets')
