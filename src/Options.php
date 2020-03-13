@@ -3,6 +3,7 @@
 namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 abstract class Options extends Composer
 {
