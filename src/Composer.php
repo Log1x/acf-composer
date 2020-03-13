@@ -29,7 +29,7 @@ class Composer
     protected $defaults = [];
 
     /**
-     * Create a new Field instance.
+     * Create a new Composer instance.
      *
      * @param  \Roots\Acorn\Application $app
      * @return void
@@ -43,10 +43,6 @@ class Composer
         )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
             return [Str::snake($key) => $value];
         });
-
-        if (! empty($this->name) && empty($this->slug)) {
-            $this->slug = Str::slug($this->name);
-        }
 
         $this->fields = $this->fields();
     }

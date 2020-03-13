@@ -14,16 +14,16 @@ class DummyClass extends Field
      */
     public function fields()
     {
-        $DummySlug = new FieldsBuilder('DummySlug');
+        $DummyCamel = new FieldsBuilder('DummySnake');
 
-        $DummySlug
+        $DummyCamel
             ->setLocation('post_type', '==', 'post');
 
-        $DummySlug
+        $DummyCamel
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $DummySlug->build();
+        return $DummyCamel->build();
     }
 }

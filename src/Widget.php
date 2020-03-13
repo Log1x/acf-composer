@@ -11,7 +11,7 @@ abstract class Widget extends Composer
     /**
      * The widget instance.
      *
-     * @var string
+     * @var object
      */
     public $widget;
 
@@ -23,18 +23,18 @@ abstract class Widget extends Composer
     public $id;
 
     /**
-     * The widget slug.
-     *
-     * @var string
-     */
-    public $slug;
-
-    /**
      * The name of the widget.
      *
      * @var string
      */
     public $name = '';
+
+    /**
+     * The widget slug.
+     *
+     * @var string
+     */
+    public $slug = '';
 
     /**
      * The description of the widget.

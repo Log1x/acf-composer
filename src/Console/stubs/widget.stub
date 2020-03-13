@@ -12,14 +12,14 @@ class DummyClass extends Widget
      *
      * @var string
      */
-    protected $name = 'DummyClass';
+    public $name = 'DummyClass';
 
     /**
      * The description of the widget.
      *
      * @var string
      */
-    protected $description = 'Lorem ipsum...';
+    public $description = 'Lorem ipsum...';
 
     /**
      * Data to be passed to the widget before rendering.
@@ -49,17 +49,17 @@ class DummyClass extends Widget
      */
     public function fields()
     {
-        $DummySlug = new FieldsBuilder('DummySlug');
+        $DummyCamel = new FieldsBuilder('DummySnake');
 
-        $DummySlug
+        $DummyCamel
             ->addText('title');
 
-        $DummySlug
+        $DummyCamel
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $DummySlug->build();
+        return $DummyCamel->build();
     }
 
     /**
