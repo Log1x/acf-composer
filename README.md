@@ -4,7 +4,7 @@
 ![CircleCI](https://img.shields.io/circleci/build/gh/Log1x/acf-composer.svg?style=flat-square)
 ![Packagist](https://img.shields.io/packagist/dt/log1x/acf-composer.svg?style=flat-square)
 
-ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using ACF, [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
+ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
 
 ## Features
 
