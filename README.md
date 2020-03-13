@@ -13,7 +13,7 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 - Blocks and widgets are fully rendered using Blade with a native Sage 10 feel for passing view data.
 - 🔥 Automatically hooks widgets with `WP_Widget` making them instantly ready to use.
 - 🔥 Automatically sets field location on blocks, widgets, and option pages.
-- 🔥 Globally set default field type and field group settings. No more repeating `ui => 1` on every select field.
+- 🔥 Globally set default field type and field group settings. No more repeating `['ui' => 1]` on every select field.
 
 ## Requirements
 
@@ -54,13 +54,13 @@ This will create `src/Fields/Example.php` which is where you will create and man
 
 Taking a glance at the generated `Example.php` stub, you will notice that it has a simple list configured.
 
-Proceed by checking the `Add Post` for the field to ensure things are working as intended– and then [get to work](https://github.com/Log1x/acf-builder-cheatsheet).
+Proceed by checking the `Add Post` for the field to ensure things are working as intended – and then [get to work](https://github.com/Log1x/acf-builder-cheatsheet).
 
 ### Generating a Block
 
-Generating a Block is generally the same as generating a field as seen above.
+Generating a block is generally the same as generating a field as seen above.
 
-Start by creating the Block field using Acorn:
+Start by creating the block field using Acorn:
 
 ```bash
 $ wp acorn acf:block Example
@@ -72,25 +72,27 @@ Optionally, you may pass `--full` to the command above to generate a stub that c
 $ wp acorn acf:block Example --full
 ```
 
-When running the ACF Block generator, one difference to a generic field is an accompanied View is generated in the `resources/views/blocks` directory.
+When running the block generator, one difference to a generic field is an accompanied `View` is generated in the `resources/views/blocks` directory.
 
-Like the Field generator, the example block contains a simple list repeater and is working out of the box.
+Like the field generator, the example block contains a simple list repeater and is working out of the box.
 
 ### Generating a Widget
 
-Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade. Batteries included.
+Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade, as well as registered with `WP_Widget` which is usually rather annoying.
 
-Start by creating a Widget using Acorn:
+Start by creating a widget using Acorn:
 
 ```bash
 $ wp acorn acf:widget Example
 ```
 
-Similar to Blocks, Widgets are also accompanied by a view generated in `resources/views/widgets`.
+Similar to blocks, widgets are also accompanied by a view generated in `resources/views/widgets`.
 
 Out of the box, the Example widget is ready to go and should appear in the backend.
 
 ### Generating an Options Page
+
+Creating an options page is similar to creating a regular field group in additional to a few configuration options available to customize the page (most of which, are optional.)
 
 Start by creating an option page using Acorn:
 
@@ -98,7 +100,15 @@ Start by creating an option page using Acorn:
 $ wp acorn acf:options Options
 ```
 
-...
+Optionally, you may pass `--full` to the command above to generate a stub that contains additional configuration examples.
+
+```bash
+$ wp acorn acf:options Options --full
+```
+
+Once finished, you should see an Options page appear in the backend.
+
+All fields registered will have their location automatically set to this page.
 
 ## Default Field Settings
 

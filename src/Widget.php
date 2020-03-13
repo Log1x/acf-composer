@@ -44,16 +44,6 @@ abstract class Widget extends Composer
     public $description = '';
 
     /**
-     * The widget title.
-     *
-     * @return string
-     */
-    public function title()
-    {
-        //
-    }
-
-    /**
      * Compose and register the defined field groups with ACF.
      *
      * @param  callback $callback
@@ -153,5 +143,15 @@ abstract class Widget extends Composer
                 //
             }
         });
+    }
+
+    /**
+     * The widget title.
+     *
+     * @return string
+     */
+    public function title()
+    {
+        //
     }
 }
