@@ -12,28 +12,28 @@ class DummyClass extends Block
      *
      * @var string
      */
-    protected $name = 'DummyClass';
+    public $name = 'DummyClass';
 
     /**
      * The block description.
      *
      * @var string
      */
-    protected $description = 'Lorem ipsum...';
+    public $description = 'Lorem ipsum...';
 
     /**
      * The block category.
      *
      * @var string
      */
-    protected $category = 'common';
+    public $category = 'common';
 
     /**
      * The icon of this block.
      *
      * @var string|array
      */
-    protected $icon = 'star-half';
+    public $icon = 'star-half';
 
     /**
      * Data to be passed to the block before rendering.
@@ -54,14 +54,14 @@ class DummyClass extends Block
      */
     public function fields()
     {
-        $DummySlug = new FieldsBuilder('DummySlug');
+        $DummyCamel = new FieldsBuilder('DummySnake');
 
-        $DummySlug
+        $DummyCamel
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $DummySlug->build();
+        return $DummyCamel->build();
     }
 
     /**

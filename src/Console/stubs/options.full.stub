@@ -22,6 +22,27 @@ class DummyClass extends Options
     public $title = 'DummyClass | Options';
 
     /**
+     * The option page permission capability.
+     *
+     * @var string
+     */
+    public $capability = 'edit_theme_options';
+
+    /**
+     * The option page menu position.
+     *
+     * @var int
+     */
+    public $position = PHP_INT_MAX;
+
+    /**
+     * The option page autoload setting.
+     *
+     * @var bool
+     */
+    public $autoload = true;
+
+    /**
      * The field group.
      *
      * @return array

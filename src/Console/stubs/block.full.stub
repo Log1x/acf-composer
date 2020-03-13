@@ -12,63 +12,63 @@ class DummyClass extends Block
      *
      * @var string
      */
-    protected $name = 'DummyClass';
+    public $name = 'DummyClass';
 
     /**
      * The description of the block.
      *
      * @var string
      */
-    protected $description = 'Lorem ipsum...';
+    public $description = 'Lorem ipsum...';
 
     /**
      * The category this block belongs to.
      *
      * @var string
      */
-    protected $category = 'common';
+    public $category = 'common';
 
     /**
      * The icon of this block.
      *
      * @var string|array
      */
-    protected $icon = 'star-half';
+    public $icon = 'star-half';
 
     /**
      * An array of block keywords.
      *
      * @var array
      */
-    protected $keywords = [];
+    public $keywords = [];
 
     /**
      * An array of post types the block will be available to.
      *
      * @var array
      */
-    protected $post_types = ['post', 'page'];
+    public $post_types = ['post', 'page'];
 
     /**
      * The default display mode of the block that is shown to the user.
      *
      * @var string
      */
-    protected $mode = 'preview';
+    public $mode = 'preview';
 
     /**
      * The block alignment class.
      *
      * @var string
      */
-    protected $align = '';
+    public $align = '';
 
     /**
      * Features supported by the block.
      *
      * @var array
      */
-    protected $supports = [];
+    public $supports = [];
 
     /**
      * Data to be passed to the block before rendering.
@@ -89,14 +89,14 @@ class DummyClass extends Block
      */
     public function fields()
     {
-        $DummySlug = new FieldsBuilder('DummySlug');
+        $DummyCamel = new FieldsBuilder('DummySnake');
 
-        $DummySlug
+        $DummyCamel
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $DummySlug->build();
+        return $DummyCamel->build();
     }
 
     /**

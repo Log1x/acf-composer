@@ -11,7 +11,7 @@ abstract class Widget extends Composer
     /**
      * The widget instance.
      *
-     * @var string
+     * @var object
      */
     public $widget;
 
@@ -23,13 +23,6 @@ abstract class Widget extends Composer
     public $id;
 
     /**
-     * The widget slug.
-     *
-     * @var string
-     */
-    public $slug;
-
-    /**
      * The name of the widget.
      *
      * @var string
@@ -37,21 +30,18 @@ abstract class Widget extends Composer
     public $name = '';
 
     /**
+     * The widget slug.
+     *
+     * @var string
+     */
+    public $slug = '';
+
+    /**
      * The description of the widget.
      *
      * @var string
      */
     public $description = '';
-
-    /**
-     * The widget title.
-     *
-     * @return string
-     */
-    public function title()
-    {
-        //
-    }
 
     /**
      * Compose and register the defined field groups with ACF.
@@ -153,5 +143,15 @@ abstract class Widget extends Composer
                 //
             }
         });
+    }
+
+    /**
+     * The widget title.
+     *
+     * @return string
+     */
+    public function title()
+    {
+        //
     }
 }

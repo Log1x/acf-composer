@@ -2,10 +2,25 @@
 
 namespace Log1x\AcfComposer\Providers;
 
+use ReflectionClass;
+use Illuminate\Support\Str;
+use Log1x\AcfComposer\Composer;
 use Roots\Acorn\ServiceProvider;
+use Symfony\Component\Finder\Finder;
 
 class AcfComposerServiceProvider extends ServiceProvider
 {
+    /**
+     * Default Paths
+     *
+     * @var array
+     */
+    protected $paths = [
+        'Fields',
+        'Blocks',
+        'Widgets'
+    ];
+
     /**
      * Register any application services.
      *
@@ -13,24 +28,30 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if (! function_exists('acf')) {
+        $this->paths = collect($this->paths)->map(function ($path) {
+            return $this->app->path($path);
+        })->filter(function ($path) {
+            return is_dir($path);
+        });
+
+        if ($this->paths->isEmpty() || ! function_exists('acf')) {
             return;
         }
 
-        collect($this->app->config->get('acf.fields'))
-            ->merge($this->app->config->get('acf.blocks'))
-            ->merge($this->app->config->get('acf.widgets'))
-            ->each(function ($field) {
-                if (is_string($field)) {
-                    if (! class_exists($field)) {
-                        return;
-                    }
+        foreach ((new Finder())->in($this->paths->all())->files() as $composer) {
+            $composer = $this->app->getNamespace() . str_replace(
+                ['/', '.php'],
+                ['\\', ''],
+                Str::after($composer->getPathname(), $this->app->path() . DIRECTORY_SEPARATOR)
+            );
 
-                    $field = new $field($this->app);
-                }
-
-                $field->compose();
-            });
+            if (
+                is_subclass_of($composer, Composer::class) &&
+                ! (new ReflectionClass($composer))->isAbstract()
+            ) {
+                (new $composer($this->app))->compose();
+            }
+        }
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace Log1x\AcfComposer;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 abstract class Block extends Composer
 {
@@ -12,112 +12,112 @@ abstract class Block extends Composer
      *
      * @var array
      */
-    protected $block;
+    public $block;
 
     /**
      * The block content.
      *
      * @var string
      */
-    protected $content;
+    public $content;
 
     /**
      * The block preview status.
      *
      * @var bool
      */
-    protected $preview;
+    public $preview;
 
     /**
      * The current post ID.
      *
      * @param int
      */
-    protected $post;
+    public $post;
 
     /**
      * The block prefix.
      *
      * @var string
      */
-    protected $prefix = 'acf/';
+    public $prefix = 'acf/';
 
     /**
      * The block namespace.
      *
      * @var string
      */
-    protected $namespace;
+    public $namespace;
 
     /**
      * The display name of the block.
      *
      * @var string
      */
-    protected $name = '';
+    public $name = '';
 
     /**
      * The slug of the block.
      *
      * @var string
      */
-    protected $slug = '';
+    public $slug = '';
 
     /**
      * The description of the block.
      *
      * @var string
      */
-    protected $description = '';
+    public $description = '';
 
     /**
      * The category this block belongs to.
      *
      * @var string
      */
-    protected $category = '';
+    public $category = '';
 
     /**
      * The icon of this block.
      *
      * @var string|array
      */
-    protected $icon = '';
+    public $icon = '';
 
     /**
      * An array of keywords the block will be found under.
      *
      * @var array
      */
-    protected $keywords = [];
+    public $keywords = [];
 
     /**
      * An array of post types the block will be available to.
      *
      * @var array
      */
-    protected $post_types = ['post', 'page'];
+    public $post_types = ['post', 'page'];
 
     /**
      * The default display mode of the block that is shown to the user.
      *
      * @var string
      */
-    protected $mode = 'preview';
+    public $mode = 'preview';
 
     /**
      * The block alignment class.
      *
      * @var string
      */
-    protected $align = '';
+    public $align = '';
 
     /**
      * Features supported by the block.
      *
      * @var array
      */
-    protected $supports = [];
+    public $supports = [];
 
     /**
      * Compose and register the defined field groups with ACF.
@@ -131,11 +131,30 @@ abstract class Block extends Composer
             return;
         }
 
+        if (! empty($this->name) && empty($this->slug)) {
+            $this->slug = Str::slug($this->name);
+        }
+
         if (empty($this->namespace)) {
             $this->namespace = Str::start($this->slug, $this->prefix);
         }
 
         parent::compose(function () {
+            acf_register_block([
+                'name' => $this->slug,
+                'title' => $this->name,
+                'description' => $this->description,
+                'category' => $this->category,
+                'icon' => $this->icon,
+                'keywords' => $this->keywords,
+                'post_types' => $this->post_types,
+                'mode' => $this->mode,
+                'align' => $this->align,
+                'supports' => $this->supports,
+                'enqueue_assets' => [$this,'assets'],
+                'render_callback' => [$this, 'render']
+            ]);
+
             if (! Arr::has($this->fields, 'location.0.0')) {
                 Arr::set($this->fields, 'location.0.0', [
                     'param' => 'block',
@@ -144,21 +163,6 @@ abstract class Block extends Composer
                 ]);
             }
         });
-
-        acf_register_block([
-            'name' => $this->slug,
-            'title' => $this->name,
-            'description' => $this->description,
-            'category' => $this->category,
-            'icon' => $this->icon,
-            'keywords' => $this->keywords,
-            'post_types' => $this->post_types,
-            'mode' => $this->mode,
-            'align' => $this->align,
-            'supports' => $this->supports,
-            'enqueue_assets' => [$this,'assets'],
-            'render_callback' => [$this, 'render']
-        ]);
     }
 
     /**

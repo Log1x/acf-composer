@@ -4,7 +4,16 @@
 ![CircleCI](https://img.shields.io/circleci/build/gh/Log1x/acf-composer.svg?style=flat-square)
 ![Packagist](https://img.shields.io/packagist/dt/log1x/acf-composer.svg?style=flat-square)
 
-ACF Composer assists you with ~~creating~~ **composing** Fields, Blocks, Widgets, and Options pages using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
+ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using ACF, [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
+
+## Features
+
+- Encourages clean structuring for creating fields with Sage 10 and ACF.
+- Instantly generate working fields, blocks, widgets, and option pages. Batteries included.
+- Blocks and widgets are fully rendered using Blade with a native Sage 10 feel for passing view data.
+- 🔥 Automatically hooks widgets with `WP_Widget` making them instantly ready to use.
+- 🔥 Automatically sets field location on blocks, widgets, and option pages.
+- 🔥 Globally set default field type and field group settings. No more repeating `['ui' => 1]` on every select field.
 
 ## Requirements
 
@@ -23,15 +32,13 @@ $ composer require log1x/acf-composer
 
 ## Usage
 
-### Basic Usage
+### Getting Started
 
 Start by publishing the `config/acf.php` configuration file using Acorn:
 
 ```bash
 $ wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerServiceProvider"
 ```
-
-Looking at the config file, you will see documented keys for configuration. When creating a field group, simply add each class to their respective type.
 
 ### Generating a Field
 
@@ -45,17 +52,15 @@ $ wp acorn acf:field Example
 
 This will create `src/Fields/Example.php` which is where you will create and manage your field group.
 
-Once finished, follow up by uncommenting `App\Fields\Example::class` in `acf.php`.
-
 Taking a glance at the generated `Example.php` stub, you will notice that it has a simple list configured.
 
-Proceed by checking the `Add Post` for the field to ensure things are working as intended– and then [get to work](https://github.com/Log1x/acf-builder-cheatsheet).
+Proceed by checking the `Add Post` for the field to ensure things are working as intended – and then [get to work](https://github.com/Log1x/acf-builder-cheatsheet).
 
 ### Generating a Block
 
-Generating a Block is generally the same as generating a field as seen above.
+Generating a block is generally the same as generating a field as seen above.
 
-Start by creating the Block field using Acorn:
+Start by creating the block field using Acorn:
 
 ```bash
 $ wp acorn acf:block Example
@@ -67,31 +72,27 @@ Optionally, you may pass `--full` to the command above to generate a stub that c
 $ wp acorn acf:block Example --full
 ```
 
-Once finished, similarily to Fields, simply add the new block, `App\Blocks\Example::class` to `config/acf.php`.
+When running the block generator, one difference to a generic field is an accompanied `View` is generated in the `resources/views/blocks` directory.
 
-When running the ACF Block generator, one difference to a generic field is an accompanied View is generated in the `resources/views/blocks` directory.
-
-Like the Field generator, the example block contains a simple list repeater and is working out of the box.
+Like the field generator, the example block contains a simple list repeater and is working out of the box.
 
 ### Generating a Widget
 
-Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade. Batteries included.
+Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade, as well as registered with `WP_Widget` which is usually rather annoying.
 
-Start by creating a Widget using Acorn:
+Start by creating a widget using Acorn:
 
 ```bash
 $ wp acorn acf:widget Example
 ```
 
-Once finished, simply add `App\Widgets\Example::class` to the `widgets` key in `config/acf.php`
-
-Similar to Blocks, Widgets are also accompanied by a view generated in `resources/views/widgets`.
+Similar to blocks, widgets are also accompanied by a view generated in `resources/views/widgets`.
 
 Out of the box, the Example widget is ready to go and should appear in the backend.
 
 ### Generating an Options Page
 
-When creating a field, you have the option of populating the `$options` variable automatically generating an Options page as well as setting the field group location.
+Creating an options page is similar to creating a regular field group in additional to a few configuration options available to customize the page (most of which, are optional.)
 
 Start by creating an option page using Acorn:
 
@@ -99,11 +100,21 @@ Start by creating an option page using Acorn:
 $ wp acorn acf:options Options
 ```
 
-Outside of the `$options` variable being set in the options stub, it is effectively a Field. That being said, `App\Fields\Options::class` should be registered in the `fields` array in `config/acf.php`
+Optionally, you may pass `--full` to the command above to generate a stub that contains additional configuration examples.
 
-### Field Defaults
+```bash
+$ wp acorn acf:options Options --full
+```
 
-One of my personal favorite features of ACF Composer is thet ability to set field defaults.
+Once finished, you should see an Options page appear in the backend.
+
+All fields registered will have their location automatically set to this page.
+
+## Default Field Settings
+
+One of my personal favorite features of ACF Composer is the ability to set field type as well as field group defaults. Any globally set default can of course be over-ridden by simply setting it on the individual field.
+
+### Global
 
 Taking a look at `config/acf.php`, you will see a few pre-configured defaults:
 
@@ -116,7 +127,22 @@ Taking a look at `config/acf.php`, you will see a few pre-configured defaults:
 
 When setting `trueFalse` and `select` to have their `ui` set to `1` by default, it is no longer necessary to repeatedly set `'ui' => 1` on your fields. This takes effect globally and can be overridden by simply setting a different value on a field.
 
-Here are a few others that I personally use:
+### Field Group
+
+It is also possible to define defaults on individual field groups. This is done by simply defining `$defaults` in your field class.
+
+```php
+/**
+ * Default field type settings.
+ *
+ * @return array
+ */
+protected $defaults = ['ui' => 0];
+```
+
+### My Defaults
+
+Here are a couple defaults I personally use. Any prefixed with `acfe_` are related to [ACF Extended](https://www.acf-extended.com/).
 
 ```php
 'defaults' => [
