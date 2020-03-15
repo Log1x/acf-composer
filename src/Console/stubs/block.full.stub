@@ -83,6 +83,16 @@ class DummyClass extends Block
     }
 
     /**
+     * Assets to be enqueued when rendering the block.
+     *
+     * @return void
+     */
+    public function enqueue()
+    {
+        //
+    }
+
+    /**
      * The block field group.
      *
      * @return array
