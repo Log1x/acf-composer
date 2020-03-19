@@ -2,10 +2,7 @@
 
 namespace Log1x\AcfComposer\Console;
 
-use Illuminate\Support\Str;
-use Roots\Acorn\Console\Commands\GeneratorCommand;
-
-class BlockMakeCommand extends GeneratorCommand
+class BlockMakeCommand extends MakeCommand
 {
     /**
      * The console command signature.
@@ -30,46 +27,11 @@ class BlockMakeCommand extends GeneratorCommand
     protected $type = 'Block';
 
     /**
-     * Execute the console command.
+     * The view stub used when generated.
      *
-     * @return mixed
+     * @var string|bool
      */
-    public function handle()
-    {
-        parent::handle();
-
-        $view = Str::finish(str_replace('.', '/', Str::slug(head($this->argument('name')))), '.blade.php');
-        $path = $this->getPaths() . '/blocks/';
-
-        if (! $this->files->exists($path)) {
-            $this->files->makeDirectory($path);
-        }
-
-        if ($this->files->exists($path . $view)) {
-            return $this->error("File {$view} already exists!");
-        }
-
-        $this->files->put($path . $view, $this->files->get($this->getViewStub()));
-
-        return $this->info("File {$view} created.");
-    }
-
-    /**
-     * Return the applications view path.
-     *
-     * @param  string $name
-     * @return void
-     */
-    protected function getPaths()
-    {
-        $paths = $this->app['view.finder']->getPaths();
-
-        if (count($paths) === 1) {
-            return head($paths);
-        }
-
-        return $this->choice('Where do you want to create the view(s)?', $paths, head($paths));
-    }
+    protected $view = 'repeater';
 
     /**
      * Get the stub file for the generator.
@@ -83,26 +45,5 @@ class BlockMakeCommand extends GeneratorCommand
         }
 
         return __DIR__ . '/stubs/block.stub';
-    }
-
-    /**
-     * Get the view stub file for the generator.
-     *
-     * @return string
-     */
-    protected function getViewStub()
-    {
-        return __DIR__ . '/stubs/views/repeater.stub';
-    }
-
-    /**
-     * Get the default namespace for the class.
-     *
-     * @param  string  $rootNamespace
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return $rootNamespace . '\Blocks';
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Log1x\AcfComposer\Console;
 
-use Roots\Acorn\Console\Commands\GeneratorCommand;
-
-class FieldMakeCommand extends GeneratorCommand
+class FieldMakeCommand extends MakeCommand
 {
     /**
      * The console command signature.
@@ -35,16 +33,5 @@ class FieldMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return __DIR__ . '/stubs/field.stub';
-    }
-
-    /**
-     * Get the default namespace for the class.
-     *
-     * @param  string  $rootNamespace
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return $rootNamespace . '\Fields';
     }
 }

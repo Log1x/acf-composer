@@ -2,9 +2,7 @@
 
 namespace Log1x\AcfComposer\Console;
 
-use Roots\Acorn\Console\Commands\GeneratorCommand;
-
-class OptionsMakeCommand extends GeneratorCommand
+class OptionsMakeCommand extends MakeCommand
 {
     /**
      * The console command signature.
@@ -20,6 +18,13 @@ class OptionsMakeCommand extends GeneratorCommand
      * @var string
      */
     protected $description = 'Create a new ACF options page.';
+
+    /**
+     * The label used when referencing the command type.
+     *
+     * @var string
+     */
+    protected $label = 'Option Page';
 
     /**
      * The type of class being generated.
@@ -40,16 +45,5 @@ class OptionsMakeCommand extends GeneratorCommand
         }
 
         return __DIR__ . '/stubs/options.stub';
-    }
-
-    /**
-     * Get the default namespace for the class.
-     *
-     * @param  string  $rootNamespace
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return $rootNamespace . '\Fields';
     }
 }
