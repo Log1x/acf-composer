@@ -179,7 +179,7 @@ class MakeCommand extends GeneratorCommand
      */
     protected function logo()
     {
-       $this->line("<fg=blue;options=bold>
+        $this->line("<fg=blue;options=bold>
              __
   __ _  ___ / _| ___ ___  _ __ ___  _ __   ___  ___  ___ _ __
  / _` |/ __| |_ / __/ _ \| '_ ` _ \| '_ \ / _ \/ __|/ _ \ '__|
