@@ -41,8 +41,6 @@ class MakeCommand extends GeneratorCommand
         );
         $this->category = strtolower($this->category ?: $this->type);
 
-        $this->logo();
-
         $this->task("Generating {$this->type} class", function () {
             if (
                 (! $this->hasOption('force') ||
@@ -150,8 +148,8 @@ class MakeCommand extends GeneratorCommand
      */
     protected function summary()
     {
-        $this->line("\n🎉 Your {$this->category} <fg=blue;options=bold>{$this->getNameInput()}</> has been composed.\n");
-        $this->line("<fg=blue;options=bold>Class</>\n    ⮑  <fg=blue>{$this->shortenPath($this->path)}</>");
+        $this->line("\n🎉 Your {$this->category} <fg=blue;options=bold>{$this->getNameInput()}</> has been composed.");
+        $this->line("\n<fg=blue;options=bold>Class</>\n    ⮑  <fg=blue>{$this->shortenPath($this->path)}</>");
 
         if ($this->view) {
             $this->line("\n<fg=blue;options=bold>View</>\n    ⮑  <fg=blue>{$this->shortenPath($this->getView(), 4)}</>");
@@ -170,23 +168,6 @@ class MakeCommand extends GeneratorCommand
         return collect(
             explode('/', $path)
         )->slice(-$i, $i)->implode('/');
-    }
-
-    /**
-     * Return the ACF Composer logo.
-     *
-     * @return void
-     */
-    protected function logo()
-    {
-        $this->line("<fg=blue;options=bold>
-             __
-  __ _  ___ / _| ___ ___  _ __ ___  _ __   ___  ___  ___ _ __
- / _` |/ __| |_ / __/ _ \| '_ ` _ \| '_ \ / _ \/ __|/ _ \ '__|
-| (_| | (__|  _| (_| (_) | | | | | | |_) | (_) \__ \  __/ |
- \__,_|\___|_|  \___\___/|_| |_| |_| .__/ \___/|___/\___|_|
-                                   |_|
-        </>\n");
     }
 
     /**
