@@ -100,6 +100,7 @@ abstract class Widget extends Composer
             public function __construct($widget)
             {
                 $this->widget = $widget;
+                $this->view = Str::finish('views.widgets.', $this->widget->slug);
 
                 parent::__construct(
                     $this->widget->slug,
@@ -117,6 +118,10 @@ abstract class Widget extends Composer
              */
             public function widget($args, $instance)
             {
+                if (empty($this->widget->view($this->view))) {
+                    return;
+                }
+
                 echo Arr::get($args, 'before_widget');
 
                 if (! empty($this->widget->title())) {

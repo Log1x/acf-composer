@@ -69,6 +69,6 @@ class DummyClass extends Widget
      */
     public function items()
     {
-        return get_field('items') ?: [];
+        return get_field('items', $this->widget->id) ?: [];
     }
 }
