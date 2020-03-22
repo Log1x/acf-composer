@@ -148,11 +148,17 @@ class MakeCommand extends GeneratorCommand
      */
     protected function summary()
     {
-        $this->line("\n🎉 Your {$this->category} <fg=blue;options=bold>{$this->getNameInput()}</> has been composed.");
-        $this->line("\n<fg=blue;options=bold>Class</>\n    ⮑  <fg=blue>{$this->shortenPath($this->path)}</>");
+        $this->line('');
+        $this->line("🎉 Your {$this->category} <fg=blue;options=bold>{$this->getNameInput()}</> has been composed.");
+        $this->line('');
+
+        $this->line('<fg=blue;options=bold>Class</>');
+        $this->line("    ⮑  <fg=blue>{$this->shortenPath($this->path)}</>");
 
         if ($this->view) {
-            $this->line("\n<fg=blue;options=bold>View</>\n    ⮑  <fg=blue>{$this->shortenPath($this->getView(), 4)}</>");
+            $this->line('');
+            $this->line('<fg=blue;options=bold>View</>');
+            $this->line("    ⮑  <fg=blue>{$this->shortenPath($this->getView(), 4)}</>");
         }
     }
 
