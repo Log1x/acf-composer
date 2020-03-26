@@ -2,10 +2,10 @@
 
 namespace DummyNamespace;
 
-use Log1x\AcfComposer\Options;
+use Log1x\AcfComposer\Options as Field;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class DummyClass extends Options
+class DummyClass extends Field
 {
     /**
      * The option page menu name.
@@ -43,7 +43,7 @@ class DummyClass extends Options
     public $autoload = true;
 
     /**
-     * The field group.
+     * The option page field group.
      *
      * @return array
      */
