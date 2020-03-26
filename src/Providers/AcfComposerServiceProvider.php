@@ -18,7 +18,8 @@ class AcfComposerServiceProvider extends ServiceProvider
     protected $paths = [
         'Fields',
         'Blocks',
-        'Widgets'
+        'Widgets',
+        'Options'
     ];
 
     /**
