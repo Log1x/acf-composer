@@ -8,9 +8,9 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 
 ## Features
 
-- Encourages clean structuring for creating fields with Sage 10 and ACF.
-- Instantly generate working fields, blocks, widgets, and option pages. Batteries included.
-- Blocks and widgets are fully rendered using Blade with a native Sage 10 feel for passing view data.
+- 🔥 Encourages clean structuring for creating fields with Sage 10 and ACF.
+- 🔥 Instantly generate working fields, blocks, widgets, and option pages. Batteries included.
+- 🔥 Blocks and widgets are fully rendered using Blade with a native Sage 10 feel for passing view data.
 - 🔥 Automatically hooks widgets with `WP_Widget` making them instantly ready to use.
 - 🔥 Automatically sets field location on blocks, widgets, and option pages.
 - 🔥 Globally set default field type and field group settings. No more repeating `['ui' => 1]` on every select field.
@@ -148,10 +148,13 @@ Here are a couple defaults I personally use. Any prefixed with `acfe_` are relat
 'defaults' => [
     'fieldGroup' => ['instruction_placement' => 'acfe_instructions_tooltip'],
     'repeater' => ['layout' => 'block', 'acfe_repeater_stylised_button' => 1],
+    'trueFalse' => ['ui' => 1],
+    'select' => ['ui' => 1],
     'postObject' => ['ui' => 1, 'return_format' => 'object'],
     'accordion' => ['multi_expand' => 1],
     'group' => ['layout' => 'table', 'acfe_group_modal' => 1],
     'tab' => ['placement' => 'left'],
+    'sidebar_selector' => ['default_value' => 'sidebar-primary', 'allow_null' => 1]
 ],
 ```
 
