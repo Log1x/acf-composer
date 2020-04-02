@@ -142,7 +142,7 @@ class Composer
             Str::finish(
                 Str::finish($path, '/'),
                 Str::finish($name, '.php')
-            ),
+            )
         );
     }
 
