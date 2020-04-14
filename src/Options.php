@@ -50,6 +50,61 @@ abstract class Options extends Composer
     public $autoload = true;
 
     /**
+     * The icon used in the menu.
+     *
+     * @var string
+     */
+    public $icon = null;
+
+    /**
+     * Whether to redirect to child pages.
+     *
+     * @var boolean
+     */
+    public $redirect = true;
+
+    /**
+     * The parent of this page, if any.
+     *
+     * @var string
+     */
+    public $parent = null;
+
+    /**
+     * Where to save this data.
+     *
+     * Accepts strings (i.e. 'user_2') or numbers (i.e. 123).
+     *
+     * @link https://www.advancedcustomfields.com/resources/get_field/
+     * @var string|int
+     */
+    public $post = 'options';
+
+    /**
+     * Text displayed on the option page submit button.
+     *
+     * Implemented as a function to support localization.
+     *
+     * @return string
+     */
+    public function updateButton()
+    {
+        return __('Update', 'acf');
+    }
+
+    /**
+     * Text displayed above form after submission.
+     *
+     * Implemented as a function to support localization.
+     *
+     * @return string
+     */
+    public function updatedMessage()
+    {
+        return __("Options Updated", 'acf');
+    }
+
+    /**
      * Compose and register the defined field groups with ACF.
      *
      * @param  callback $callback
@@ -76,7 +131,13 @@ abstract class Options extends Composer
                 'page_title' => $this->title,
                 'capability' => $this->capability,
                 'position' => $this->position,
-                'autoload' => $this->autoload
+                'autoload' => $this->autoload,
+                'icon_url' => $this->icon,
+                'parent_slug' => $this->parent,
+                'redirect' => $this->redirect,
+                'post_id' => $this->post,
+                'update_button' => $this->updateButton(),
+                'updated_message' => $this->updatedMessage()
             ]);
 
             if (! Arr::has($this->fields, 'location.0.0')) {
