@@ -43,6 +43,61 @@ class DummyClass extends Field
     public $autoload = true;
 
     /**
+     * The icon used in the menu.
+     *
+     * @var string
+     */
+    public $icon = null;
+
+    /**
+     * Whether to redirect to child pages.
+     *
+     * @var boolean
+     */
+    public $redirect = true;
+
+    /**
+     * The parent of this page, if any.
+     *
+     * @var string
+     */
+    public $parent = null;
+
+    /**
+     * Where to save this data.
+     *
+     * Accepts strings (i.e. 'user_2') or numbers (i.e. 123).
+     *
+     * @link https://www.advancedcustomfields.com/resources/get_field/
+     * @var string|int
+     */
+    public $post = 'options';
+
+    /**
+     * Text displayed on the option page submit button.
+     *
+     * Implemented as a function to support localization.
+     *
+     * @return string
+     */
+    public function updateButton()
+    {
+        return __('Update', 'acf');
+    }
+
+    /**
+     * Text displayed above form after submission.
+     *
+     * Implemented as a function to support localization.
+     *
+     * @return string
+     */
+    public function updatedMessage()
+    {
+        return __("DummyClass Updated", 'acf');
+    }
+
+    /**
      * The option page field group.
      *
      * @return array
