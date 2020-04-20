@@ -94,7 +94,7 @@ class DummyClass extends Field
      */
     public function updatedMessage()
     {
-        return __('Options Updated', 'acf');
+        return __('DummyClass Updated', 'acf');
     }
 
     /**
