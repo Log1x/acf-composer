@@ -43,6 +43,34 @@ abstract class Options extends Composer
     public $position = PHP_INT_MAX;
 
     /**
+     * The slug of another admin page to be used as a parent.
+     *
+     * @var string
+     */
+    public $parent = null;
+
+    /**
+     * The option page menu icon.
+     *
+     * @var string
+     */
+    public $icon = null;
+
+    /**
+     * Redirect to the first child page if one exists.
+     *
+     * @var boolean
+     */
+    public $redirect = true;
+
+    /**
+     * The post ID to save and load values from.
+     *
+     * @var string|int
+     */
+    public $post = 'options';
+
+    /**
      * The option page autoload setting.
      *
      * @var bool
@@ -50,40 +78,7 @@ abstract class Options extends Composer
     public $autoload = true;
 
     /**
-     * The icon used in the menu.
-     *
-     * @var string
-     */
-    public $icon = null;
-
-    /**
-     * Whether to redirect to child pages.
-     *
-     * @var boolean
-     */
-    public $redirect = true;
-
-    /**
-     * The parent of this page, if any.
-     *
-     * @var string
-     */
-    public $parent = null;
-
-    /**
-     * Where to save this data.
-     *
-     * Accepts strings (i.e. 'user_2') or numbers (i.e. 123).
-     *
-     * @link https://www.advancedcustomfields.com/resources/get_field/
-     * @var string|int
-     */
-    public $post = 'options';
-
-    /**
-     * Text displayed on the option page submit button.
-     *
-     * Implemented as a function to support localization.
+     * Localized text displayed on the submit button.
      *
      * @return string
      */
@@ -93,15 +88,13 @@ abstract class Options extends Composer
     }
 
     /**
-     * Text displayed above form after submission.
-     *
-     * Implemented as a function to support localization.
+     * Localized text displayed after form submission.
      *
      * @return string
      */
     public function updatedMessage()
     {
-        return __("Options Updated", 'acf');
+        return __('Options Updated', 'acf');
     }
 
     /**
@@ -131,11 +124,11 @@ abstract class Options extends Composer
                 'page_title' => $this->title,
                 'capability' => $this->capability,
                 'position' => $this->position,
-                'autoload' => $this->autoload,
-                'icon_url' => $this->icon,
                 'parent_slug' => $this->parent,
+                'icon_url' => $this->icon,
                 'redirect' => $this->redirect,
                 'post_id' => $this->post,
+                'autoload' => $this->autoload,
                 'update_button' => $this->updateButton(),
                 'updated_message' => $this->updatedMessage()
             ]);
