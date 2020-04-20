@@ -43,11 +43,59 @@ abstract class Options extends Composer
     public $position = PHP_INT_MAX;
 
     /**
+     * The slug of another admin page to be used as a parent.
+     *
+     * @var string
+     */
+    public $parent = null;
+
+    /**
+     * The option page menu icon.
+     *
+     * @var string
+     */
+    public $icon = null;
+
+    /**
+     * Redirect to the first child page if one exists.
+     *
+     * @var boolean
+     */
+    public $redirect = true;
+
+    /**
+     * The post ID to save and load values from.
+     *
+     * @var string|int
+     */
+    public $post = 'options';
+
+    /**
      * The option page autoload setting.
      *
      * @var bool
      */
     public $autoload = true;
+
+    /**
+     * Localized text displayed on the submit button.
+     *
+     * @return string
+     */
+    public function updateButton()
+    {
+        return __('Update', 'acf');
+    }
+
+    /**
+     * Localized text displayed after form submission.
+     *
+     * @return string
+     */
+    public function updatedMessage()
+    {
+        return __('Options Updated', 'acf');
+    }
 
     /**
      * Compose and register the defined field groups with ACF.
@@ -76,7 +124,13 @@ abstract class Options extends Composer
                 'page_title' => $this->title,
                 'capability' => $this->capability,
                 'position' => $this->position,
-                'autoload' => $this->autoload
+                'parent_slug' => $this->parent,
+                'icon_url' => $this->icon,
+                'redirect' => $this->redirect,
+                'post_id' => $this->post,
+                'autoload' => $this->autoload,
+                'update_button' => $this->updateButton(),
+                'updated_message' => $this->updatedMessage()
             ]);
 
             if (! Arr::has($this->fields, 'location.0.0')) {
