@@ -138,7 +138,7 @@ class Composer
             '.' => '/'
         ]);
 
-        include $this->app->path(
+        return include $this->app->path(
             Str::finish(
                 Str::finish($path, '/'),
                 Str::finish($name, '.php')
