@@ -19,7 +19,7 @@ class AcfComposerServiceProvider extends ServiceProvider
         'Fields',
         'Blocks',
         'Widgets',
-        'Options'
+        'Options',
     ];
 
     /**
@@ -50,7 +50,9 @@ class AcfComposerServiceProvider extends ServiceProvider
                 is_subclass_of($composer, Composer::class) &&
                 ! (new ReflectionClass($composer))->isAbstract()
             ) {
-                (new $composer($this->app))->compose();
+                add_filter('init', function () use ($composer) {
+                    (new $composer($this->app))->compose();
+                });
             }
         }
     }
@@ -67,8 +69,9 @@ class AcfComposerServiceProvider extends ServiceProvider
         ], 'acf-composer');
 
         $this->commands([
-            \Log1x\AcfComposer\Console\FieldMakeCommand::class,
             \Log1x\AcfComposer\Console\BlockMakeCommand::class,
+            \Log1x\AcfComposer\Console\FieldMakeCommand::class,
+            \Log1x\AcfComposer\Console\PartialMakeCommand::class,
             \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
             \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
         ]);
