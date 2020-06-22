@@ -5,9 +5,16 @@ namespace Log1x\AcfComposer;
 abstract class Partial extends Composer
 {
     /**
-     * Autoload and compose the current field group.
+     * Compose and register the defined field groups with ACF.
      *
-     * @var bool
+     * @return void
      */
-    protected $autoload = false;
+    public function compose()
+    {
+        if (empty($this->fields())) {
+            return;
+        }
+
+        return $this->fields();
+    }
 }

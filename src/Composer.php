@@ -32,13 +32,6 @@ abstract class Composer implements ComposerContract
     protected $defaults = [];
 
     /**
-     * Autoload and compose the current field group.
-     *
-     * @var bool
-     */
-    protected $autoload = true;
-
-    /**
      * Create a new Composer instance.
      *
      * @param  \Roots\Acorn\Application $app

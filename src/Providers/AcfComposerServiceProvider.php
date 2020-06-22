@@ -5,6 +5,7 @@ namespace Log1x\AcfComposer\Providers;
 use ReflectionClass;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Composer;
+use Log1x\AcfComposer\Partial;
 use Roots\Acorn\ServiceProvider;
 use Symfony\Component\Finder\Finder;
 
@@ -48,6 +49,7 @@ class AcfComposerServiceProvider extends ServiceProvider
 
             if (
                 is_subclass_of($composer, Composer::class) &&
+                ! is_subclass_of($composer, Partial::class) &&
                 ! (new ReflectionClass($composer))->isAbstract()
             ) {
                 add_filter('init', function () use ($composer) {
