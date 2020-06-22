@@ -2,7 +2,7 @@
 
 namespace Log1x\AcfComposer\Contracts;
 
-interface Composer
+interface Fields
 {
     /**
      * The field group.

@@ -15,10 +15,6 @@ abstract class Field extends Composer
             return;
         }
 
-        if ($this->defaults->has('field_group')) {
-            $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
-        }
-
         $this->register();
     }
 }

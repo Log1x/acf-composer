@@ -52,9 +52,7 @@ class AcfComposerServiceProvider extends ServiceProvider
                 ! is_subclass_of($composer, Partial::class) &&
                 ! (new ReflectionClass($composer))->isAbstract()
             ) {
-                add_filter('init', function () use ($composer) {
-                    (new $composer($this->app))->compose();
-                });
+                (new $composer($this->app))->compose();
             }
         }
     }

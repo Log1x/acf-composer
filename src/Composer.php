@@ -3,12 +3,12 @@
 namespace Log1x\AcfComposer;
 
 use ReflectionClass;
-use Log1x\AcfComposer\Contracts\Composer as ComposerContract;
+use Log1x\AcfComposer\Contracts\Fields as FieldsContract;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Roots\Acorn\Application;
 use Illuminate\Support\Str;
 
-abstract class Composer implements ComposerContract
+abstract class Composer implements FieldsContract
 {
     /**
      * The application instance.
@@ -50,6 +50,10 @@ abstract class Composer implements ComposerContract
         $this->fields = is_a($this->fields = $this->fields(), FieldsBuilder::class)
             ? $this->fields->build()
             : $this->fields;
+
+        if ($this->defaults->has('field_group')) {
+            $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
+        }
     }
 
     /**
@@ -64,9 +68,11 @@ abstract class Composer implements ComposerContract
             return;
         }
 
-        return acf_add_local_field_group(
-            $this->build($this->fields)
-        );
+        add_filter('init', function () {
+            return acf_add_local_field_group(
+                $this->build($this->fields)
+            );
+        });
     }
 
     /**
@@ -119,9 +125,7 @@ abstract class Composer implements ComposerContract
     }
 
     /**
-     * The field group.
-     *
-     * @return \StoutLogic\AcfBuilder\FieldsBuilder|array
+     * {@inheritdoc}
      */
     public function fields()
     {

@@ -5,8 +5,9 @@ namespace Log1x\AcfComposer;
 use WP_Widget;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Contracts\Widget as WidgetContract;
 
-abstract class Widget extends Composer
+abstract class Widget extends Composer implements WidgetContract
 {
     use Traits\HasView;
 
@@ -46,9 +47,7 @@ abstract class Widget extends Composer
     public $description = '';
 
     /**
-     * The widget title.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function title()
     {
@@ -62,7 +61,7 @@ abstract class Widget extends Composer
      */
     public function compose()
     {
-        if (empty($this->name)) {
+        if (empty($this->fields) || empty($this->name)) {
             return;
         }
 
@@ -89,9 +88,8 @@ abstract class Widget extends Composer
 
         add_filter('widgets_init', function () {
             register_widget($this->widget());
+            $this->register();
         });
-
-        $this->register();
     }
 
     /**
@@ -140,7 +138,7 @@ abstract class Widget extends Composer
                         Arr::get($args, 'before_title'),
                         $this->widget->title(),
                         Arr::get($args, 'after_title')
-                    ])->implode('');
+                    ])->implode(PHP_EOL);
                 }
 
                 echo $this->widget->view(
