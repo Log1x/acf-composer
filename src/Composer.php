@@ -3,11 +3,12 @@
 namespace Log1x\AcfComposer;
 
 use ReflectionClass;
+use Log1x\AcfComposer\Contracts\Composer as ComposerContract;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Roots\Acorn\Application;
 use Illuminate\Support\Str;
 
-class Composer
+abstract class Composer implements ComposerContract
 {
     /**
      * The application instance.
@@ -66,7 +67,7 @@ class Composer
      */
     protected function register()
     {
-        if (! $this->autoload || empty($this->fields)) {
+        if (empty($this->fields)) {
             return;
         }
 
@@ -102,12 +103,12 @@ class Composer
     }
 
     /**
-     * Get field partial if it exists.
+     * Returns a field partial instance.
      *
      * @param  mixed $partial
      * @return mixed
      */
-    public function get($partial = null)
+    protected function get($partial = null)
     {
         if (
             ! is_subclass_of($partial, Partial::class) ||
@@ -121,7 +122,7 @@ class Composer
             ) : $partial;
         }
 
-        return (new $partial($this->app))->fields();
+        return (new $partial($this->app))->compose();
     }
 
     /**

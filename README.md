@@ -56,6 +56,10 @@ Taking a glance at the generated `Example.php` stub, you will notice that it has
 
 Proceed by checking the `Add Post` for the field to ensure things are working as intended – and then [get to work](https://github.com/Log1x/acf-builder-cheatsheet).
 
+### Generating a Field Partial
+
+...
+
 ### Generating a Block
 
 Generating a block is generally the same as generating a field as seen above.
