@@ -23,13 +23,6 @@ class MakeCommand extends GeneratorCommand
     protected $path;
 
     /**
-     * The category (type) of block.
-     *
-     * @var string|bool
-     */
-    protected $category = false;
-
-    /**
      * Execute the console command.
      *
      * @return mixed
@@ -39,7 +32,8 @@ class MakeCommand extends GeneratorCommand
         $this->path = $this->getPath(
             $this->qualifyClass($this->getNameInput())
         );
-        $this->category = strtolower($this->category ?: $this->type);
+
+        $this->type = str_replace('/', ' ', strtolower($this->type));
 
         $this->task("Generating {$this->type} class", function () {
             if (
@@ -149,7 +143,7 @@ class MakeCommand extends GeneratorCommand
     protected function summary()
     {
         $this->line('');
-        $this->line("🎉 Your {$this->category} <fg=blue;options=bold>{$this->getNameInput()}</> has been composed.");
+        $this->line("🎉 Your {$this->type} <fg=blue;options=bold>{$this->getNameInput()}</> has been composed.");
         $this->line('');
 
         $this->line('<fg=blue;options=bold>Class</>');

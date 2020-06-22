@@ -23,7 +23,7 @@ class PartialMakeCommand extends MakeCommand
      *
      * @var string
      */
-    protected $type = 'Field\\Partial';
+    protected $type = 'Fields\\Partials';
 
     /**
      * Get the stub file for the generator.
