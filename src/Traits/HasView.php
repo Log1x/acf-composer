@@ -2,6 +2,8 @@
 
 namespace Log1x\AcfComposer\Traits;
 
+use Illuminate\Support\Str;
+
 trait HasView
 {
     /**
