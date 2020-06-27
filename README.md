@@ -55,7 +55,7 @@ Taking a glance at the generated `Example.php` stub, you will notice that it has
 ```php
 <?php
 
-namespace App\fields;
+namespace App\Fields;
 
 use Log1x\AcfComposer\Field;
 use StoutLogic\AcfBuilder\FieldsBuilder;
@@ -90,13 +90,43 @@ Proceed by checking the `Add Post` for the field to ensure things are working as
 
 A field partial consists of a field group that can be re-used and/or added to existing field groups.
 
-To start, let's generate a partial called _Items_ that we can use in the _Example_ field we generated above.
+To start, let's generate a partial called _ListItems_ that we can use in the _Example_ field we generated above.
 
 ```bash
-$ wp acorn acf:partial Items
+$ wp acorn acf:partial ListItems
 ```
 
-Looking at `Items.php`, you will see out of the box it consists of an identical list repeater as seen in your generated field.
+```php
+<?php
+
+namespace App\Fields\Partials;
+
+use Log1x\AcfComposer\Partial;
+
+class ListItems extends Partial
+{
+    /**
+     * The field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $list = new FieldsBuilder('list');
+
+        $list
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $list;
+    }
+}
+```
+
+Looking at `ListItems.php`, you will see out of the box it consists of an identical list repeater as seen in your generated field.
+
+A key difference to note compared to an ordinary field is the omitting of `->build()` instead returning the `FieldsBuilder` instance itself.
 
 This can be utilized in our _Example_ field by passing the `::class` constant to `->addFields()`.
 
@@ -107,6 +137,7 @@ namespace App\Fields;
 
 use Log1x\AcfComposer\Field;
 use StoutLogic\AcfBuilder\FieldsBuilder;
+use App\Fields\Partials\ListItems;
 
 class Example extends Field
 {
@@ -123,7 +154,7 @@ class Example extends Field
             ->setLocation('post_type', '==', 'post');
 
         $example
-            ->addFields(Partials\Items::class);
+            ->addFields(ListItems::class);
 
         return $example->build();
     }

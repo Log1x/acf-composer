@@ -7,7 +7,7 @@ use Log1x\AcfComposer\Partial;
 class DummyClass extends Partial
 {
     /**
-     * The field group.
+     * The partial field group.
      *
      * @return array
      */
