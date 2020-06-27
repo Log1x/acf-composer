@@ -33,7 +33,7 @@ class MakeCommand extends GeneratorCommand
             $this->qualifyClass($this->getNameInput())
         );
 
-        $this->type = str_replace('/', ' ', strtolower($this->type));
+        $this->type = str_replace('/', ' ', $this->type);
 
         $this->task("Generating {$this->type} class", function () {
             if (
