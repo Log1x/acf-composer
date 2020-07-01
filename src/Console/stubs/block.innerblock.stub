@@ -36,40 +36,13 @@ class DummyClass extends Block
     public $icon = 'star-half';
 
     /**
-     * The block keywords.
-     *
-     * @var array
-     */
-    public $keywords = [];
-
-    /**
-     * The block post types.
-     *
-     * @var array
-     */
-    public $post_types = ['post', 'page'];
-
-    /**
-     * The default block mode.
-     *
-     * @var string
-     */
-    public $mode = 'preview';
-
-    /**
-     * The block alignment.
-     *
-     * @var string
-     */
-    public $align = '';
-
-    /**
      * The block features.
      *
      * @var array
      */
     public $supports = [
         '__experimental_jsx' => true,
+        'mode' => false,
     ];
 
     /**
@@ -82,16 +55,6 @@ class DummyClass extends Block
         return [
             'items' => $this->items(),
         ];
-    }
-
-    /**
-     * Assets to be enqueued when rendering the block.
-     *
-     * @return void
-     */
-    public function enqueue()
-    {
-        //
     }
 
     /**

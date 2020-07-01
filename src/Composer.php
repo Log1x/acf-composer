@@ -110,18 +110,18 @@ abstract class Composer implements FieldsContract
     protected function get($partial = null)
     {
         if (
-            ! is_subclass_of($partial, Partial::class) ||
-            (new ReflectionClass($partial))->isAbstract()
+            is_subclass_of($partial, Partial::class) &&
+            ! (new ReflectionClass($partial))->isAbstract()
         ) {
-            return is_string($partial) ? include $this->app->path(
-                Str::finish(
-                    Str::finish($path, '/'),
-                    Str::finish($name, '.php')
-                )
-            ) : $partial;
+            return (new $partial($this->app))->compose();
         }
 
-        return (new $partial($this->app))->compose();
+        return is_string($partial) ? include $this->app->path(
+            Str::finish(
+                Str::finish($path, '/'),
+                Str::finish($name, '.php')
+            )
+        ) : $partial;
     }
 
     /**
