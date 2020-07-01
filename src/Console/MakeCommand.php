@@ -33,42 +33,9 @@ class MakeCommand extends GeneratorCommand
         $this->path = $this->getPath($this->name);
         $this->type = str_replace('/', ' ', $this->type);
 
-        $this->task("Generating {$this->type} class", function () {
-            if ($this->isReservedName($this->getNameInput())) {
-                throw new Exception('The name "' . $this->getNameInput() . '" is reserved by PHP.');
-            }
-
-            if (
-                (! $this->hasOption('force') ||
-                ! $this->option('force')) &&
-                $this->alreadyExists($this->getNameInput())
-            ) {
-                throw new Exception('File `' . $this->shortenPath($this->path) . '` already exists.');
-            }
-
-            $this->makeDirectory($this->path);
-
-            $this->files->put($this->path, $this->sortImports($this->buildClass($this->name)));
-        });
-
-        $this->task("Generating {$this->type} view", function () {
-            if (! $this->view) {
-                return;
-            }
-
-            if (
-                (! $this->hasOption('force') ||
-                ! $this->option('force')) &&
-                $this->files->exists($this->getView())
-            ) {
-                return;
-            }
-
-            $this->makeDirectory($this->getViewPath());
-            $this->files->put($this->getView(), $this->files->get($this->getViewStub()));
-        });
-
-        return $this->summary();
+        $this->createClass();
+        $this->createView();
+        $this->summary();
     }
 
     /**
@@ -111,6 +78,10 @@ class MakeCommand extends GeneratorCommand
      */
     protected function getViewStub()
     {
+        if (empty($this->view)) {
+            return;
+        }
+
         return __DIR__ . "/stubs/views/{$this->view}.stub";
     }
 
@@ -143,6 +114,62 @@ class MakeCommand extends GeneratorCommand
     }
 
     /**
+     * Return the Composer type.
+     *
+     * @return void
+     */
+    protected function getType()
+    {
+        return collect(explode('\\', $this->type))->map(function ($value) {
+            return Str::singular(Str::slug($value));
+        })->implode(' ');
+    }
+
+    /**
+     * Create a Composer class.
+     *
+     * @return void
+     */
+    protected function createClass()
+    {
+        if ($this->isReservedName($this->getNameInput())) {
+            throw new Exception('The name "' . $this->getNameInput() . '" is reserved by PHP.');
+        }
+
+        if (
+            (! $this->hasOption('force') ||
+            ! $this->option('force')) &&
+            $this->alreadyExists($this->getNameInput())
+        ) {
+            throw new Exception('File `' . $this->shortenPath($this->path) . '` already exists.');
+        }
+
+        $this->makeDirectory($this->path);
+
+        $this->files->put($this->path, $this->sortImports($this->buildClass($this->name)));
+    }
+
+    /**
+     * Create the Composer view.
+     *
+     * @return void
+     */
+    protected function createView()
+    {
+        if (
+            empty($this->getViewStub()) ||
+            (! $this->hasOption('force') ||
+            ! $this->option('force')) &&
+            $this->files->exists($this->getView())
+        ) {
+            return;
+        }
+
+        $this->makeDirectory($this->getViewPath());
+        $this->files->put($this->getView(), $this->files->get($this->getViewStub()));
+    }
+
+    /**
      * Return the block creation summary.
      *
      * @return void
@@ -150,16 +177,11 @@ class MakeCommand extends GeneratorCommand
     protected function summary()
     {
         $this->line('');
-        $this->line("🎉 Your {$this->type} <fg=blue;options=bold>{$this->getNameInput()}</> has been composed.");
-        $this->line('');
-
-        $this->line('<fg=blue;options=bold>Class</>');
-        $this->line("    ⮑  <fg=blue>{$this->shortenPath($this->path)}</>");
+        $this->line("🎉 <fg=blue;options=bold>{$this->getNameInput()}</> {$this->getType()} successfully composed.");
+        $this->line("     ⮑  <fg=blue>{$this->shortenPath($this->path)}</>");
 
         if ($this->view) {
-            $this->line('');
-            $this->line('<fg=blue;options=bold>View</>');
-            $this->line("    ⮑  <fg=blue>{$this->shortenPath($this->getView(), 4)}</>");
+            $this->line("     ⮑  <fg=blue>{$this->shortenPath($this->getView(), 4)}</>");
         }
     }
 
