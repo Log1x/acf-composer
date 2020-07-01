@@ -8,7 +8,7 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 class DummyClass extends Block
 {
     /**
-     * The name of the block.
+     * The block name.
      *
      * @var string
      */
@@ -29,7 +29,7 @@ class DummyClass extends Block
     public $category = 'common';
 
     /**
-     * The icon of this block.
+     * The block icon.
      *
      * @var string|array
      */

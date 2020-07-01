@@ -8,63 +8,63 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 class DummyClass extends Block
 {
     /**
-     * The display name of the block.
+     * The block name.
      *
      * @var string
      */
     public $name = 'DummyClass';
 
     /**
-     * The description of the block.
+     * The block description.
      *
      * @var string
      */
     public $description = 'Lorem ipsum...';
 
     /**
-     * The category this block belongs to.
+     * The block category.
      *
      * @var string
      */
     public $category = 'common';
 
     /**
-     * The icon of this block.
+     * The block icon.
      *
      * @var string|array
      */
     public $icon = 'star-half';
 
     /**
-     * An array of block keywords.
+     * The block keywords.
      *
      * @var array
      */
     public $keywords = [];
 
     /**
-     * An array of post types the block will be available to.
+     * The block post types.
      *
      * @var array
      */
     public $post_types = ['post', 'page'];
 
     /**
-     * The default display mode of the block that is shown to the user.
+     * The default block mode.
      *
      * @var string
      */
     public $mode = 'preview';
 
     /**
-     * The block alignment class.
+     * The block alignment.
      *
      * @var string
      */
     public $align = '';
 
     /**
-     * Features supported by the block.
+     * The block features.
      *
      * @var array
      */
