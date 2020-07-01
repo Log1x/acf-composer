@@ -2,29 +2,29 @@
 
 namespace Log1x\AcfComposer\Console;
 
-class FieldMakeCommand extends MakeCommand
+class PartialMakeCommand extends MakeCommand
 {
     /**
      * The console command signature.
      *
      * @var string
      */
-    protected $signature = 'acf:field {name* : The name of the field group}
-                                      {--force : Overwrite any existing files}';
+    protected $signature = 'acf:partial {name* : The name of the partial field group}
+                                        {--force : Overwrite any existing files}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new ACF field group.';
+    protected $description = 'Create a new ACF field group partial.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Field';
+    protected $type = 'Fields\\Partials';
 
     /**
      * Get the stub file for the generator.
@@ -33,6 +33,6 @@ class FieldMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/stubs/field.stub';
+        return __DIR__ . '/stubs/partial.stub';
     }
 }

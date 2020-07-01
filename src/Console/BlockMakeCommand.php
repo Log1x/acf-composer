@@ -10,7 +10,8 @@ class BlockMakeCommand extends MakeCommand
      * @var string
      */
     protected $signature = 'acf:block {name* : The name of the block}
-                            {--full : Scaffold a block that contains the complete configuration.}';
+                            {--full : Scaffold a block that contains the complete configuration.}
+                            {--force : Overwrite any existing files}';
 
     /**
      * The console command description.

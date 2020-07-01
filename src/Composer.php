@@ -2,10 +2,13 @@
 
 namespace Log1x\AcfComposer;
 
+use ReflectionClass;
+use Log1x\AcfComposer\Contracts\Fields as FieldsContract;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 use Roots\Acorn\Application;
 use Illuminate\Support\Str;
 
-class Composer
+abstract class Composer implements FieldsContract
 {
     /**
      * The application instance.
@@ -17,14 +20,14 @@ class Composer
     /**
      * The field groups.
      *
-     * @var array
+     * @var \StoutLogic\AcfBuilder\FieldsBuilder|array
      */
     protected $fields;
 
     /**
-     * Default field type settings.
+     * The default field settings.
      *
-     * @return array
+     * @var \Illuminate\Support\Collection|array
      */
     protected $defaults = [];
 
@@ -44,35 +47,35 @@ class Composer
             return [Str::snake($key) => $value];
         });
 
-        $this->fields = $this->fields();
+        $this->fields = is_a($this->fields = $this->fields(), FieldsBuilder::class)
+            ? $this->fields->build()
+            : $this->fields;
+
+        if ($this->defaults->has('field_group')) {
+            $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
+        }
     }
 
     /**
-     * Compose and register the defined field groups with ACF.
+     * Register the field group with Advanced Custom Fields.
      *
      * @param  callback $callback
      * @return void
      */
-    public function compose($callback = null)
+    protected function register()
     {
-        if (! $this->fields) {
+        if (empty($this->fields)) {
             return;
         }
 
-        add_action('init', function () use ($callback) {
-            if ($this->defaults->has('field_group')) {
-                $this->fields = array_merge($this->fields, $this->defaults->get('field_group'));
-            }
-
-            if ($callback) {
-                $callback();
-            }
-
-            acf_add_local_field_group($this->build());
-        }, 20);
+        add_filter('init', function () {
+            return acf_add_local_field_group(
+                $this->build($this->fields)
+            );
+        });
     }
 
-   /**
+    /**
      * Build the field group with the default field type settings.
      *
      * @param  array $fields
@@ -80,7 +83,7 @@ class Composer
      */
     protected function build($fields = [])
     {
-        return collect($fields ?: $this->fields)->map(function ($value, $key) {
+        return collect($fields)->map(function ($value, $key) {
             if (
                 ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
                 (Str::is($key, 'type') && ! $this->defaults->has($value))
@@ -99,69 +102,32 @@ class Composer
     }
 
     /**
-     * Render the view using Blade.
+     * Returns a field partial instance.
      *
-     * @param  string $view
-     * @param  array $with
-     * @return string
-     */
-    public function view($view, $with = [])
-    {
-        $view = $this->app->resourcePath(
-            Str::finish(
-                str_replace('.', '/', basename($view, '.blade.php')),
-                '.blade.php'
-            )
-        );
-
-        if (! file_exists($view)) {
-            return;
-        }
-
-        return $this->app->make('view')->file(
-            $view,
-            array_merge($this->with(), $with)
-        )->render();
-    }
-
-    /**
-     * Get field partial if it exists.
-     *
-     * @param  string $name
-     * @param  string $path
+     * @param  mixed $partial
      * @return mixed
      */
-    public function get($name = '', $path = 'Fields')
+    protected function get($partial = null)
     {
-        $name = strtr($name, [
-            '.php' => '',
-            '.' => '/'
-        ]);
+        if (
+            ! is_subclass_of($partial, Partial::class) ||
+            (new ReflectionClass($partial))->isAbstract()
+        ) {
+            return is_string($partial) ? include $this->app->path(
+                Str::finish(
+                    Str::finish($path, '/'),
+                    Str::finish($name, '.php')
+                )
+            ) : $partial;
+        }
 
-        return include $this->app->path(
-            Str::finish(
-                Str::finish($path, '/'),
-                Str::finish($name, '.php')
-            )
-        );
+        return (new $partial($this->app))->compose();
     }
 
     /**
-     * The field group.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function fields()
-    {
-        return [];
-    }
-
-    /**
-     * Data to be passed to the rendered view.
-     *
-     * @return array
-     */
-    public function with()
     {
         return [];
     }

@@ -98,12 +98,11 @@ abstract class Options extends Composer
     }
 
     /**
-     * Compose and register the defined field groups with ACF.
+     * Compose and register the defined ACF field groups.
      *
-     * @param  callback $callback
      * @return void
      */
-    public function compose($callback = null)
+    public function compose()
     {
         if (empty($this->name)) {
             return;
@@ -117,29 +116,29 @@ abstract class Options extends Composer
             $this->title = $this->name;
         }
 
-        parent::compose(function () {
-            acf_add_options_page([
-                'menu_title' => $this->name,
-                'menu_slug' => $this->slug,
-                'page_title' => $this->title,
-                'capability' => $this->capability,
-                'position' => $this->position,
-                'parent_slug' => $this->parent,
-                'icon_url' => $this->icon,
-                'redirect' => $this->redirect,
-                'post_id' => $this->post,
-                'autoload' => $this->autoload,
-                'update_button' => $this->updateButton(),
-                'updated_message' => $this->updatedMessage()
+        if (! Arr::has($this->fields, 'location.0.0')) {
+            Arr::set($this->fields, 'location.0.0', [
+                'param' => 'options_page',
+                'operator' => '==',
+                'value' => $this->slug,
             ]);
+        }
 
-            if (! Arr::has($this->fields, 'location.0.0')) {
-                Arr::set($this->fields, 'location.0.0', [
-                    'param' => 'options_page',
-                    'operator' => '==',
-                    'value' => $this->slug,
-                ]);
-            }
-        });
+        acf_add_options_page([
+            'menu_title' => $this->name,
+            'menu_slug' => $this->slug,
+            'page_title' => $this->title,
+            'capability' => $this->capability,
+            'position' => $this->position,
+            'parent_slug' => $this->parent,
+            'icon_url' => $this->icon,
+            'redirect' => $this->redirect,
+            'post_id' => $this->post,
+            'autoload' => $this->autoload,
+            'update_button' => $this->updateButton(),
+            'updated_message' => $this->updatedMessage()
+        ]);
+
+        return $this->register();
     }
 }

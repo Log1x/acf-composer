@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 
 abstract class Block extends Composer
 {
+    use Concerns\HasView;
+
     /**
      * The block properties.
      *
@@ -127,12 +129,22 @@ abstract class Block extends Composer
     public $supports = [];
 
     /**
-     * Compose and register the defined field groups with ACF.
+     * Assets enqueued when rendering the block.
      *
-     * @param  callback $callback
      * @return void
      */
-    public function compose($callback = null)
+    public function enqueue()
+    {
+        //
+    }
+
+    /**
+     * Compose the defined field group and register it
+     * with Advanced Custom Fields.
+     *
+     * @return void
+     */
+    public function compose()
     {
         if (empty($this->name)) {
             return;
@@ -144,6 +156,14 @@ abstract class Block extends Composer
 
         if (empty($this->namespace)) {
             $this->namespace = Str::start($this->slug, $this->prefix);
+        }
+
+        if (! Arr::has($this->fields, 'location.0.0')) {
+            Arr::set($this->fields, 'location.0.0', [
+                'param' => 'block',
+                'operator' => '==',
+                'value' => $this->namespace,
+            ]);
         }
 
         acf_register_block([
@@ -165,15 +185,7 @@ abstract class Block extends Composer
             }
         ]);
 
-        parent::compose(function () {
-            if (! Arr::has($this->fields, 'location.0.0')) {
-                Arr::set($this->fields, 'location.0.0', [
-                    'param' => 'block',
-                    'operator' => '==',
-                    'value' => $this->namespace,
-                ]);
-            }
-        });
+        $this->register();
     }
 
     /**
@@ -201,15 +213,5 @@ abstract class Block extends Composer
             Str::finish('views.blocks.', $this->slug),
             ['block' => $this]
         );
-    }
-
-    /**
-     * Assets enqueued when rendering the block.
-     *
-     * @return void
-     */
-    public function enqueue()
-    {
-        //
     }
 }

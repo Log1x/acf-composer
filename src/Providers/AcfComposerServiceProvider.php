@@ -5,6 +5,7 @@ namespace Log1x\AcfComposer\Providers;
 use ReflectionClass;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Composer;
+use Log1x\AcfComposer\Partial;
 use Roots\Acorn\ServiceProvider;
 use Symfony\Component\Finder\Finder;
 
@@ -19,7 +20,7 @@ class AcfComposerServiceProvider extends ServiceProvider
         'Fields',
         'Blocks',
         'Widgets',
-        'Options'
+        'Options',
     ];
 
     /**
@@ -48,6 +49,7 @@ class AcfComposerServiceProvider extends ServiceProvider
 
             if (
                 is_subclass_of($composer, Composer::class) &&
+                ! is_subclass_of($composer, Partial::class) &&
                 ! (new ReflectionClass($composer))->isAbstract()
             ) {
                 (new $composer($this->app))->compose();
@@ -64,11 +66,12 @@ class AcfComposerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
-        ], 'acf-composer');
+        ], 'config');
 
         $this->commands([
-            \Log1x\AcfComposer\Console\FieldMakeCommand::class,
             \Log1x\AcfComposer\Console\BlockMakeCommand::class,
+            \Log1x\AcfComposer\Console\FieldMakeCommand::class,
+            \Log1x\AcfComposer\Console\PartialMakeCommand::class,
             \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
             \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
         ]);

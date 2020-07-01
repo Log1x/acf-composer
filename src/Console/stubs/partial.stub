@@ -1,0 +1,25 @@
+<?php
+
+namespace DummyNamespace;
+
+use Log1x\AcfComposer\Partial;
+
+class DummyClass extends Partial
+{
+    /**
+     * The partial field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $DummyCamel = new FieldsBuilder('DummySnake');
+
+        $DummyCamel
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $DummyCamel;
+    }
+}

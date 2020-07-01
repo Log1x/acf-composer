@@ -8,14 +8,14 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 class DummyClass extends Widget
 {
     /**
-     * The display name of the widget.
+     * The widget name.
      *
      * @var string
      */
     public $name = 'DummyClass';
 
     /**
-     * The description of the widget.
+     * The widget description.
      *
      * @var string
      */
@@ -34,11 +34,12 @@ class DummyClass extends Widget
     }
 
     /**
-     * The title of the widget.
+     * The widget title.
      *
      * @return string
      */
-    public function title() {
+    public function title()
+    {
         return get_field('title', $this->widget->id);
     }
 

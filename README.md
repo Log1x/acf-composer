@@ -42,19 +42,124 @@ $ wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerSer
 
 ### Generating a Field
 
-Generating fields with ACF Composer is done using Acorn.
-
-To create your first field, start by running the following command from your theme directory:
+To create your first field, start by running the following generator command from your theme directory:
 
 ```bash
 $ wp acorn acf:field Example
 ```
 
-This will create `src/Fields/Example.php` which is where you will create and manage your field group.
+This will create `src/Fields/Example.php` which is where you will create and manage your first field group.
 
 Taking a glance at the generated `Example.php` stub, you will notice that it has a simple list configured.
 
+```php
+<?php
+
+namespace App\Fields;
+
+use Log1x\AcfComposer\Field;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class Example extends Field
+{
+    /**
+     * The field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $example = new FieldsBuilder('example');
+
+        $example
+            ->setLocation('post_type', '==', 'post');
+
+        $example
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $example->build();
+    }
+}
+```
+
 Proceed by checking the `Add Post` for the field to ensure things are working as intended – and then [get to work](https://github.com/Log1x/acf-builder-cheatsheet).
+
+### Generating a Field Partial
+
+A field partial consists of a field group that can be re-used and/or added to existing field groups.
+
+To start, let's generate a partial called _ListItems_ that we can use in the _Example_ field we generated above.
+
+```bash
+$ wp acorn acf:partial ListItems
+```
+
+```php
+<?php
+
+namespace App\Fields\Partials;
+
+use Log1x\AcfComposer\Partial;
+
+class ListItems extends Partial
+{
+    /**
+     * The field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $list = new FieldsBuilder('list');
+
+        $list
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $list;
+    }
+}
+```
+
+Looking at `ListItems.php`, you will see out of the box it consists of an identical list repeater as seen in your generated field.
+
+A key difference to note compared to an ordinary field is the omitting of `->build()` instead returning the `FieldsBuilder` instance itself.
+
+This can be utilized in our _Example_ field by passing the `::class` constant to `->addFields()`.
+
+```php
+<?php
+
+namespace App\Fields;
+
+use Log1x\AcfComposer\Field;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+use App\Fields\Partials\ListItems;
+
+class Example extends Field
+{
+    /**
+     * The field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $example = new FieldsBuilder('example');
+
+        $example
+            ->setLocation('post_type', '==', 'post');
+
+        $example
+            ->addFields(ListItems::class);
+
+        return $example->build();
+    }
+}
+```
 
 ### Generating a Block
 
@@ -66,6 +171,85 @@ Start by creating the block field using Acorn:
 $ wp acorn acf:block Example
 ```
 
+```php
+<?php
+
+namespace App\Blocks;
+
+use Log1x\AcfComposer\Block;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class Example extends Block
+{
+    /**
+     * The name of the block.
+     *
+     * @var string
+     */
+    public $name = 'Example';
+
+    /**
+     * The block description.
+     *
+     * @var string
+     */
+    public $description = 'Lorem ipsum...';
+
+    /**
+     * The block category.
+     *
+     * @var string
+     */
+    public $category = 'common';
+
+    /**
+     * The icon of this block.
+     *
+     * @var string|array
+     */
+    public $icon = 'star-half';
+
+    /**
+     * Data to be passed to the block before rendering.
+     *
+     * @return array
+     */
+    public function with()
+    {
+        return [
+            'items' => $this->items(),
+        ];
+    }
+
+    /**
+     * The block field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $example = new FieldsBuilder('example');
+
+        $example
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $example->build();
+    }
+
+    /**
+     * Return the items field.
+     *
+     * @return array
+     */
+    public function items()
+    {
+        return get_field('items') ?: [];
+    }
+}
+```
+
 Optionally, you may pass `--full` to the command above to generate a stub that contains additional configuration examples.
 
 ```bash
@@ -73,6 +257,18 @@ $ wp acorn acf:block Example --full
 ```
 
 When running the block generator, one difference to a generic field is an accompanied `View` is generated in the `resources/views/blocks` directory.
+
+```php
+@if ($items)
+  <ul>
+    @foreach ($items as $item)
+      <li>{{ $item['item'] }}</li>
+    @endforeach
+  </ul>
+@else
+  <p>No items found!</p>
+@endif
+```
 
 Like the field generator, the example block contains a simple list repeater and is working out of the box.
 
@@ -86,7 +282,96 @@ Start by creating a widget using Acorn:
 $ wp acorn acf:widget Example
 ```
 
+```php
+<?php
+
+namespace App\widgets;
+
+use Log1x\AcfComposer\Widget;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class Example extends Widget
+{
+    /**
+     * The display name of the widget.
+     *
+     * @var string
+     */
+    public $name = 'Example';
+
+    /**
+     * The description of the widget.
+     *
+     * @var string
+     */
+    public $description = 'Lorem ipsum...';
+
+    /**
+     * Data to be passed to the widget before rendering.
+     *
+     * @return array
+     */
+    public function with()
+    {
+        return [
+            'items' => $this->items(),
+        ];
+    }
+
+    /**
+     * The title of the widget.
+     *
+     * @return string
+     */
+    public function title() {
+        return get_field('title', $this->widget->id);
+    }
+
+    /**
+     * The widget field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $example = new FieldsBuilder('example');
+
+        $example
+            ->addText('title');
+
+        $example
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $example->build();
+    }
+
+    /**
+     * Return the items field.
+     *
+     * @return array
+     */
+    public function items()
+    {
+        return get_field('items', $this->widget->id) ?: [];
+    }
+}
+```
+
 Similar to blocks, widgets are also accompanied by a view generated in `resources/views/widgets`.
+
+```php
+@if ($items)
+  <ul>
+    @foreach ($items as $item)
+      <li>{{ $item['item'] }}</li>
+    @endforeach
+  </ul>
+@else
+  <p>No items found!</p>
+@endif
+```
 
 Out of the box, the Example widget is ready to go and should appear in the backend.
 
@@ -97,7 +382,50 @@ Creating an options page is similar to creating a regular field group in additio
 Start by creating an option page using Acorn:
 
 ```bash
-$ wp acorn acf:options Options
+$ wp acorn acf:options Example
+```
+
+```php
+<?php
+
+namespace App\Options;
+
+use Log1x\AcfComposer\Options as Field;
+use StoutLogic\AcfBuilder\FieldsBuilder;
+
+class Example extends Field
+{
+    /**
+     * The option page menu name.
+     *
+     * @var string
+     */
+    public $name = 'Example';
+
+    /**
+     * The option page document title.
+     *
+     * @var string
+     */
+    public $title = 'Example | Options';
+
+    /**
+     * The option page field group.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        $example = new FieldsBuilder('example');
+
+        $example
+            ->addRepeater('items')
+                ->addText('item')
+            ->endRepeater();
+
+        return $example->build();
+    }
+}
 ```
 
 Optionally, you may pass `--full` to the command above to generate a stub that contains additional configuration examples.

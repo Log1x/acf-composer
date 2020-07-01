@@ -2,7 +2,7 @@
 
 namespace Log1x\AcfComposer;
 
-abstract class Field extends Composer
+abstract class Partial extends Composer
 {
     /**
      * Compose and register the defined field groups with ACF.
@@ -11,10 +11,10 @@ abstract class Field extends Composer
      */
     public function compose()
     {
-        if (empty($this->fields)) {
+        if (empty($this->fields())) {
             return;
         }
 
-        $this->register();
+        return $this->fields();
     }
 }
