@@ -21,8 +21,6 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 
 - [Sage](https://github.com/roots/sage) >= 10.0
 - [ACF](https://www.advancedcustomfields.com/) >= 5.8.0
-- [PHP](https://secure.php.net/manual/en/install.php) >= 7.2.5
-- [Composer](https://getcomposer.org/download/)
 
 ## Installation
 
