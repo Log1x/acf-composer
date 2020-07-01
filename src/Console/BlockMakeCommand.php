@@ -2,6 +2,8 @@
 
 namespace Log1x\AcfComposer\Console;
 
+use Illuminate\Support\Str;
+
 class BlockMakeCommand extends MakeCommand
 {
     /**
@@ -41,8 +43,19 @@ class BlockMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
+        if (
+            ! empty($version = get_option('acf_version')) &&
+            Str::before($version, '-') >= '5.9.0'
+        ) {
+            $this->view = 'repeater-innerblock';
+        }
+
         if ($this->option('full')) {
             return __DIR__ . '/stubs/block.full.stub';
+        }
+
+        if (Str::before($version, '-') >= '5.9.0') {
+            return __DIR__ . '/stubs/block.innerblock.stub';
         }
 
         return __DIR__ . '/stubs/block.stub';
