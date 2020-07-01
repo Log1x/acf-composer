@@ -1,6 +1,6 @@
 <?php
 
-namespace Log1x\AcfComposer\Traits;
+namespace Log1x\AcfComposer\Concerns;
 
 use Illuminate\Support\Str;
 

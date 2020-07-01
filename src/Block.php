@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 abstract class Block extends Composer
 {
-    use Traits\HasView;
+    use Concerns\HasView;
 
     /**
      * The block properties.

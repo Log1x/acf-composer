@@ -9,7 +9,7 @@ use Log1x\AcfComposer\Contracts\Widget as WidgetContract;
 
 abstract class Widget extends Composer implements WidgetContract
 {
-    use Traits\HasView;
+    use Concerns\HasView;
 
     /**
      * The widget instance.
