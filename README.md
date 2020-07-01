@@ -10,6 +10,7 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 
 - 🔥 Encourages clean structuring for creating fields with Sage 10 and ACF.
 - 🔥 Instantly generate working fields, blocks, widgets, and option pages. Batteries included.
+- 🔥 Instantly generate re-usable field group partials.
 - 🔥 Blocks and widgets are fully rendered using Blade with a native Sage 10 feel for passing view data.
 - 🔥 Automatically hooks widgets with `WP_Widget` making them instantly ready to use.
 - 🔥 Automatically sets field location on blocks, widgets, and option pages.
