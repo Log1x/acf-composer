@@ -40,7 +40,7 @@ abstract class Widget extends Composer implements WidgetContract
     public $slug = '';
 
     /**
-     * The description of the widget.
+     * The widget description.
      *
      * @var string
      */
@@ -69,27 +69,24 @@ abstract class Widget extends Composer implements WidgetContract
             $this->slug = Str::slug($this->name);
         }
 
+        add_filter('widgets_init', function () {
+            register_widget($this->widget());
+        });
+
         $this->widget = (object) collect(
             Arr::get($GLOBALS, 'wp_registered_widgets')
         )->filter(function ($value) {
             return $value['name'] == $this->name;
         })->pop();
 
+        if (empty($this->widget) || empty($this->widget->id)) {
+            return;
+        }
+
         $this->widget->id = Str::start($this->widget->id, 'widget_');
         $this->id = $this->widget->id;
 
-        if (! Arr::has($this->fields, 'location.0.0')) {
-            Arr::set($this->fields, 'location.0.0', [
-                'param' => 'widget',
-                'operator' => '==',
-                'value' => $this->slug,
-            ]);
-        }
-
-        add_filter('widgets_init', function () {
-            register_widget($this->widget());
-            $this->register();
-        });
+        return $this->register();
     }
 
     /**
@@ -97,7 +94,7 @@ abstract class Widget extends Composer implements WidgetContract
      *
      * @return WP_Widget
      */
-    public function widget()
+    protected function widget()
     {
         return (new class ($this) extends WP_Widget {
             /**
@@ -119,7 +116,7 @@ abstract class Widget extends Composer implements WidgetContract
             }
 
             /**
-             * Render the widget for WordPress.
+             * Render the widget.
              *
              * @param  array $args
              * @param  array $instance

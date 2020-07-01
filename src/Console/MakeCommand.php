@@ -29,13 +29,15 @@ class MakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->path = $this->getPath(
-            $this->qualifyClass($this->getNameInput())
-        );
-
+        $this->name = $this->qualifyClass($this->getNameInput());
+        $this->path = $this->getPath($this->name);
         $this->type = str_replace('/', ' ', $this->type);
 
         $this->task("Generating {$this->type} class", function () {
+            if ($this->isReservedName($this->getNameInput())) {
+                throw new Exception('The name "' . $this->getNameInput() . '" is reserved by PHP.');
+            }
+
             if (
                 (! $this->hasOption('force') ||
                 ! $this->option('force')) &&
@@ -44,21 +46,26 @@ class MakeCommand extends GeneratorCommand
                 throw new Exception('File `' . $this->shortenPath($this->path) . '` already exists.');
             }
 
-            return parent::handle();
+            $this->makeDirectory($this->path);
+
+            $this->files->put($this->path, $this->sortImports($this->buildClass($this->name)));
         });
 
         $this->task("Generating {$this->type} view", function () {
-            if ($this->view) {
-                if (! $this->files->exists($this->getViewPath())) {
-                    $this->files->makeDirectory($this->getViewPath());
-                }
-
-                if ($this->files->exists($this->getView())) {
-                    return;
-                }
-
-                $this->files->put($this->getView(), $this->files->get($this->getViewStub()));
+            if (! $this->view) {
+                return;
             }
+
+            if (
+                (! $this->hasOption('force') ||
+                ! $this->option('force')) &&
+                $this->files->exists($this->getView())
+            ) {
+                return;
+            }
+
+            $this->makeDirectory($this->getViewPath());
+            $this->files->put($this->getView(), $this->files->get($this->getViewStub()));
         });
 
         return $this->summary();

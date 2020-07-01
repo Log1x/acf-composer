@@ -66,7 +66,7 @@ class AcfComposerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
-        ], 'acf-composer');
+        ], 'config');
 
         $this->commands([
             \Log1x\AcfComposer\Console\BlockMakeCommand::class,
