@@ -6,6 +6,8 @@
 
 ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
 
+![Screenshot](https://i.imgur.com/cFXqi35.png)
+
 ## Features
 
 - 🔥 Encourages clean structuring for creating fields with Sage 10 and ACF.
