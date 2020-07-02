@@ -16,8 +16,7 @@
   },
   "require": {
     "php": ">=7.2.5",
-    "doctrine/inflector": "^1.4",
-    "stoutlogic/acf-builder": "^1.9"
+    "stoutlogic/acf-builder": "^1.10"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.5"
