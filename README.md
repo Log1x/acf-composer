@@ -108,20 +108,20 @@ use Log1x\AcfComposer\Partial;
 class ListItems extends Partial
 {
     /**
-     * The field group.
+     * The partial field group.
      *
      * @return array
      */
     public function fields()
     {
-        $list = new FieldsBuilder('list');
+        $listItems = new FieldsBuilder('listItems');
 
-        $list
+        $listItems
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $list;
+        return $listItems;
     }
 }
 ```
@@ -184,7 +184,7 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 class Example extends Block
 {
     /**
-     * The name of the block.
+     * The block name.
      *
      * @var string
      */
@@ -205,7 +205,7 @@ class Example extends Block
     public $category = 'common';
 
     /**
-     * The icon of this block.
+     * The block icon.
      *
      * @var string|array
      */
@@ -295,14 +295,14 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 class Example extends Widget
 {
     /**
-     * The display name of the widget.
+     * The widget name.
      *
      * @var string
      */
     public $name = 'Example';
 
     /**
-     * The description of the widget.
+     * The widget description.
      *
      * @var string
      */
@@ -321,7 +321,7 @@ class Example extends Widget
     }
 
     /**
-     * The title of the widget.
+     * The widget title.
      *
      * @return string
      */
