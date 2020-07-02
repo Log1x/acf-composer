@@ -165,7 +165,10 @@ class MakeCommand extends GeneratorCommand
             return;
         }
 
-        $this->makeDirectory($this->getViewPath());
+        if (! $this->files->exists($this->getViewPath())) {
+            $this->files->makeDirectory($this->getViewPath());
+        }
+
         $this->files->put($this->getView(), $this->files->get($this->getViewStub()));
     }
 
