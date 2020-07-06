@@ -14,7 +14,7 @@ class AcfComposerServiceProvider extends ServiceProvider
     /**
      * Default Paths
      *
-     * @var array
+     * @var \Illuminate\Support\Collection
      */
     protected $paths = [
         'Fields',
@@ -35,11 +35,39 @@ class AcfComposerServiceProvider extends ServiceProvider
         })->filter(function ($path) {
             return is_dir($path);
         });
+    }
 
-        if ($this->paths->isEmpty() || ! function_exists('acf')) {
-            return;
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        if (function_exists('acf') && ! $this->paths->isEmpty()) {
+            $this->compose();
         }
 
+        $this->publishes([
+            __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
+        ], 'config');
+
+        $this->commands([
+            \Log1x\AcfComposer\Console\BlockMakeCommand::class,
+            \Log1x\AcfComposer\Console\FieldMakeCommand::class,
+            \Log1x\AcfComposer\Console\PartialMakeCommand::class,
+            \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
+            \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
+        ]);
+    }
+
+    /**
+     * Find and compose the available field groups.
+     *
+     * @return void
+     */
+    public function compose()
+    {
         foreach ((new Finder())->in($this->paths->all())->files() as $composer) {
             $composer = $this->app->getNamespace() . str_replace(
                 ['/', '.php'],
@@ -55,25 +83,5 @@ class AcfComposerServiceProvider extends ServiceProvider
                 (new $composer($this->app))->compose();
             }
         }
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->publishes([
-            __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
-        ], 'config');
-
-        $this->commands([
-            \Log1x\AcfComposer\Console\BlockMakeCommand::class,
-            \Log1x\AcfComposer\Console\FieldMakeCommand::class,
-            \Log1x\AcfComposer\Console\PartialMakeCommand::class,
-            \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
-            \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
-        ]);
     }
 }
