@@ -2,20 +2,36 @@
 
 namespace Log1x\AcfComposer;
 
-use ReflectionClass;
 use Log1x\AcfComposer\Contracts\Fields as FieldsContract;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Roots\Acorn\Application;
+use Roots\Acorn\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
 abstract class Composer implements FieldsContract
 {
+    use Concerns\RetrievesPartials;
+
     /**
      * The application instance.
      *
      * @var \Roots\Acorn\Application
      */
     protected $app;
+
+    /**
+     * The filesystem instance.
+     *
+     * @var \Roots\Acorn\Filesystem\Filesystem
+     */
+    protected $files;
+
+    /**
+     * The field keys.
+     *
+     * @var array
+     */
+    protected $keys = ['fields', 'sub_fields', 'layouts'];
 
     /**
      * The field groups.
@@ -40,6 +56,7 @@ abstract class Composer implements FieldsContract
     public function __construct(Application $app)
     {
         $this->app = $app;
+        $this->files = new Filesystem();
 
         $this->defaults = collect(
             $this->app->config->get('acf.defaults')
@@ -72,7 +89,7 @@ abstract class Composer implements FieldsContract
             return acf_add_local_field_group(
                 $this->build($this->fields)
             );
-        });
+        }, 20);
     }
 
     /**
@@ -85,43 +102,20 @@ abstract class Composer implements FieldsContract
     {
         return collect($fields)->map(function ($value, $key) {
             if (
-                ! Str::contains($key, ['fields', 'sub_fields', 'layouts']) ||
+                ! Str::contains($key, $this->keys) ||
                 (Str::is($key, 'type') && ! $this->defaults->has($value))
             ) {
                 return $value;
             }
 
             return array_map(function ($field) {
-                if (collect($field)->keys()->intersect(['fields', 'sub_fields', 'layouts'])->isNotEmpty()) {
+                if (collect($field)->keys()->intersect($this->keys)->isNotEmpty()) {
                     return $this->build($field);
                 }
 
                 return array_merge($this->defaults->get($field['type'], []), $field);
             }, $value);
         })->all();
-    }
-
-    /**
-     * Returns a field partial instance.
-     *
-     * @param  mixed $partial
-     * @return mixed
-     */
-    protected function get($partial = null)
-    {
-        if (
-            is_subclass_of($partial, Partial::class) &&
-            ! (new ReflectionClass($partial))->isAbstract()
-        ) {
-            return (new $partial($this->app))->compose();
-        }
-
-        return is_string($partial) ? include $this->app->path(
-            Str::finish(
-                Str::finish($path, '/'),
-                Str::finish($name, '.php')
-            )
-        ) : $partial;
     }
 
     /**
