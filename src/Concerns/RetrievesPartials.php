@@ -35,6 +35,6 @@ trait RetrievesPartials
                     '.php'
                 )
             )
-         ) ? include $partial : [];
+        ) ? include $partial : [];
     }
 }
