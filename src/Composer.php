@@ -85,11 +85,9 @@ abstract class Composer implements FieldsContract
             return;
         }
 
-        add_filter('init', function () {
-            return acf_add_local_field_group(
-                $this->build($this->fields)
-            );
-        }, 20);
+        return acf_add_local_field_group(
+            $this->build($this->fields)
+        );
     }
 
     /**

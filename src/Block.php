@@ -185,7 +185,7 @@ abstract class Block extends Composer
             }
         ]);
 
-        $this->register();
+        return $this->register();
     }
 
     /**

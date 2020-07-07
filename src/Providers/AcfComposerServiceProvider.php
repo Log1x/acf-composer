@@ -68,20 +68,22 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function compose()
     {
-        foreach ((new Finder())->in($this->paths->all())->files() as $composer) {
-            $composer = $this->app->getNamespace() . str_replace(
-                ['/', '.php'],
-                ['\\', ''],
-                Str::after($composer->getPathname(), $this->app->path() . DIRECTORY_SEPARATOR)
-            );
+        add_filter('init', function () {
+            foreach ((new Finder())->in($this->paths->all())->files() as $composer) {
+                $composer = $this->app->getNamespace() . str_replace(
+                    ['/', '.php'],
+                    ['\\', ''],
+                    Str::after($composer->getPathname(), $this->app->path() . DIRECTORY_SEPARATOR)
+                );
 
-            if (
-                is_subclass_of($composer, Composer::class) &&
-                ! is_subclass_of($composer, Partial::class) &&
-                ! (new ReflectionClass($composer))->isAbstract()
-            ) {
-                (new $composer($this->app))->compose();
+                if (
+                    is_subclass_of($composer, Composer::class) &&
+                    ! is_subclass_of($composer, Partial::class) &&
+                    ! (new ReflectionClass($composer))->isAbstract()
+                ) {
+                    (new $composer($this->app))->compose();
+                }
             }
-        }
+        }, 0);
     }
 }
