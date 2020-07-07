@@ -3,6 +3,7 @@
 namespace DummyNamespace;
 
 use Log1x\AcfComposer\Partial;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Partial
 {
