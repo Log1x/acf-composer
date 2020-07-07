@@ -104,6 +104,7 @@ $ wp acorn acf:partial ListItems
 namespace App\Fields\Partials;
 
 use Log1x\AcfComposer\Partial;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class ListItems extends Partial
 {
@@ -156,7 +157,7 @@ class Example extends Field
             ->setLocation('post_type', '==', 'post');
 
         $example
-            ->addFields(ListItems::class);
+            ->addFields($this->get(ListItems::class));
 
         return $example->build();
     }
