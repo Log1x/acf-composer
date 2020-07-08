@@ -288,7 +288,7 @@ $ wp acorn acf:widget Example
 ```php
 <?php
 
-namespace App\widgets;
+namespace App\Widgets;
 
 use Log1x\AcfComposer\Widget;
 use StoutLogic\AcfBuilder\FieldsBuilder;
