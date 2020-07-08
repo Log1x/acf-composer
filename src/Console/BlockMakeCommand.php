@@ -47,7 +47,7 @@ class BlockMakeCommand extends MakeCommand
             ! empty($version = get_option('acf_version')) &&
             Str::before($version, '-') >= '5.9.0'
         ) {
-            $this->view = 'repeater-innerblock';
+            $this->view = 'repeater.innerblocks';
         }
 
         if ($this->option('full')) {
@@ -55,7 +55,7 @@ class BlockMakeCommand extends MakeCommand
         }
 
         if (Str::before($version, '-') >= '5.9.0') {
-            return __DIR__ . '/stubs/block.innerblock.stub';
+            return __DIR__ . '/stubs/block.innerblocks.stub';
         }
 
         return __DIR__ . '/stubs/block.stub';
