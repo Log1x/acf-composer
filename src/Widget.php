@@ -71,7 +71,9 @@ abstract class Widget extends Composer implements WidgetContract
 
         add_filter('widgets_init', function () {
             register_widget($this->widget());
+        }, 20);
 
+        add_filter('acf/init', function () {
             $this->widget = (object) collect(
                 Arr::get($GLOBALS, 'wp_registered_widgets')
             )->filter(function ($value) {
@@ -102,7 +104,7 @@ abstract class Widget extends Composer implements WidgetContract
      *
      * @return WP_Widget
      */
-    protected function widget()
+    public function widget()
     {
         return (new class ($this) extends WP_Widget {
             /**
@@ -111,7 +113,7 @@ abstract class Widget extends Composer implements WidgetContract
              * @param  \Log1x\AcfComposer\Widget $widget
              * @return void
              */
-            public function __construct(Widget $widget)
+            public function __construct($widget)
             {
                 $this->widget = $widget;
                 $this->view = Str::finish('views.widgets.', $this->widget->slug);

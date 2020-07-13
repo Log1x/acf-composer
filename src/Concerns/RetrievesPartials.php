@@ -28,7 +28,7 @@ trait RetrievesPartials
             return $partial;
         }
 
-        return $this->files->exists(
+        return file_exists(
             $partial = $this->app->path(
                 Str::finish(
                     strtr($partial, ['.php' => '', '.' => '/']),

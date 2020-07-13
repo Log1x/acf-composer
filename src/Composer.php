@@ -5,7 +5,6 @@ namespace Log1x\AcfComposer;
 use Log1x\AcfComposer\Contracts\Fields as FieldsContract;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Roots\Acorn\Application;
-use Roots\Acorn\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
 abstract class Composer implements FieldsContract
@@ -18,13 +17,6 @@ abstract class Composer implements FieldsContract
      * @var \Roots\Acorn\Application
      */
     protected $app;
-
-    /**
-     * The filesystem instance.
-     *
-     * @var \Roots\Acorn\Filesystem\Filesystem
-     */
-    protected $files;
 
     /**
      * The field keys.
@@ -56,7 +48,6 @@ abstract class Composer implements FieldsContract
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->files = new Filesystem();
 
         $this->defaults = collect(
             $this->app->config->get('acf.defaults')
@@ -85,7 +76,7 @@ abstract class Composer implements FieldsContract
             return;
         }
 
-        return acf_add_local_field_group(
+        acf_add_local_field_group(
             $this->build($this->fields)
         );
     }
