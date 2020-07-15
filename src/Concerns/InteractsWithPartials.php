@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Log1x\AcfComposer\Partial;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-trait RetrievesPartials
+trait InteractsWithPartials
 {
     /**
      * Compose a field partial instance or file.

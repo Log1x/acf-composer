@@ -2,14 +2,15 @@
 
 namespace Log1x\AcfComposer;
 
-use Log1x\AcfComposer\Contracts\Fields as FieldsContract;
+use Log1x\AcfComposer\Contracts\Field as FieldContract;
+use Log1x\AcfComposer\Concerns\InteractsWithPartials;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Roots\Acorn\Application;
 use Illuminate\Support\Str;
 
-abstract class Composer implements FieldsContract
+abstract class Composer implements FieldContract
 {
-    use Concerns\RetrievesPartials;
+    use InteractsWithPartials;
 
     /**
      * The application instance.

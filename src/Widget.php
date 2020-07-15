@@ -6,10 +6,11 @@ use WP_Widget;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Contracts\Widget as WidgetContract;
+use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 
 abstract class Widget extends Composer implements WidgetContract
 {
-    use Concerns\HasView;
+    use InteractsWithBlade;
 
     /**
      * The widget instance.
@@ -47,14 +48,6 @@ abstract class Widget extends Composer implements WidgetContract
     public $description = '';
 
     /**
-     * {@inheritdoc}
-     */
-    public function title()
-    {
-        //
-    }
-
-    /**
      * Compose and register the defined ACF field groups.
      *
      * @return void
@@ -69,11 +62,7 @@ abstract class Widget extends Composer implements WidgetContract
             $this->slug = Str::slug($this->name);
         }
 
-        add_filter('widgets_init', function () {
-            register_widget($this->widget());
-        }, 20);
-
-        add_filter('acf/init', function () {
+        add_filter('init', function () {
             $this->widget = (object) collect(
                 Arr::get($GLOBALS, 'wp_registered_widgets')
             )->filter(function ($value) {
@@ -86,17 +75,21 @@ abstract class Widget extends Composer implements WidgetContract
 
             $this->widget->id = Str::start($this->widget->id, 'widget_');
             $this->id = $this->widget->id;
+
+            if (! Arr::has($this->fields, 'location.0.0')) {
+                Arr::set($this->fields, 'location.0.0', [
+                    'param' => 'widget',
+                    'operator' => '==',
+                    'value' => $this->slug,
+                ]);
+            }
+
+            $this->register();
         });
 
-        if (! Arr::has($this->fields, 'location.0.0')) {
-            Arr::set($this->fields, 'location.0.0', [
-                'param' => 'widget',
-                'operator' => '==',
-                'value' => $this->slug,
-            ]);
-        }
-
-        return $this->register();
+        add_filter('widgets_init', function () {
+            register_widget($this->widget());
+        }, 20);
     }
 
     /**
@@ -116,7 +109,6 @@ abstract class Widget extends Composer implements WidgetContract
             public function __construct($widget)
             {
                 $this->widget = $widget;
-                $this->view = Str::finish('views.widgets.', $this->widget->slug);
 
                 parent::__construct(
                     $this->widget->slug,
@@ -134,10 +126,6 @@ abstract class Widget extends Composer implements WidgetContract
              */
             public function widget($args, $instance)
             {
-                if (empty($this->widget->view($this->view))) {
-                    return;
-                }
-
                 echo Arr::get($args, 'before_widget');
 
                 if (! empty($this->widget->title())) {
@@ -149,7 +137,7 @@ abstract class Widget extends Composer implements WidgetContract
                 }
 
                 echo $this->widget->view(
-                    Str::finish('views.widgets.', $this->widget->slug),
+                    Str::finish('widgets.', $this->widget->slug),
                     ['widget' => $this->widget]
                 );
 

@@ -4,10 +4,12 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Contracts\Block as BlockContract;
+use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 
-abstract class Block extends Composer
+abstract class Block extends Composer implements BlockContract
 {
-    use Concerns\HasView;
+    use InteractsWithBlade;
 
     /**
      * The block properties.
@@ -204,7 +206,10 @@ abstract class Block extends Composer
         $this->preview = $preview;
         $this->post = $post;
         $this->classes = collect([
-            'slug' => Str::start(Str::slug($this->block->title), 'wp-block-'),
+            'slug' => Str::start(
+                Str::slug($this->block->title),
+                'wp-block-'
+            ),
             'align' => ! empty($this->block->align) ? Str::start($this->block->align, 'align') : false,
             'classes' => $this->block->className ?? false,
         ])->filter()->implode(' ');
