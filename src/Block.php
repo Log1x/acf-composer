@@ -93,6 +93,14 @@ abstract class Block extends Composer
      */
     public $icon = '';
 
+
+    /**
+     * An array of dummy data for previews
+     *s
+     * @var array
+     */
+    public $example_data = [];
+
     /**
      * An array of keywords the block will be found under.
      *
@@ -166,7 +174,7 @@ abstract class Block extends Composer
             ]);
         }
 
-        acf_register_block([
+        acf_register_block_type([
             'name' => $this->slug,
             'title' => $this->name,
             'description' => $this->description,
@@ -177,6 +185,12 @@ abstract class Block extends Composer
             'mode' => $this->mode,
             'align' => $this->align,
             'supports' => $this->supports,
+            'example' => [
+                'attributes' => [
+                    'mode' => 'preview',
+                    'data' => $this->example_data,
+                ]
+            ],
             'enqueue_assets' => function () {
                 return $this->enqueue();
             },
