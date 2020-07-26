@@ -35,6 +35,10 @@ class AcfComposerServiceProvider extends ServiceProvider
         })->filter(function ($path) {
             return is_dir($path);
         });
+
+        $this->app->singleton('AcfComposer', function () {
+            return $this->compose();
+        });
     }
 
     /**
@@ -44,8 +48,11 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (function_exists('acf') && ! $this->paths->isEmpty()) {
-            $this->compose();
+        if (
+            function_exists('acf') &&
+            ! $this->paths->isEmpty()
+        ) {
+            $this->app->make('AcfComposer');
         }
 
         $this->publishes([

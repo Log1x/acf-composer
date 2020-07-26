@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Log1x\AcfComposer\Partial;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-trait InteractsWithPartials
+trait InteractsWithPartial
 {
     /**
      * Compose a field partial instance or file.
@@ -19,7 +19,7 @@ trait InteractsWithPartials
     {
         if (
             is_subclass_of($partial, Partial::class) &&
-            ! (new ReflectionClass($partial))->isAbstract()
+            !(new ReflectionClass($partial))->isAbstract()
         ) {
             return (new $partial($this->app))->compose();
         }

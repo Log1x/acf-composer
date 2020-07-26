@@ -3,14 +3,14 @@
 namespace Log1x\AcfComposer;
 
 use Log1x\AcfComposer\Contracts\Field as FieldContract;
-use Log1x\AcfComposer\Concerns\InteractsWithPartials;
+use Log1x\AcfComposer\Concerns\InteractsWithPartial;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Roots\Acorn\Application;
 use Illuminate\Support\Str;
 
 abstract class Composer implements FieldContract
 {
-    use InteractsWithPartials;
+    use InteractsWithPartial;
 
     /**
      * The application instance.
@@ -77,9 +77,11 @@ abstract class Composer implements FieldContract
             return;
         }
 
-        acf_add_local_field_group(
-            $this->build($this->fields)
-        );
+        add_filter('init', function () {
+            acf_add_local_field_group(
+                $this->build($this->fields)
+            );
+        }, 20);
     }
 
     /**
