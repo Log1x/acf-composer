@@ -168,26 +168,26 @@ abstract class Block extends Composer implements BlockContract
             ]);
         }
 
-        acf_register_block([
-            'name' => $this->slug,
-            'title' => $this->name,
-            'description' => $this->description,
-            'category' => $this->category,
-            'icon' => $this->icon,
-            'keywords' => $this->keywords,
-            'post_types' => $this->post_types,
-            'mode' => $this->mode,
-            'align' => $this->align,
-            'supports' => $this->supports,
-            'enqueue_assets' => function () {
-                return $this->enqueue();
-            },
-            'render_callback' => function ($block, $content = '', $preview = false, $post = 0) {
-                echo $this->render($block, $content, $preview, $post);
-            }
-        ]);
-
-        return $this->register();
+        $this->register(function () {
+            acf_register_block([
+                'name' => $this->slug,
+                'title' => $this->name,
+                'description' => $this->description,
+                'category' => $this->category,
+                'icon' => $this->icon,
+                'keywords' => $this->keywords,
+                'post_types' => $this->post_types,
+                'mode' => $this->mode,
+                'align' => $this->align,
+                'supports' => $this->supports,
+                'enqueue_assets' => function () {
+                    return $this->enqueue();
+                },
+                'render_callback' => function ($block, $content = '', $preview = false, $post = 0) {
+                    echo $this->render($block, $content, $preview, $post);
+                }
+            ]);
+        });
     }
 
     /**

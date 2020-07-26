@@ -68,16 +68,20 @@ abstract class Composer implements FieldContract
     /**
      * Register the field group with Advanced Custom Fields.
      *
-     * @param  callback $callback
+     * @param  callable $callback
      * @return void
      */
-    protected function register()
+    protected function register($callback = null)
     {
         if (empty($this->fields)) {
             return;
         }
 
-        add_filter('init', function () {
+        add_filter('init', function () use ($callback) {
+            if ($callback) {
+                $callback();
+            }
+
             acf_add_local_field_group(
                 $this->build($this->fields)
             );

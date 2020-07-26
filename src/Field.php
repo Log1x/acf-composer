@@ -15,6 +15,6 @@ abstract class Field extends Composer
             return;
         }
 
-        return $this->register();
+        $this->register();
     }
 }

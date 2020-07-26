@@ -62,7 +62,15 @@ abstract class Widget extends Composer implements WidgetContract
             $this->slug = Str::slug($this->name);
         }
 
-        add_filter('init', function () {
+        if (! Arr::has($this->fields, 'location.0.0')) {
+            Arr::set($this->fields, 'location.0.0', [
+                'param' => 'widget',
+                'operator' => '==',
+                'value' => $this->slug,
+            ]);
+        }
+
+        $this->register(function () {
             $this->widget = (object) collect(
                 Arr::get($GLOBALS, 'wp_registered_widgets')
             )->filter(function ($value) {
@@ -75,17 +83,7 @@ abstract class Widget extends Composer implements WidgetContract
 
             $this->widget->id = Str::start($this->widget->id, 'widget_');
             $this->id = $this->widget->id;
-
-            if (! Arr::has($this->fields, 'location.0.0')) {
-                Arr::set($this->fields, 'location.0.0', [
-                    'param' => 'widget',
-                    'operator' => '==',
-                    'value' => $this->slug,
-                ]);
-            }
-
-            $this->register();
-        }, 20);
+        });
 
         add_filter('widgets_init', function () {
             register_widget($this->widget());
