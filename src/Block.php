@@ -215,7 +215,7 @@ abstract class Block extends Composer implements BlockContract
         ])->filter()->implode(' ');
 
         return $this->view(
-            Str::finish('views.blocks.', $this->slug),
+            Str::finish('blocks.', $this->slug),
             ['block' => $this]
         );
     }
