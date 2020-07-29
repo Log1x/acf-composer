@@ -183,8 +183,8 @@ abstract class Block extends Composer implements BlockContract
                 'enqueue_assets' => function () {
                     return $this->enqueue();
                 },
-                'render_callback' => function ($block, $content = '', $preview = false, $post = 0) {
-                    echo $this->render($block, $content, $preview, $post);
+                'render_callback' => function ($block, $content = '', $preview = false, $post_id = 0) {
+                    echo $this->render($block, $content, $preview, $post_id);
                 }
             ]);
         });
@@ -199,12 +199,13 @@ abstract class Block extends Composer implements BlockContract
      * @param  int $post
      * @return void
      */
-    public function render($block, $content = '', $preview = false, $post = 0)
+    public function render($block, $content = '', $preview = false, $post_id = 0)
     {
         $this->block = (object) $block;
         $this->content = $content;
         $this->preview = $preview;
-        $this->post = $post;
+        $this->post = get_post($post_id);
+        $this->post_id = $post_id;
         $this->classes = collect([
             'slug' => Str::start(
                 Str::slug($this->block->title),
