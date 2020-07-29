@@ -96,6 +96,13 @@ abstract class Block extends Composer implements BlockContract
     public $icon = '';
 
     /**
+     * The dummy data used for the block preview.
+     *
+     * @var array
+     */
+    public $preview = [];
+
+    /**
      * An array of keywords the block will be found under.
      *
      * @var array
@@ -168,26 +175,32 @@ abstract class Block extends Composer implements BlockContract
             ]);
         }
 
-        $this->register(function () {
-            acf_register_block([
-                'name' => $this->slug,
-                'title' => $this->name,
-                'description' => $this->description,
-                'category' => $this->category,
-                'icon' => $this->icon,
-                'keywords' => $this->keywords,
-                'post_types' => $this->post_types,
-                'mode' => $this->mode,
-                'align' => $this->align,
-                'supports' => $this->supports,
-                'enqueue_assets' => function () {
-                    return $this->enqueue();
-                },
-                'render_callback' => function ($block, $content = '', $preview = false, $post_id = 0) {
-                    echo $this->render($block, $content, $preview, $post_id);
-                }
-            ]);
-        });
+        acf_register_block_type([
+            'name' => $this->slug,
+            'title' => $this->name,
+            'description' => $this->description,
+            'category' => $this->category,
+            'icon' => $this->icon,
+            'keywords' => $this->keywords,
+            'post_types' => $this->post_types,
+            'mode' => $this->mode,
+            'align' => $this->align,
+            'supports' => $this->supports,
+            'example' => [
+                'attributes' => [
+                    'mode' => 'preview',
+                    'data' => $this->preview,
+                ]
+            ],
+            'enqueue_assets' => function () {
+                return $this->enqueue();
+            },
+            'render_callback' => function ($block, $content = '', $preview = false, $post_id = 0) {
+                echo $this->render($block, $content, $preview, $post_id);
+            }
+        ]);
+
+        return $this->register();
     }
 
     /**
