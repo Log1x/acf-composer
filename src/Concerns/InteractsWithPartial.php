@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Log1x\AcfComposer\Partial;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-trait RetrievesPartials
+trait InteractsWithPartial
 {
     /**
      * Compose a field partial instance or file.
@@ -19,7 +19,7 @@ trait RetrievesPartials
     {
         if (
             is_subclass_of($partial, Partial::class) &&
-            ! (new ReflectionClass($partial))->isAbstract()
+            !(new ReflectionClass($partial))->isAbstract()
         ) {
             return (new $partial($this->app))->compose();
         }
@@ -28,7 +28,7 @@ trait RetrievesPartials
             return $partial;
         }
 
-        return $this->files->exists(
+        return file_exists(
             $partial = $this->app->path(
                 Str::finish(
                     strtr($partial, ['.php' => '', '.' => '/']),

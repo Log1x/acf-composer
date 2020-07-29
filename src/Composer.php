@@ -2,15 +2,15 @@
 
 namespace Log1x\AcfComposer;
 
-use Log1x\AcfComposer\Contracts\Fields as FieldsContract;
+use Log1x\AcfComposer\Contracts\Field as FieldContract;
+use Log1x\AcfComposer\Concerns\InteractsWithPartial;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Roots\Acorn\Application;
-use Roots\Acorn\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
-abstract class Composer implements FieldsContract
+abstract class Composer implements FieldContract
 {
-    use Concerns\RetrievesPartials;
+    use InteractsWithPartial;
 
     /**
      * The application instance.
@@ -18,13 +18,6 @@ abstract class Composer implements FieldsContract
      * @var \Roots\Acorn\Application
      */
     protected $app;
-
-    /**
-     * The filesystem instance.
-     *
-     * @var \Roots\Acorn\Filesystem\Filesystem
-     */
-    protected $files;
 
     /**
      * The field keys.
@@ -56,7 +49,6 @@ abstract class Composer implements FieldsContract
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->files = new Filesystem();
 
         $this->defaults = collect(
             $this->app->config->get('acf.defaults')
@@ -76,18 +68,24 @@ abstract class Composer implements FieldsContract
     /**
      * Register the field group with Advanced Custom Fields.
      *
-     * @param  callback $callback
+     * @param  callable $callback
      * @return void
      */
-    protected function register()
+    protected function register($callback = null)
     {
         if (empty($this->fields)) {
             return;
         }
 
-        return acf_add_local_field_group(
-            $this->build($this->fields)
-        );
+        add_filter('init', function () use ($callback) {
+            if ($callback) {
+                $callback();
+            }
+
+            acf_add_local_field_group(
+                $this->build($this->fields)
+            );
+        }, 20);
     }
 
     /**

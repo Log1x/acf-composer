@@ -4,10 +4,12 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Contracts\Block as BlockContract;
+use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 
-abstract class Block extends Composer
+abstract class Block extends Composer implements BlockContract
 {
-    use Concerns\HasView;
+    use InteractsWithBlade;
 
     /**
      * The block properties.
@@ -166,26 +168,26 @@ abstract class Block extends Composer
             ]);
         }
 
-        acf_register_block([
-            'name' => $this->slug,
-            'title' => $this->name,
-            'description' => $this->description,
-            'category' => $this->category,
-            'icon' => $this->icon,
-            'keywords' => $this->keywords,
-            'post_types' => $this->post_types,
-            'mode' => $this->mode,
-            'align' => $this->align,
-            'supports' => $this->supports,
-            'enqueue_assets' => function () {
-                return $this->enqueue();
-            },
-            'render_callback' => function ($block, $content = '', $preview = false, $post = 0) {
-                echo $this->render($block, $content, $preview, $post);
-            }
-        ]);
-
-        return $this->register();
+        $this->register(function () {
+            acf_register_block([
+                'name' => $this->slug,
+                'title' => $this->name,
+                'description' => $this->description,
+                'category' => $this->category,
+                'icon' => $this->icon,
+                'keywords' => $this->keywords,
+                'post_types' => $this->post_types,
+                'mode' => $this->mode,
+                'align' => $this->align,
+                'supports' => $this->supports,
+                'enqueue_assets' => function () {
+                    return $this->enqueue();
+                },
+                'render_callback' => function ($block, $content = '', $preview = false, $post = 0) {
+                    echo $this->render($block, $content, $preview, $post);
+                }
+            ]);
+        });
     }
 
     /**
@@ -204,13 +206,16 @@ abstract class Block extends Composer
         $this->preview = $preview;
         $this->post = $post;
         $this->classes = collect([
-            'slug' => Str::start(Str::slug($this->block->title), 'wp-block-'),
+            'slug' => Str::start(
+                Str::slug($this->block->title),
+                'wp-block-'
+            ),
             'align' => ! empty($this->block->align) ? Str::start($this->block->align, 'align') : false,
             'classes' => $this->block->className ?? false,
         ])->filter()->implode(' ');
 
         return $this->view(
-            Str::finish('views.blocks.', $this->slug),
+            Str::finish('blocks.', $this->slug),
             ['block' => $this]
         );
     }

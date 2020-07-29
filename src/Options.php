@@ -124,21 +124,21 @@ abstract class Options extends Composer
             ]);
         }
 
-        acf_add_options_page([
-            'menu_title' => $this->name,
-            'menu_slug' => $this->slug,
-            'page_title' => $this->title,
-            'capability' => $this->capability,
-            'position' => $this->position,
-            'parent_slug' => $this->parent,
-            'icon_url' => $this->icon,
-            'redirect' => $this->redirect,
-            'post_id' => $this->post,
-            'autoload' => $this->autoload,
-            'update_button' => $this->updateButton(),
-            'updated_message' => $this->updatedMessage()
-        ]);
-
-        return $this->register();
+        $this->register(function () {
+            acf_add_options_page([
+                'menu_title' => $this->name,
+                'menu_slug' => $this->slug,
+                'page_title' => $this->title,
+                'capability' => $this->capability,
+                'position' => $this->position,
+                'parent_slug' => $this->parent,
+                'icon_url' => $this->icon,
+                'redirect' => $this->redirect,
+                'post_id' => $this->post,
+                'autoload' => $this->autoload,
+                'update_button' => $this->updateButton(),
+                'updated_message' => $this->updatedMessage()
+            ]);
+        });
     }
 }
