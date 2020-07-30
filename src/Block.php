@@ -153,7 +153,7 @@ abstract class Block extends Composer implements BlockContract
         }
 
         if (! empty($this->name) && empty($this->slug)) {
-            $this->slug = Str::slug($this->name);
+            $this->slug = Str::slug(Str::kebab($this->name));
         }
 
         if (empty($this->namespace)) {
