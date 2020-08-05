@@ -74,15 +74,8 @@ abstract class Widget extends Composer implements WidgetContract
             $this->widget = (object) collect(
                 Arr::get($GLOBALS, 'wp_registered_widgets')
             )->filter(function ($value) {
-                return $value['name'] == $this->name;
+                return $value['name'] === $this->name;
             })->pop();
-
-            if (empty($this->widget) || empty($this->widget->id)) {
-                return;
-            }
-
-            $this->widget->id = Str::start($this->widget->id, 'widget_');
-            $this->id = $this->widget->id;
         });
 
         add_filter('widgets_init', function () {
@@ -95,23 +88,23 @@ abstract class Widget extends Composer implements WidgetContract
      *
      * @return WP_Widget
      */
-    public function widget()
+    protected function widget()
     {
         return (new class ($this) extends WP_Widget {
             /**
              * Create a new WP_Widget instance.
              *
-             * @param  \Log1x\AcfComposer\Widget $widget
+             * @param  \Log1x\AcfComposer\Widget $composer
              * @return void
              */
-            public function __construct($widget)
+            public function __construct($composer)
             {
-                $this->widget = $widget;
+                $this->composer = $composer;
 
                 parent::__construct(
-                    $this->widget->slug,
-                    $this->widget->name,
-                    ['description' => $this->widget->description]
+                    $this->composer->slug,
+                    $this->composer->name,
+                    ['description' => $this->composer->description]
                 );
             }
 
@@ -124,19 +117,21 @@ abstract class Widget extends Composer implements WidgetContract
              */
             public function widget($args, $instance)
             {
+                $this->composer->id = $this->composer->widget->id = Str::start($args['widget_id'], 'widget_');
+
                 echo Arr::get($args, 'before_widget');
 
-                if (! empty($this->widget->title())) {
+                if (! empty($this->composer->title())) {
                     echo collect([
                         Arr::get($args, 'before_title'),
-                        $this->widget->title(),
+                        $this->composer->title(),
                         Arr::get($args, 'after_title')
                     ])->implode(PHP_EOL);
                 }
 
-                echo $this->widget->view(
-                    Str::finish('widgets.', $this->widget->slug),
-                    ['widget' => $this->widget]
+                echo $this->composer->view(
+                    Str::finish('widgets.', $this->composer->slug),
+                    ['widget' => $this->composer]
                 );
 
                 echo Arr::get($args, 'after_widget');
