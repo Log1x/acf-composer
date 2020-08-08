@@ -41,7 +41,7 @@ class DummyClass extends Block
      * @var array
      */
     public $supports = [
-        '__experimental_jsx' => true,
+        'jsx' => true,
         'mode' => false,
     ];
 
