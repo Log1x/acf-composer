@@ -124,6 +124,20 @@ abstract class Block extends Composer implements BlockContract
     public $align = '';
 
     /**
+     * The block text alignment class.
+     *
+     * @var string
+     */
+    public $align_text = '';
+
+    /**
+     * The block text alignment class.
+     *
+     * @var string
+     */
+    public $align_content = '';
+
+    /**
      * Features supported by the block.
      *
      * @var array
@@ -168,6 +182,13 @@ abstract class Block extends Composer implements BlockContract
             ]);
         }
 
+        // The matrix isn't available on WP > 5.5
+        if (Arr::has($this->supports, 'align_content') && version_compare('5.5', get_bloginfo('version'), '>')) {
+            if (! is_bool($this->supports['align_content'])) {
+                $this->supports['align_content'] = true;
+            }
+        }
+
         $this->register(function () {
             acf_register_block([
                 'name' => $this->slug,
@@ -179,6 +200,8 @@ abstract class Block extends Composer implements BlockContract
                 'post_types' => $this->post_types,
                 'mode' => $this->mode,
                 'align' => $this->align,
+                'align_text' => $this->align_text ?? $this->align,
+                'align_content' => $this->align_content,
                 'supports' => $this->supports,
                 'enqueue_assets' => function () {
                     return $this->enqueue();
