@@ -96,6 +96,13 @@ abstract class Block extends Composer implements BlockContract
     public $icon = '';
 
     /**
+     * An array of dummy data for previews
+     *s
+     * @var array
+     */
+    public $example = [];
+
+    /**
      * An array of keywords the block will be found under.
      *
      * @var array
@@ -203,6 +210,12 @@ abstract class Block extends Composer implements BlockContract
                 'align_text' => $this->align_text ?? $this->align,
                 'align_content' => $this->align_content,
                 'supports' => $this->supports,
+                'example' => [
+                    'attributes' => [
+                        'mode' => 'preview',
+                        'data' => $this->example,
+                    ]
+                ],
                 'enqueue_assets' => function () {
                     return $this->enqueue();
                 },
