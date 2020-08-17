@@ -96,8 +96,8 @@ abstract class Block extends Composer implements BlockContract
     public $icon = '';
 
     /**
-     * An array of dummy data for previews
-     *s
+     * The block preview example data.
+     *
      * @var array
      */
     public $example = [];
