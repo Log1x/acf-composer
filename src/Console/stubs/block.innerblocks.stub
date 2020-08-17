@@ -36,6 +36,19 @@ class DummyClass extends Block
     public $icon = 'star-half';
 
     /**
+     * An array of dummy data for previews
+     *
+     * @var array
+     */
+    public $example = [
+        'items'   => [
+            ['item' => 'Item one'],
+            ['item' => 'Item two'],
+            ['item' => 'Item three']
+        ],
+    ];
+
+    /**
      * The block features.
      *
      * @var array
