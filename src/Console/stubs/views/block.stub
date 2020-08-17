@@ -8,4 +8,6 @@
   <p>No items found!</p>
 @endif
 
-<InnerBlocks />
+<div>
+  <InnerBlocks />
+</div>

@@ -17,7 +17,7 @@ class WidgetMakeCommand extends MakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new widget using ACF.';
+    protected $description = 'Create a new ACF sidebar widget.';
 
     /**
      * The type of class being generated.
@@ -31,7 +31,7 @@ class WidgetMakeCommand extends MakeCommand
      *
      * @var string|bool
      */
-    protected $view = 'repeater';
+    protected $view = 'widget';
 
     /**
      * Get the stub file for the generator.

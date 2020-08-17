@@ -61,39 +61,88 @@ abstract class Block extends Composer implements BlockContract
     public $namespace;
 
     /**
-     * The display name of the block.
+     * The block name.
      *
      * @var string
      */
     public $name = '';
 
     /**
-     * The slug of the block.
+     * The block slug.
      *
      * @var string
      */
     public $slug = '';
 
     /**
-     * The description of the block.
+     * The block description.
      *
      * @var string
      */
     public $description = '';
 
     /**
-     * The category this block belongs to.
+     * The block category.
      *
      * @var string
      */
     public $category = '';
 
     /**
-     * The icon of this block.
+     * The block icon.
      *
      * @var string|array
      */
     public $icon = '';
+
+    /**
+     * The block keywords.
+     *
+     * @var array
+     */
+    public $keywords = [];
+
+    /**
+     * The block post type allow list.
+     *
+     * @var array
+     */
+    public $post_types = [];
+
+    /**
+     * The default block mode.
+     *
+     * @var string
+     */
+    public $mode = 'preview';
+
+    /**
+     * The default block alignment.
+     *
+     * @var string
+     */
+    public $align = '';
+
+    /**
+     * The default block text alignment.
+     *
+     * @var string
+     */
+    public $align_text = '';
+
+    /**
+     * The default block content alignment.
+     *
+     * @var string
+     */
+    public $align_content = '';
+
+    /**
+     * The supported block features.
+     *
+     * @var array
+     */
+    public $supports = [];
 
     /**
      * The block preview example data.
@@ -101,55 +150,6 @@ abstract class Block extends Composer implements BlockContract
      * @var array
      */
     public $example = [];
-
-    /**
-     * An array of keywords the block will be found under.
-     *
-     * @var array
-     */
-    public $keywords = [];
-
-    /**
-     * An array of post types the block will be available to.
-     *
-     * @var array
-     */
-    public $post_types = ['post', 'page'];
-
-    /**
-     * The default display mode of the block that is shown to the user.
-     *
-     * @var string
-     */
-    public $mode = 'preview';
-
-    /**
-     * The block alignment class.
-     *
-     * @var string
-     */
-    public $align = '';
-
-    /**
-     * The block text alignment class.
-     *
-     * @var string
-     */
-    public $align_text = '';
-
-    /**
-     * The block text alignment class.
-     *
-     * @var string
-     */
-    public $align_content = '';
-
-    /**
-     * Features supported by the block.
-     *
-     * @var array
-     */
-    public $supports = [];
 
     /**
      * Assets enqueued when rendering the block.
@@ -232,7 +232,7 @@ abstract class Block extends Composer implements BlockContract
      * @param  array $block
      * @param  string $content
      * @param  bool $preview
-     * @param  int $post
+     * @param  int $post_id
      * @return void
      */
     public function render($block, $content = '', $preview = false, $post_id = 0)
@@ -240,14 +240,24 @@ abstract class Block extends Composer implements BlockContract
         $this->block = (object) $block;
         $this->content = $content;
         $this->preview = $preview;
+
         $this->post = get_post($post_id);
         $this->post_id = $post_id;
+
         $this->classes = collect([
             'slug' => Str::start(
                 Str::slug($this->block->title),
                 'wp-block-'
             ),
-            'align' => ! empty($this->block->align) ? Str::start($this->block->align, 'align') : false,
+            'align' => ! empty($this->block->align) ?
+                Str::start($this->block->align, 'align') :
+                false,
+            'align_text' => ! empty($this->supports['align_text']) ?
+                Str::start($this->block->align_text, 'align-text-') :
+                false,
+            'align_content' => ! empty($this->supports['align_content']) ?
+                Str::start($this->block->align_content, 'is-position-') :
+                false,
             'classes' => $this->block->className ?? false,
         ])->filter()->implode(' ');
 

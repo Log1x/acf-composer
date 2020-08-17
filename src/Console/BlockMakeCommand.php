@@ -12,7 +12,6 @@ class BlockMakeCommand extends MakeCommand
      * @var string
      */
     protected $signature = 'acf:block {name* : The name of the block}
-                            {--full : Scaffold a block that contains the complete configuration.}
                             {--force : Overwrite any existing files}';
 
     /**
@@ -20,7 +19,7 @@ class BlockMakeCommand extends MakeCommand
      *
      * @var string
      */
-    protected $description = 'Create a new block using ACF.';
+    protected $description = 'Create a new ACF block type.';
 
     /**
      * The type of class being generated.
@@ -34,7 +33,7 @@ class BlockMakeCommand extends MakeCommand
      *
      * @var string|bool
      */
-    protected $view = 'repeater';
+    protected $view = 'block';
 
     /**
      * Get the stub file for the generator.
@@ -43,21 +42,6 @@ class BlockMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
-        if (
-            ! empty($version = get_option('acf_version')) &&
-            Str::before($version, '-') >= '5.9.0'
-        ) {
-            $this->view = 'repeater.innerblocks';
-        }
-
-        if ($this->option('full')) {
-            return __DIR__ . '/stubs/block.full.stub';
-        }
-
-        if (Str::before($version, '-') >= '5.9.0') {
-            return __DIR__ . '/stubs/block.innerblocks.stub';
-        }
-
         return __DIR__ . '/stubs/block.stub';
     }
 }
