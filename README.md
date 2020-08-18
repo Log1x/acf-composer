@@ -253,12 +253,6 @@ class Example extends Block
 }
 ```
 
-Optionally, you may pass `--full` to the command above to generate a stub that contains additional configuration examples.
-
-```bash
-$ wp acorn acf:block Example --full
-```
-
 When running the block generator, one difference to a generic field is an accompanied `View` is generated in the `resources/views/blocks` directory.
 
 ```php
@@ -271,6 +265,10 @@ When running the block generator, one difference to a generic field is an accomp
 @else
   <p>No items found!</p>
 @endif
+
+<div>
+  <InnerBlocks />
+</div>
 ```
 
 Like the field generator, the example block contains a simple list repeater and is working out of the box.

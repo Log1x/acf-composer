@@ -7,5 +7,3 @@
 @else
   <p>No items found!</p>
 @endif
-
-<InnerBlocks />
