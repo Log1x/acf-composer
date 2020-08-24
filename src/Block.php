@@ -19,6 +19,13 @@ abstract class Block extends Composer implements BlockContract
     public $block;
 
     /**
+     * The block view name.
+     *
+     * @var string
+     */
+    protected $viewName;
+
+    /**
      * The block content.
      *
      * @var string
@@ -233,7 +240,7 @@ abstract class Block extends Composer implements BlockContract
      * @param  string $content
      * @param  bool $preview
      * @param  int $post_id
-     * @return void
+     * @return string
      */
     public function render($block, $content = '', $preview = false, $post_id = 0)
     {
@@ -262,8 +269,23 @@ abstract class Block extends Composer implements BlockContract
         ])->filter()->implode(' ');
 
         return $this->view(
-            Str::finish('blocks.', $this->slug),
+            $this->guessViewName($this->viewName ?: $this->slug),
             ['block' => $this]
         );
+    }
+
+    /**
+     * Guess the view name.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    public function guessViewName($name)
+    {
+        if (Str::contains($name, '.')) {
+            return $name;
+        }
+
+        return Str::finish('blocks.', $name);
     }
 }
