@@ -15,7 +15,13 @@ trait InteractsWithBlade
      */
     public function view($view, $with = [])
     {
-        if (! view()->exists($view)) {
+        if ($this->preview === true) {
+            $preview = str_replace('blocks.', 'blocks.preview-', $view);
+            if (view()->exists($preview)) {
+                $view = $preview;
+            }
+        }
+        if (!view()->exists($view)) {
             return;
         }
 
