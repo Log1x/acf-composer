@@ -19,13 +19,6 @@ abstract class Block extends Composer implements BlockContract
     public $block;
 
     /**
-     * The block view name.
-     *
-     * @var string
-     */
-    protected $viewName;
-
-    /**
      * The block content.
      *
      * @var string
@@ -80,6 +73,13 @@ abstract class Block extends Composer implements BlockContract
      * @var string
      */
     public $slug = '';
+
+    /**
+     * The block view.
+     *
+     * @var string
+     */
+    public $view;
 
     /**
      * The block description.
@@ -184,6 +184,10 @@ abstract class Block extends Composer implements BlockContract
             $this->slug = Str::slug(Str::kebab($this->name));
         }
 
+        if (empty($this->view)) {
+            $this->view = Str::start($this->slug, 'blocks.');
+        }
+
         if (empty($this->namespace)) {
             $this->namespace = Str::start($this->slug, $this->prefix);
         }
@@ -268,24 +272,6 @@ abstract class Block extends Composer implements BlockContract
             'classes' => $this->block->className ?? false,
         ])->filter()->implode(' ');
 
-        return $this->view(
-            $this->guessViewName($this->viewName ?: $this->slug),
-            ['block' => $this]
-        );
-    }
-
-    /**
-     * Guess the view name.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    public function guessViewName($name)
-    {
-        if (Str::contains($name, '.')) {
-            return $name;
-        }
-
-        return Str::finish('blocks.', $name);
+        return $this->view($this->view, ['block' => $this]);
     }
 }
