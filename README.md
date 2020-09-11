@@ -273,6 +273,12 @@ When running the block generator, one difference to a generic field is an accomp
 
 Like the field generator, the example block contains a simple list repeater and is working out of the box.
 
+#### Block Preview View
+
+While `$block->preview` is an option for conditionally modifying your block when shown in the editor, you may also render your block using a seperate view.
+
+Simply duplicate your existing view prefixing it with `preview-` (e.g. `preview-example.blade.php`).
+
 ### Generating a Widget
 
 Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade, as well as registered with `WP_Widget` which is usually rather annoying.
