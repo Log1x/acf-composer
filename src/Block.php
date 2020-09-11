@@ -235,6 +235,8 @@ abstract class Block extends Composer implements BlockContract
                 }
             ]);
         });
+
+        return $this;
     }
 
     /**

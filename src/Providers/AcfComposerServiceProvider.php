@@ -12,7 +12,7 @@ use Symfony\Component\Finder\Finder;
 class AcfComposerServiceProvider extends ServiceProvider
 {
     /**
-     * Default Paths
+     * The default paths.
      *
      * @var \Illuminate\Support\Collection
      */
@@ -22,6 +22,13 @@ class AcfComposerServiceProvider extends ServiceProvider
         'Widgets',
         'Options',
     ];
+
+    /**
+     * The registered field groups.
+     *
+     * @var array
+     */
+     protected $fields = [];
 
     /**
      * Register any application services.
@@ -87,8 +94,10 @@ class AcfComposerServiceProvider extends ServiceProvider
                 ! is_subclass_of($composer, Partial::class) &&
                 ! (new ReflectionClass($composer))->isAbstract()
             ) {
-                (new $composer($this->app))->compose();
+                $this->fields[] = (new $composer($this->app))->compose();
             }
         }
+
+        return $this->fields;
     }
 }

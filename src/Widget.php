@@ -81,6 +81,8 @@ abstract class Widget extends Composer implements WidgetContract
         add_filter('widgets_init', function () {
             register_widget($this->widget());
         }, 20);
+
+        return $this;
     }
 
     /**

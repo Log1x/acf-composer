@@ -19,7 +19,7 @@ trait InteractsWithPartial
     {
         if (
             is_subclass_of($partial, Partial::class) &&
-            !(new ReflectionClass($partial))->isAbstract()
+            ! (new ReflectionClass($partial))->isAbstract()
         ) {
             return (new $partial($this->app))->compose();
         }
