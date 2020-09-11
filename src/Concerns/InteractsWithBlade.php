@@ -15,8 +15,12 @@ trait InteractsWithBlade
      */
     public function view($view, $with = [])
     {
-        if (! view()->exists($view)) {
-            return;
+        if (
+            isset($this->block) &&
+            ! empty($this->preview) &&
+            view()->exists(Str::start($view, 'preview-'))
+        ) {
+            $view = Str::start($view, 'preview-');
         }
 
         return view($view, $with, $this->with())->render();
