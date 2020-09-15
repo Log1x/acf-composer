@@ -116,6 +116,12 @@ abstract class Options extends Composer
             $this->title = $this->name;
         }
 
+        if (class_exists($this->parent)) {
+            $parent = new $this->parent();
+            $this->parent = $parent->slug ?: Str::slug($parent->name);
+            if (!$this->parent || empty(trim($this->parent))) throw new \InvalidArgumentException("You need to set a correct slug for parent page.");
+        }
+
         if (! Arr::has($this->fields, 'location.0.0')) {
             Arr::set($this->fields, 'location.0.0', [
                 'param' => 'options_page',
