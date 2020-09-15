@@ -4,6 +4,7 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use ReflectionClass;
 
 abstract class Options extends Composer
 {
@@ -101,6 +102,7 @@ abstract class Options extends Composer
      * Compose and register the defined ACF field groups.
      *
      * @return void
+     * @throws \ReflectionException
      */
     public function compose()
     {
@@ -116,7 +118,11 @@ abstract class Options extends Composer
             $this->title = $this->name;
         }
 
-        if (class_exists($this->parent)) {
+        if (
+            class_exists($this->parent) &&
+            !(new ReflectionClass($this->parent))->isAbstract()
+        ) {
+            if (!is_subclass_of($this->parent, Options::class)) throw new \InvalidArgumentException("The parent page need to extends Options class.");
             $parent = new $this->parent();
             $this->parent = $parent->slug ?: Str::slug($parent->name);
             if (!$this->parent || empty(trim($this->parent))) throw new \InvalidArgumentException("You need to set a correct slug for parent page.");
