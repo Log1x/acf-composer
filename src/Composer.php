@@ -108,8 +108,12 @@ abstract class Composer implements FieldContract
                 return array_map(
                     function ($field) {
                         foreach ($field as $key => $value) {
-                            if (Str::contains($key, $this->keys)) return $this->build($field);
-                            if ((Str::is($key, 'type') && $this->defaults->has($value))) $field = array_merge($this->defaults->get($field['type'], []), $field);
+                            if (Str::contains($key, $this->keys)) {
+                                return $this->build($field);
+                            }
+                            if ((Str::is($key, 'type') && $this->defaults->has($value))) {
+                                $field = array_merge($this->defaults->get($field['type'], []), $field);
+                            }
                         }
 
                         return $field;
