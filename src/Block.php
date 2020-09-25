@@ -222,7 +222,7 @@ abstract class Block extends Composer implements BlockContract
                 'category' => $this->category,
                 'icon' => $this->icon,
                 'keywords' => $this->keywords,
-                'parent' => $this->parent,
+                'parent' => $this->parent ?: null,
                 'post_types' => $this->post_types,
                 'mode' => $this->mode,
                 'align' => $this->align,
