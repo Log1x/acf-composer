@@ -110,6 +110,13 @@ abstract class Block extends Composer implements BlockContract
     public $keywords = [];
 
     /**
+     * The parent block type allow list.
+     *
+     * @var array
+     */
+    public $parent = [];
+
+    /**
      * The block post type allow list.
      *
      * @var array
@@ -215,6 +222,7 @@ abstract class Block extends Composer implements BlockContract
                 'category' => $this->category,
                 'icon' => $this->icon,
                 'keywords' => $this->keywords,
+                'parent' => $this->parent,
                 'post_types' => $this->post_types,
                 'mode' => $this->mode,
                 'align' => $this->align,

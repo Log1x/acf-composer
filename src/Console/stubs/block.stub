@@ -50,6 +50,13 @@ class DummyClass extends Block
     public $post_types = [];
 
     /**
+     * The parent block type allow list.
+     *
+     * @var array
+     */
+    public $parent = [];
+
+    /**
      * The default block mode.
      *
      * @var string
@@ -83,73 +90,16 @@ class DummyClass extends Block
      * @var array
      */
     public $supports = [
-        'align' => true,
-        'align_text' => false,
-        'align_content' => false,
-        'mode' => false,
-        'multiple' => true,
-        'jsx' => true,
-    ];
-
-    /**
-     * The block preview example data.
-     *
-     * @var array
-     */
-    public $example = [
-        'items' => [
-            ['item' => 'Item one'],
-            ['item' => 'Item two'],
-            ['item' => 'Item three'],
-        ],
-    ];
-
-    /**
-     * Data to be passed to the block before rendering.
-     *
-     * @return array
-     */
-    public function with()
-    {
-        return [
-            'items' => $this->items(),
-        ];
-    }
-
-    /**
-     * The block field group.
-     *
-     * @return array
-     */
-    public function fields()
-    {
-        $DummyCamel = new FieldsBuilder('DummySnake');
-
-        $DummyCamel
-            ->addRepeater('items')
-                ->addText('item')
-            ->endRepeater();
-
-        return $DummyCamel->build();
-    }
-
-    /**
-     * Return the items field.
-     *
-     * @return array
-     */
-    public function items()
-    {
-        return get_field('items') ?: [];
-    }
-
-    /**
-     * Assets to be enqueued when rendering the block.
-     *
-     * @return void
-     */
-    public function enqueue()
-    {
-        //
-    }
-}
+        'align' =>
+true, 'align_text' => false, 'align_content' => false, 'mode' => false,
+'multiple' => true, 'jsx' => true, ]; /** * The block preview example data. * *
+@var array */ public $example = [ 'items' => [ ['item' => 'Item one'], ['item'
+=> 'Item two'], ['item' => 'Item three'], ], ]; /** * Data to be passed to the
+block before rendering. * * @return array */ public function with() { return [
+'items' => $this->items(), ]; } /** * The block field group. * * @return array
+*/ public function fields() { $DummyCamel = new FieldsBuilder('DummySnake');
+$DummyCamel ->addRepeater('items') ->addText('item') ->endRepeater(); return
+$DummyCamel->build(); } /** * Return the items field. * * @return array */
+public function items() { return get_field('items') ?: []; } /** * Assets to be
+enqueued when rendering the block. * * @return void */ public function enqueue()
+{ // } }
