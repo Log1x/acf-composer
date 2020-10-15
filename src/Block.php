@@ -75,6 +75,13 @@ abstract class Block extends Composer implements BlockContract
     public $slug = '';
 
     /**
+     * The block title.
+     *
+     * @var string
+     */
+    public $title = '';
+
+    /**
      * The block view.
      *
      * @var string
@@ -191,6 +198,10 @@ abstract class Block extends Composer implements BlockContract
             $this->slug = Str::slug(Str::kebab($this->name));
         }
 
+        if (empty($this->title)) {
+            $this->title = $this->name;
+        }
+
         if (empty($this->view)) {
             $this->view = Str::start($this->slug, 'blocks.');
         }
@@ -217,7 +228,7 @@ abstract class Block extends Composer implements BlockContract
         $this->register(function () {
             acf_register_block([
                 'name' => $this->slug,
-                'title' => $this->name,
+                'title' => $this->title,
                 'description' => $this->description,
                 'category' => $this->category,
                 'icon' => $this->icon,
