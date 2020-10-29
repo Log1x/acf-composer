@@ -1,4 +1,4 @@
-<div class="{{ $block->classes }}">
+<div class="{{ $block->classes }} {{ $block->align }}" data-id="{{ $block->block->id }}">
   @if ($items)
     <ul>
       @foreach ($items as $item)
