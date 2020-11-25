@@ -12,7 +12,7 @@ class BlockMakeCommand extends MakeCommand
      * @var string
      */
     protected $signature = 'acf:block {name* : The name of the block}
-                            {--construct : set block settings with __construct.}
+                            {--construct : Generate block properties inside of `__construct`}
                             {--force : Overwrite any existing files}';
 
     /**
