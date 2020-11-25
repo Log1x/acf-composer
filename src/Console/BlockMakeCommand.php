@@ -12,6 +12,7 @@ class BlockMakeCommand extends MakeCommand
      * @var string
      */
     protected $signature = 'acf:block {name* : The name of the block}
+                            {--construct : set block settings with __construct.}
                             {--force : Overwrite any existing files}';
 
     /**
@@ -42,6 +43,10 @@ class BlockMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
+        if ($this->option('construct')) {
+            return __DIR__ . '/stubs/block.construct.stub';
+        }
+
         return __DIR__ . '/stubs/block.stub';
     }
 }

@@ -3,43 +3,113 @@
 namespace DummyNamespace;
 
 use Log1x\AcfComposer\Block;
-use Roots\Acorn\Application;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Block
 {
-    public function __construct(Application $app)
-    {
-        parent::__construct($app);
+    /**
+     * The block name.
+     *
+     * @var string
+     */
+    public $name = 'DummyClass';
 
-        $this->name = __('DummyClass', 'sage');
-        $this->slug = 'projects';
-        $this->description = __('A simple DummyClass block.', 'sage');
-        $this->category = 'formatting';
-        $this->icon = 'editor-ul';
-        $this->keywords = [];
-        $this->post_types = [];
-        $this->parent = [];
-        $this->mode = 'preview';
-        $this->align = '';
-        $this->align_text = '';
-        $this->align_content = '';
-        $this->supports = [
-            'align' => true,
-            'align_text' => false,
-            'align_content' => false,
-            'mode' => false,
-            'multiple' => true,
-            'jsx' => true,
-        ];
-        $this->example = [
-            'items' => [
-                ['item' => 'Item one'],
-                ['item' => 'Item two'],
-                ['item' => 'Item three'],
-            ],
-        ];
-    }
+    /**
+     * The block description.
+     *
+     * @var string
+     */
+    public $description = 'A simple DummyClass block.';
+
+    /**
+     * The block category.
+     *
+     * @var string
+     */
+    public $category = 'formatting';
+
+    /**
+     * The block icon.
+     *
+     * @var string|array
+     */
+    public $icon = 'editor-ul';
+
+    /**
+     * The block keywords.
+     *
+     * @var array
+     */
+    public $keywords = [];
+
+    /**
+     * The block post type allow list.
+     *
+     * @var array
+     */
+    public $post_types = [];
+
+    /**
+     * The parent block type allow list.
+     *
+     * @var array
+     */
+    public $parent = [];
+
+    /**
+     * The default block mode.
+     *
+     * @var string
+     */
+    public $mode = 'preview';
+
+    /**
+     * The default block alignment.
+     *
+     * @var string
+     */
+    public $align = '';
+
+    /**
+     * The default block text alignment.
+     *
+     * @var string
+     */
+    public $align_text = '';
+
+    /**
+     * The default block content alignment.
+     *
+     * @var string
+     */
+    public $align_content = '';
+
+    /**
+     * The supported block features.
+     *
+     * @var array
+     */
+    public $supports = [
+        'align' => true,
+        'align_text' => false,
+        'align_content' => false,
+        'mode' => false,
+        'multiple' => true,
+        'jsx' => true,
+    ];
+
+    /**
+     * The block preview example data.
+     *
+     * @var array
+     */
+    public $example = [
+        'items' => [
+            ['item' => 'Item one'],
+            ['item' => 'Item two'],
+            ['item' => 'Item three'],
+        ],
+    ];
 
     /**
      * Data to be passed to the block before rendering.
