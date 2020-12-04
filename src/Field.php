@@ -16,5 +16,7 @@ abstract class Field extends Composer
         }
 
         $this->register();
+
+        return $this;
     }
 }

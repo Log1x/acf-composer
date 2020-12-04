@@ -140,5 +140,7 @@ abstract class Options extends Composer
                 'updated_message' => $this->updatedMessage()
             ]);
         });
+
+        return $this;
     }
 }

@@ -19,7 +19,7 @@ class DummyClass extends Block
      *
      * @var string
      */
-    public $description = 'Lorem ipsum...';
+    public $description = 'A simple DummyClass block.';
 
     /**
      * The block category.
@@ -48,6 +48,13 @@ class DummyClass extends Block
      * @var array
      */
     public $post_types = [];
+
+    /**
+     * The parent block type allow list.
+     *
+     * @var array
+     */
+    public $parent = [];
 
     /**
      * The default block mode.
@@ -140,7 +147,7 @@ class DummyClass extends Block
      */
     public function items()
     {
-        return get_field('items') ?: [];
+        return get_field('items') ?: $this->example['items'];
     }
 
     /**
