@@ -14,7 +14,7 @@ abstract class Block extends Composer implements BlockContract
     /**
      * The block properties.
      *
-     * @var array
+     * @var array|object
      */
     public $block;
 
