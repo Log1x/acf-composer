@@ -32,6 +32,17 @@ class DummyClass extends Block
             'multiple' => true,
             'jsx' => true,
         ];
+        $this->styles = [
+            [
+                'name' => 'light',
+                'label' => __('Light', 'sage'),
+                'isDefault' => true,
+            ],
+            [
+                'name' => 'dark',
+                'label' => __('Dark', 'sage'),
+            ]
+        ];
         $this->example = [
             'items' => [
                 ['item' => 'Item one'],
