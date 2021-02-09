@@ -445,6 +445,30 @@ Once finished, you should see an Options page appear in the backend.
 
 All fields registered will have their location automatically set to this page.
 
+### 3rd Party ACF Add-on Fields
+
+Add any other registered custom/[3rd party ACF Fields](https://www.advancedcustomfields.com/add-ons/) using the `addField` method.
+
+```php
+    ...
+    $example = new FieldsBuilder('example');
+
+    /**
+     * Add a field of a specific type
+     * @param string $name
+     * @param string $type
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
+     */
+
+      $example
+          ->addField('icon', 'font-awesome', [
+              'label'         => 'Icon',
+              'instructions'  => 'Select an icon',
+          ]);
+```
+
 ## Default Field Settings
 
 One of my personal favorite features of ACF Composer is the ability to set field type as well as field group defaults. Any globally set default can of course be over-ridden by simply setting it on the individual field.
