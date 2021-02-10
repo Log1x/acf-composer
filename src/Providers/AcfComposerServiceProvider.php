@@ -26,9 +26,7 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (function_exists('acf')) {
-            $this->app->make('AcfComposer');
-        }
+        $this->app->make('AcfComposer');
 
         $this->publishes([
             __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),

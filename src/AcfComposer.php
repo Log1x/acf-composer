@@ -73,6 +73,10 @@ class AcfComposer
      */
     public function registerPath($path, $namespace = null)
     {
+        if (! function_exists('acf')) {
+            return;
+        }
+
         $paths = collect(File::directories($path))->filter(function ($item) {
             return Str::contains($item, $this->classes);
         });
