@@ -123,12 +123,4 @@ abstract class Composer implements FieldContract
             }
         )->all();
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function fields()
-    {
-        return [];
-    }
 }

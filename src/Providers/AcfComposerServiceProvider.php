@@ -2,34 +2,11 @@
 
 namespace Log1x\AcfComposer\Providers;
 
-use ReflectionClass;
-use Illuminate\Support\Str;
-use Log1x\AcfComposer\Composer;
-use Log1x\AcfComposer\Partial;
 use Roots\Acorn\ServiceProvider;
-use Symfony\Component\Finder\Finder;
+use Log1x\AcfComposer\AcfComposer;
 
 class AcfComposerServiceProvider extends ServiceProvider
 {
-    /**
-     * The default paths.
-     *
-     * @var \Illuminate\Support\Collection
-     */
-    protected $paths = [
-        'Fields',
-        'Blocks',
-        'Widgets',
-        'Options',
-    ];
-
-    /**
-     * The registered field groups.
-     *
-     * @var array
-     */
-     protected $fields = [];
-
     /**
      * Register any application services.
      *
@@ -37,14 +14,8 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->paths = collect($this->paths)->map(function ($path) {
-            return $this->app->path($path);
-        })->filter(function ($path) {
-            return is_dir($path);
-        });
-
         $this->app->singleton('AcfComposer', function () {
-            return $this->compose();
+            return new AcfComposer($this->app);
         });
     }
 
@@ -55,10 +26,7 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (
-            function_exists('acf') &&
-            ! $this->paths->isEmpty()
-        ) {
+        if (function_exists('acf')) {
             $this->app->make('AcfComposer');
         }
 
@@ -73,31 +41,5 @@ class AcfComposerServiceProvider extends ServiceProvider
             \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
             \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
         ]);
-    }
-
-    /**
-     * Find and compose the available field groups.
-     *
-     * @return void
-     */
-    public function compose()
-    {
-        foreach ((new Finder())->in($this->paths->all())->files() as $composer) {
-            $composer = $this->app->getNamespace() . str_replace(
-                ['/', '.php'],
-                ['\\', ''],
-                Str::after($composer->getPathname(), $this->app->path() . DIRECTORY_SEPARATOR)
-            );
-
-            if (
-                is_subclass_of($composer, Composer::class) &&
-                ! is_subclass_of($composer, Partial::class) &&
-                ! (new ReflectionClass($composer))->isAbstract()
-            ) {
-                $this->fields[] = (new $composer($this->app))->compose();
-            }
-        }
-
-        return $this->fields;
     }
 }
