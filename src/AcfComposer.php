@@ -20,13 +20,6 @@ class AcfComposer
     protected $app;
 
     /**
-     * The filesystem instance.
-     *
-     * @var \Illuminate\Filesystem\Filesystem
-     */
-    protected $file;
-
-    /**
      * The registered paths.
      *
      * @var array
@@ -69,7 +62,8 @@ class AcfComposer
      * Register the default theme paths with ACF Composer.
      *
      * @param  string $path
-     * @return void
+     * @param  string $namespace
+     * @return array
      */
     public function registerPath($path, $namespace = null)
     {
