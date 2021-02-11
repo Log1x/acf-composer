@@ -1,18 +1,27 @@
-name: Main
+name: Compatibility Checks
 
-on: [pull_request]
+on:
+  push:
+    branches: [master]
 
 jobs:
-  main:
-    runs-on: ubuntu-latest
+  compatibility:
+    name: PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}
+    runs-on: ${{ matrix.operating-system }}
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ["7.3", "7.4", "8.0"]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup PHP
+      - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.3"
+          php-version: ${{ matrix.php-versions }}
           coverage: xdebug
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -24,8 +33,8 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ${{ steps.composercache.outputs.dir }}
-          key: ${{ runner.os }}-7.3.x-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-7.3.x-composer-
+          key: ${{ runner.os }}-${{ matrix.php-versions }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.php-versions }}-composer-
 
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader --no-suggest
