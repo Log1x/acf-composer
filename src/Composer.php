@@ -99,8 +99,8 @@ abstract class Composer implements FieldContract
         return collect($fields)->map(
             function ($value, $key) {
                 if (
-                    !in_array($key, $this->keys) ||
-                    (Str::is($key, 'type') && !$this->defaults->has($value))
+                    ! in_array($key, $this->keys) ||
+                    (Str::is($key, 'type') && ! $this->defaults->has($value))
                 ) {
                     return $value;
                 }
@@ -111,7 +111,8 @@ abstract class Composer implements FieldContract
                             if (in_array($key, $this->keys)) {
                                 return $this->build($field);
                             }
-                            if ((Str::is($key, 'type') && $this->defaults->has($value))) {
+                            
+                            if (Str::is($key, 'type') && $this->defaults->has($value)) {
                                 $field = array_merge($this->defaults->get($field['type'], []), $field);
                             }
                         }
