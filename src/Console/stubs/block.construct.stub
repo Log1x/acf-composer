@@ -28,6 +28,7 @@ class DummyClass extends Block
             'align' => true,
             'align_text' => false,
             'align_content' => false,
+            'anchor' => false,
             'mode' => false,
             'multiple' => true,
             'jsx' => true,
