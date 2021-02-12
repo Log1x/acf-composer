@@ -96,40 +96,27 @@ abstract class Composer implements FieldContract
      */
     protected function build($fields = [])
     {
-        return collect($fields)->map(
-            function ($value, $key) {
-                if (
-                    ! in_array($key, $this->keys) ||
-                    (Str::is($key, 'type') && ! $this->defaults->has($value))
-                ) {
-                    return $value;
+        return collect($fields)->map(function ($value, $key) {
+            if (
+                ! in_array($key, $this->keys) ||
+                (Str::is($key, 'type') && ! $this->defaults->has($value))
+            ) {
+                return $value;
+            }
+
+            return array_map(function ($field) {
+                foreach ($field as $key => $value) {
+                    if (in_array($key, $this->keys)) {
+                        return $this->build($field);
+                    }
+
+                    if (Str::is($key, 'type') && $this->defaults->has($value)) {
+                        $field = array_merge($this->defaults->get($field['type'], []), $field);
+                    }
                 }
 
-                return array_map(
-                    function ($field) {
-                        foreach ($field as $key => $value) {
-                            if (in_array($key, $this->keys)) {
-                                return $this->build($field);
-                            }
-                            
-                            if (Str::is($key, 'type') && $this->defaults->has($value)) {
-                                $field = array_merge($this->defaults->get($field['type'], []), $field);
-                            }
-                        }
-
-                        return $field;
-                    },
-                    $value
-                );
-            }
-        )->all();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function fields()
-    {
-        return [];
+                return $field;
+            }, $value);
+        })->all();
     }
 }

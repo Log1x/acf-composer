@@ -1,8 +1,8 @@
 # ACF Composer
 
-![Packagist Version](https://img.shields.io/packagist/v/log1x/acf-composer.svg?style=flat-square)
-![CircleCI](https://img.shields.io/circleci/build/gh/Log1x/acf-composer.svg?style=flat-square)
-![Packagist](https://img.shields.io/packagist/dt/log1x/acf-composer.svg?style=flat-square)
+![Latest Stable Version](https://img.shields.io/packagist/v/log1x/acf-composer.svg?style=flat-square)
+![Total Downloads](https://img.shields.io/packagist/dt/log1x/acf-composer.svg?style=flat-square)
+![Build Status](https://img.shields.io/github/workflow/status/log1x/acf-phone-number/Compatibility%20Checks)
 
 ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
 
@@ -503,4 +503,4 @@ Contributing whether it be through PRs, reporting an issue, or suggesting an ide
 
 ## License
 
-ACF Composer is provided under the [MIT License](https://github.com/log1x/acf-composer/blob/master/LICENSE.md).
+ACF Composer is provided under the [MIT License](LICENSE.md).
