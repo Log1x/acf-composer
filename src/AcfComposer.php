@@ -31,7 +31,14 @@ class AcfComposer
      *
      * @var array
      */
-     protected $composers = [];
+    protected $composers = [];
+
+    /**
+     * The registered plugin paths.
+     *
+     * @var array
+     */
+    protected $plugins = [];
 
     /**
      * The composer classes.
@@ -99,14 +106,28 @@ class AcfComposer
             }
 
             $this->composers[$namespace][] = (new $composer($this->app))->compose();
-            $this->paths[$file->getPath()][] = $composer;
+            $this->paths[dirname($file->getPath())][] = $composer;
         }
 
         return $this->paths;
     }
 
     /**
-     * Retrieve the registered field.
+     * Register an ACF Composer plugin with the container.
+     *
+     * @return void
+     */
+    public function registerPlugin($path, $namespace)
+    {
+        $namespace = str_replace('Providers', '', $namespace);
+
+        $this->registerPath($path, $namespace);
+
+        $this->plugins[$namespace] = dirname($path);
+    }
+
+    /**
+     * Retrieve the registered composers.
      *
      * @return array
      */
@@ -122,6 +143,16 @@ class AcfComposer
      */
     public function getPaths()
     {
-        return $this->paths;
+        return array_unique($this->paths);
+    }
+
+    /**
+     * Retrieve the registered plugins.
+     *
+     * @return array
+     */
+    public function getPlugins()
+    {
+        return $this->plugins;
     }
 }
