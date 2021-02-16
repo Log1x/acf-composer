@@ -12,14 +12,14 @@ class DummyClass extends Widget
      *
      * @var string
      */
-    public $name = 'DummyClass';
+    public $name = 'DummyTitle';
 
     /**
      * The widget description.
      *
      * @var string
      */
-    public $description = 'Lorem ipsum...';
+    public $description = 'This is a DummyTitle widget.';
 
     /**
      * Data to be passed to the widget before rendering.

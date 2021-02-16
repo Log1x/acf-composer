@@ -39,6 +39,54 @@ class MakeCommand extends GeneratorCommand
     }
 
     /**
+     * Replace the namespace for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $name
+     * @return $this
+     */
+    protected function replaceDummyStrings(&$stub, $name)
+    {
+        $searches = [
+            ['DummyTitle', 'DummyCamel', 'DummySlug', 'DummySnake'],
+            ['{{ DummyTitle }}', '{{ DummyCamel }}', '{{ DummySlug }}', '{{ DummySnake }}'],
+            ['{{DummyTitle}}', '{{DummyCamel}}', '{{DummySlug}}', '{{DummySnake}}'],
+        ];
+
+        $name = Str::title(
+            str_replace('-', ' ', Str::kebab(Str::afterLast($name, '\\')))
+        );
+
+        foreach ($searches as $search) {
+            $stub = str_replace(
+                $search,
+                [$name, Str::camel($name), Str::kebab($name), Str::snake($name)],
+                $stub
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Build the class with the given name.
+     *
+     * @param  string  $name
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function buildClass($name)
+    {
+        $stub = $this->files->get($this->getStub());
+
+        return $this
+            ->replaceDummyStrings($stub, $name)
+            ->replaceNamespace($stub, $name)
+            ->replaceClass($stub, $name);
+    }
+
+    /**
      * Return the full view destination.
      *
      * @return string

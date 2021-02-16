@@ -12,14 +12,14 @@ class DummyClass extends Block
      *
      * @var string
      */
-    public $name = 'DummyClass';
+    public $name = 'DummyTitle';
 
     /**
      * The block description.
      *
      * @var string
      */
-    public $description = 'A simple DummyClass block.';
+    public $description = 'A simple DummyTitle block.';
 
     /**
      * The block category.
