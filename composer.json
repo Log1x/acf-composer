@@ -16,7 +16,7 @@
   },
   "require": {
     "php": "^7.3|^8.0",
-    "stoutlogic/acf-builder": "^1.10"
+    "stoutlogic/acf-builder": "^1.11"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.5"
