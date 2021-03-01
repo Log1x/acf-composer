@@ -152,7 +152,7 @@ class MakeCommand extends GeneratorCommand
      */
     protected function getPaths()
     {
-        $paths = $this->app['view.finder']->getPaths();
+        $paths = $this->laravel->get('view.finder')->getPaths();
 
         if (count($paths) === 1) {
             return head($paths);
