@@ -94,7 +94,7 @@ class AcfComposer
             $composer = $namespace . str_replace(
                 ['/', '.php'],
                 ['\\', ''],
-                Str::after($file->getPathname(), Str::beforeLast($file->getPath(), '/') . DIRECTORY_SEPARATOR)
+                Str::after($file->getPathname(), Str::beforeLast($file->getPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)
             );
 
             if (
