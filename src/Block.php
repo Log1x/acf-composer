@@ -166,6 +166,13 @@ abstract class Block extends Composer implements BlockContract
     public $styles = [];
 
     /**
+     * The block active style.
+     *
+     * @var string
+     */
+    public $style;
+
+    /**
      * The block preview example data.
      *
      * @var array
@@ -180,6 +187,20 @@ abstract class Block extends Composer implements BlockContract
     public function enqueue()
     {
         //
+    }
+
+    /**
+     * Returns the active block style based on the block CSS classes.
+     * If none is found, it returns the default style set in $styles.
+     *
+     * @return string|null
+     */
+    public function getStyle()
+    {
+        return Str::of($this->block->className ?? null)
+            ->matchAll('/is-style-(\S+)/')
+            ->get(0) ??
+            Arr::get(collect($this->block->styles)->firstWhere('isDefault'), 'name');
     }
 
     /**
@@ -289,6 +310,8 @@ abstract class Block extends Composer implements BlockContract
                 false,
             'classes' => $this->block->className ?? false,
         ])->filter()->implode(' ');
+
+        $this->style = $this->getStyle();
 
         return $this->view($this->view, ['block' => $this]);
     }
