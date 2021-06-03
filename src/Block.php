@@ -214,7 +214,7 @@ abstract class Block extends Composer implements BlockContract
             ]);
         }
 
-        // The matrix isn't available on WP > 5.5
+        // The matrix isn't available on WP < 5.5
         if (Arr::has($this->supports, 'align_content') && version_compare('5.5', get_bloginfo('version'), '>')) {
             if (! is_bool($this->supports['align_content'])) {
                 $this->supports['align_content'] = true;
