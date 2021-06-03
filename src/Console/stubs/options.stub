@@ -12,14 +12,14 @@ class DummyClass extends Field
      *
      * @var string
      */
-    public $name = 'DummyClass';
+    public $name = 'DummyTitle';
 
     /**
      * The option page document title.
      *
      * @var string
      */
-    public $title = 'DummyClass | Options';
+    public $title = 'DummyTitle | Options';
 
     /**
      * The option page field group.

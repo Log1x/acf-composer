@@ -28,6 +28,10 @@ trait InteractsWithPartial
             return $partial;
         }
 
+        if (file_exists($partial)) {
+            return include $partial;
+        }
+
         return file_exists(
             $partial = $this->app->path(
                 Str::finish(

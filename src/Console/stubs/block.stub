@@ -12,14 +12,14 @@ class DummyClass extends Block
      *
      * @var string
      */
-    public $name = 'DummyClass';
+    public $name = 'DummyTitle';
 
     /**
      * The block description.
      *
      * @var string
      */
-    public $description = 'A simple DummyClass block.';
+    public $description = 'A simple DummyTitle block.';
 
     /**
      * The block category.
@@ -93,9 +93,27 @@ class DummyClass extends Block
         'align' => true,
         'align_text' => false,
         'align_content' => false,
+        'anchor' => false,
         'mode' => false,
         'multiple' => true,
         'jsx' => true,
+    ];
+
+    /**
+     * The block styles.
+     *
+     * @var array
+     */
+    public $styles = [
+        [
+            'name' => 'light',
+            'label' => 'Light',
+            'isDefault' => true,
+        ],
+        [
+            'name' => 'dark',
+            'label' => 'Dark',
+        ]
     ];
 
     /**

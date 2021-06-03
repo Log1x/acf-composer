@@ -159,6 +159,13 @@ abstract class Block extends Composer implements BlockContract
     public $supports = [];
 
     /**
+     * The block styles.
+     *
+     * @var array
+     */
+    public $styles = [];
+
+    /**
      * The block preview example data.
      *
      * @var array
@@ -228,6 +235,7 @@ abstract class Block extends Composer implements BlockContract
                 'align' => $this->align,
                 'align_text' => $this->align_text ?? $this->align,
                 'align_content' => $this->align_content,
+                'styles' => $this->styles,
                 'supports' => $this->supports,
                 'example' => [
                     'attributes' => [

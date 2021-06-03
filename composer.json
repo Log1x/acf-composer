@@ -15,14 +15,13 @@
     }
   },
   "require": {
-    "php": ">=7.2.5",
-    "stoutlogic/acf-builder": "^1.10"
+    "php": "^7.3|^8.0",
+    "stoutlogic/acf-builder": "^1.11"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.5"
   },
   "suggest": {
-    "log1x/sage-directives": "Provides Sage-specific Blade directives for use with WordPress and ACF within your views.",
     "log1x/modern-acf-options": "Gives ACF option pages a much needed design overhaul."
   },
   "extra": {
@@ -34,7 +33,7 @@
   },
   "scripts": {
     "lint": [
-      "phpcs --ignore=vendor,resources --extensions=php --standard=PSR12 ."
+      "phpcs --ignore=vendor --extensions=php --standard=PSR12 ."
     ]
   }
 }
