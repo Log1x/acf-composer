@@ -21,7 +21,7 @@ trait InteractsWithBlade
             isset($this->block) &&
             ! empty($this->preview)
         ) {
-            $preview = str_replace(
+            $preview = Str::replaceLast(
                 $name = Str::afterLast($view, '.'),
                 Str::start($name, 'preview-'),
                 $view
