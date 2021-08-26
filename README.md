@@ -88,13 +88,6 @@ class Example extends Field
 
 Proceed by checking the `Add Post` for the field to ensure things are working as intended – and then [get to work](https://github.com/Log1x/acf-builder-cheatsheet).
 
-#### Need the block name and description to be translatable?
-The block properties need to be set by `__construct` to be able to use localization. To generate a block with properties set inside of `__construct` run:
-
-```bash
-$ wp acorn acf:block Example --construct
-```
-
 ### Generating a Field Partial
 
 A field partial consists of a field group that can be re-used and/or added to existing field groups.
@@ -258,6 +251,12 @@ class Example extends Block
         return get_field('items') ?: [];
     }
 }
+```
+
+You may also pass `--construct` to the command above to generate a stub with the block properties set within the constructor. This can be useful for localization, etc.
+
+```bash
+$ wp acorn acf:options Block --construct
 ```
 
 When running the block generator, one difference to a generic field is an accompanied `View` is generated in the `resources/views/blocks` directory.
