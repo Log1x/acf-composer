@@ -287,6 +287,10 @@ abstract class Block extends Composer implements BlockContract
             'align_content' => ! empty($this->supports['align_content']) ?
                 Str::start($this->block->align_content, 'is-position-') :
                 false,
+            'full_height' => ! empty($this->supports['full_height'])
+                && ! empty($this->block->full_height) ?
+                'full-height' :
+                false,
             'classes' => $this->block->className ?? false,
         ])->filter()->implode(' ');
 

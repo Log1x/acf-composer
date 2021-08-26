@@ -93,6 +93,7 @@ class DummyClass extends Block
         'align' => true,
         'align_text' => false,
         'align_content' => false,
+        'full_height' => false,
         'anchor' => false,
         'mode' => false,
         'multiple' => true,
