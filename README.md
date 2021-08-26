@@ -95,8 +95,6 @@ The block properties need to be set by `__construct` to be able to use localizat
 $ wp acorn acf:block Example --construct
 ```
 
-
-
 ### Generating a Field Partial
 
 A field partial consists of a field group that can be re-used and/or added to existing field groups.
