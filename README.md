@@ -256,7 +256,7 @@ class Example extends Block
 You may also pass `--construct` to the command above to generate a stub with the block properties set within the constructor. This can be useful for localization, etc.
 
 ```bash
-$ wp acorn acf:options Block --construct
+$ wp acorn acf:block Example --construct
 ```
 
 When running the block generator, one difference to a generic field is an accompanied `View` is generated in the `resources/views/blocks` directory.
