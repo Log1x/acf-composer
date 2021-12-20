@@ -90,7 +90,7 @@ class AcfComposer
             $namespace = $this->app->getNamespace();
         }
 
-        foreach ((new Finder())->in($paths->toArray())->files() as $file) {
+        foreach ((new Finder())->in($paths->toArray())->files()->sortByName() as $file) {
             $composer = $namespace . str_replace(
                 ['/', '.php'],
                 ['\\', ''],
