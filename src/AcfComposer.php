@@ -61,7 +61,7 @@ class AcfComposer
     public function __construct(Application $app)
     {
         $this->app = $app;
-
+        
         $this->registerPath($this->app->path());
     }
 
@@ -90,15 +90,20 @@ class AcfComposer
             $namespace = $this->app->getNamespace();
         }
 
-        foreach ((new Finder())->in($paths->toArray())->files()->sortByName() as $file) {
-            $composer = $namespace . str_replace(
-                ['/', '.php'],
-                ['\\', ''],
-                Str::after(
-                    $file->getPathname(),
-                    Str::beforeLast($file->getPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR
-                )
+        foreach ((new Finder())->in($paths->toArray())->files() as $file) {
+
+            $relativePath = Str::remove(
+                $this->app->path() . DIRECTORY_SEPARATOR, $file->getPathname()
             );
+
+            $folders = Str::beforeLast($relativePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $className = Str::after($relativePath, $folders);
+
+            $composer = $namespace . str_replace(
+                    ['/', '.php'],
+                    ['\\', ''],
+                    $folders . $className
+                );
 
             if (
                 ! is_subclass_of($composer, Composer::class) ||
