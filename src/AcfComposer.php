@@ -2,17 +2,15 @@
 
 namespace Log1x\AcfComposer;
 
-use ReflectionClass;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Composer;
-use Log1x\AcfComposer\Partial;
+use ReflectionClass;
 use Roots\Acorn\Application;
 use Symfony\Component\Finder\Finder;
-use Illuminate\Support\Facades\File;
 
 class AcfComposer
 {
-   /**
+    /**
      * The application instance.
      *
      * @var \Roots\Acorn\Application
@@ -55,26 +53,25 @@ class AcfComposer
     /**
      * Create a new Composer instance.
      *
-     * @param  \Roots\Acorn\Application $app
+     * @param  \Roots\Acorn\Application  $app
      * @return void
      */
     public function __construct(Application $app)
     {
         $this->app = $app;
-        
         $this->registerPath($this->app->path());
     }
 
     /**
      * Register the default theme paths with ACF Composer.
      *
-     * @param  string $path
-     * @param  string $namespace
+     * @param  string  $path
+     * @param  string  $namespace
      * @return array
      */
     public function registerPath($path, $namespace = null)
     {
-        if (! function_exists('acf')) {
+        if (!function_exists('acf')) {
             return;
         }
 
@@ -91,29 +88,34 @@ class AcfComposer
         }
 
         foreach ((new Finder())->in($paths->toArray())->files() as $file) {
-
             $relativePath = Str::remove(
-                $this->app->path() . DIRECTORY_SEPARATOR, $file->getPathname()
+                $this->app->path() . DIRECTORY_SEPARATOR,
+                $file->getPathname()
             );
 
-            $folders = Str::beforeLast($relativePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $folders   = Str::beforeLast(
+                $relativePath,
+                DIRECTORY_SEPARATOR
+            ) . DIRECTORY_SEPARATOR;
+
             $className = Str::after($relativePath, $folders);
 
-            $composer = $namespace . str_replace(
+            $composer =
+                $namespace . str_replace(
                     ['/', '.php'],
                     ['\\', ''],
                     $folders . $className
                 );
 
             if (
-                ! is_subclass_of($composer, Composer::class) ||
+                !is_subclass_of($composer, Composer::class) ||
                 is_subclass_of($composer, Partial::class) ||
                 (new ReflectionClass($composer))->isAbstract()
             ) {
                 continue;
             }
 
-            $this->composers[$namespace][] = (new $composer($this->app))->compose();
+            $this->composers[$namespace][]            = (new $composer($this->app))->compose();
             $this->paths[dirname($file->getPath())][] = $composer;
         }
 
