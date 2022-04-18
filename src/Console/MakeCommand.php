@@ -271,4 +271,13 @@ class MakeCommand extends GeneratorCommand
             $this->defaultStubDir
         );
     }
+
+    protected function ensureStub($name)
+    {
+        $path = '/' . $name . '.stub';
+
+        return $this->files->exists($this->getStubDir() . $path)
+            ? $this->getStubDir() . $path
+            : $this->defaultStubDir . $path;
+    }
 }
