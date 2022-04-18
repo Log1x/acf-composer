@@ -31,6 +31,6 @@ return [
     */
 
     // 'stubs' => [
-    //     'dir' => __DIR__ . '../src/Console/stubs'
+    //     'dir' => __DIR__ . "/stubs"
     // ]
 ];
