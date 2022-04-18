@@ -21,7 +21,7 @@ return [
         'select' => ['ui' => 1],
     ],
 
-    'stubs' => [
-        'dir' => __DIR__ . '../src/Console/stubs'
-    ]
+    // 'stubs' => [
+    //     'dir' => __DIR__ . '../src/Console/stubs'
+    // ]
 ];
