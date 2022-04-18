@@ -499,6 +499,24 @@ Here are a couple defaults I personally use. Any prefixed with `acfe_` are relat
 ],
 ```
 
+## Custom stub generation
+
+Start by publishing the `stubs` directory using Acorn:
+
+```bash
+$ wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerServiceProvider" --tag="acf-console-stubs"
+```
+
+Then uncomment the "stubs" section of the `acf/config.php` file:
+
+```php
+'stubs' => [
+    'dir' => __DIR__ . "/acf/stubs"
+]
+```
+
+The publish command generates all available stubs by default. However, each stub file is optional. When a stub file doesn't exist in the `acf/stubs` directory the default stub provided by the package will be used.
+
 ## Bug Reports
 
 If you discover a bug in ACF Composer, please [open an issue](https://github.com/log1x/acf-composer/issues).
