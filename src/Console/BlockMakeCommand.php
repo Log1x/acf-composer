@@ -44,9 +44,9 @@ class BlockMakeCommand extends MakeCommand
     protected function getStub()
     {
         if ($this->option('construct')) {
-            return $this->getStubDir() . '/block.construct.stub';
+            return $this->ensureStub('block.construct');
         }
 
-        return $this->getStubDir() . '/block.stub';
+        return $this->ensureStub('block');
     }
 }
