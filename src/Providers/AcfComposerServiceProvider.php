@@ -32,6 +32,10 @@ class AcfComposerServiceProvider extends ServiceProvider
             __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
         ], 'config');
 
+        $this->publishes([
+            __DIR__ . '/../Console/stubs/' => $this->app->configPath('acf/stubs'),
+        ], 'acf-console-stubs');
+
         $this->commands([
             \Log1x\AcfComposer\Console\BlockMakeCommand::class,
             \Log1x\AcfComposer\Console\FieldMakeCommand::class,
