@@ -133,7 +133,7 @@ class MakeCommand extends GeneratorCommand
             return;
         }
 
-        return $this->getStubDir() . "/views/{$this->view}.stub";
+        return $this->ensureStub("views/{$this->view}");
     }
 
     /**
