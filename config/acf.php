@@ -31,6 +31,6 @@ return [
     */
 
     // 'stubs' => [
-    //     'dir' => __DIR__ . "/stubs"
+    //     'dir' => __DIR__ . "/acf/stubs"
     // ]
 ];
