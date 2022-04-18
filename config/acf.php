@@ -20,4 +20,8 @@ return [
         'trueFalse' => ['ui' => 1],
         'select' => ['ui' => 1],
     ],
+
+    'stubs' => [
+        'dir' => __DIR__ . '../src/Console/stubs'
+    ]
 ];

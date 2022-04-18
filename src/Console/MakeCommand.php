@@ -3,6 +3,7 @@
 namespace Log1x\AcfComposer\Console;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Roots\Acorn\Console\Commands\GeneratorCommand;
 
@@ -21,6 +22,8 @@ class MakeCommand extends GeneratorCommand
      * @var string
      */
     protected $path;
+
+    protected $defaultStubDir = __DIR__ . "/stubs";
 
     /**
      * Execute the console command.
@@ -130,7 +133,7 @@ class MakeCommand extends GeneratorCommand
             return;
         }
 
-        return __DIR__ . "/stubs/views/{$this->view}.stub";
+        return $this->getStubDir() . "/views/{$this->view}.stub";
     }
 
     /**
@@ -258,5 +261,14 @@ class MakeCommand extends GeneratorCommand
     protected function getStub()
     {
         //
+    }
+
+    protected function getStubDir()
+    {
+        return Arr::get(
+            $this->app->config->get('acf'),
+            'stubs.dir',
+            $this->defaultStubDir
+        );
     }
 }
