@@ -263,6 +263,11 @@ class MakeCommand extends GeneratorCommand
         //
     }
 
+    /**
+     * Get the path to the stub directory.
+     *
+     * @return string
+     */
     protected function getStubDir()
     {
         return Arr::get(
@@ -272,6 +277,15 @@ class MakeCommand extends GeneratorCommand
         );
     }
 
+    /**
+     * Get the path to the stub file for the given name.
+     *
+     * When the stub file doesn't exist within the current user configured
+     * stub directory fallback to the default stub directory.
+     *
+     * @param string $name
+     * @return string
+     */
     protected function ensureStub($name)
     {
         $path = '/' . $name . '.stub';
