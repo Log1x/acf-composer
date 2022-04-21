@@ -4,14 +4,6 @@ namespace Log1x\AcfComposer;
 
 abstract class Partial extends Composer
 {
-
-    /**
-     * The field groups.
-     *
-     * @var \StoutLogic\AcfBuilder\FieldsBuilder|array
-     */
-    protected $fields;
-
     /**
      * Compose and register the defined field groups with ACF.
      *
@@ -19,12 +11,12 @@ abstract class Partial extends Composer
      */
     public function compose()
     {
-        $this->fields = $this->fields();
+        $fields = $this->fields();
 
-        if (empty($this->fields)) {
+        if (empty($fields)) {
             return;
         }
 
-        return $this->fields;
+        return $fields;
     }
 }
