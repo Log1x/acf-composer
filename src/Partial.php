@@ -11,10 +11,12 @@ abstract class Partial extends Composer
      */
     public function compose()
     {
-        if (empty($this->fields())) {
+        $fields = $this->fields();
+
+        if (empty($fields)) {
             return;
         }
 
-        return $this->fields();
+        return $fields;
     }
 }
