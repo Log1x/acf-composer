@@ -71,7 +71,7 @@ class AcfComposer
      */
     public function registerPath($path, $namespace = null)
     {
-        if (!function_exists('acf')) {
+        if (! function_exists('acf')) {
             return;
         }
 
