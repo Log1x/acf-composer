@@ -2,9 +2,9 @@
 
 namespace Log1x\AcfComposer;
 
+use ReflectionClass;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use ReflectionClass;
 use Roots\Acorn\Application;
 use Symfony\Component\Finder\Finder;
 
@@ -53,7 +53,7 @@ class AcfComposer
     /**
      * Create a new Composer instance.
      *
-     * @param  \Roots\Acorn\Application  $app
+     * @param  \Roots\Acorn\Application $app
      * @return void
      */
     public function __construct(Application $app)
@@ -65,8 +65,8 @@ class AcfComposer
     /**
      * Register the default theme paths with ACF Composer.
      *
-     * @param  string  $path
-     * @param  string  $namespace
+     * @param  string $path
+     * @param  string $namespace
      * @return array
      */
     public function registerPath($path, $namespace = null)
@@ -93,29 +93,28 @@ class AcfComposer
                 $file->getPathname()
             );
 
-            $folders   = Str::beforeLast(
+            $folders = Str::beforeLast(
                 $relativePath,
                 DIRECTORY_SEPARATOR
             ) . DIRECTORY_SEPARATOR;
 
             $className = Str::after($relativePath, $folders);
 
-            $composer =
-                $namespace . str_replace(
-                    ['/', '.php'],
-                    ['\\', ''],
-                    $folders . $className
-                );
+            $composer = $namespace . str_replace(
+                ['/', '.php'],
+                ['\\', ''],
+                $folders . $className
+            );
 
             if (
-                !is_subclass_of($composer, Composer::class) ||
+                ! is_subclass_of($composer, Composer::class) ||
                 is_subclass_of($composer, Partial::class) ||
                 (new ReflectionClass($composer))->isAbstract()
             ) {
                 continue;
             }
 
-            $this->composers[$namespace][]            = (new $composer($this->app))->compose();
+            $this->composers[$namespace][] = (new $composer($this->app))->compose();
             $this->paths[dirname($file->getPath())][] = $composer;
         }
 
