@@ -92,11 +92,11 @@ class AcfComposer
 
         foreach ((new Finder())->in($paths->toArray())->files()->sortByName() as $file) {
             $composer = $namespace . str_replace(
-                    [ '/', '.php' ],
-                    [ '\\', '' ],
+                    ['/', '.php'],
+                    ['\\', ''],
                     Str::replace(
                         $path . DIRECTORY_SEPARATOR,
-                        "",
+                        '',
                         $file->getPathname(),
                     ),
                 );
