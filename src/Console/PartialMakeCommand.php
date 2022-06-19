@@ -33,6 +33,6 @@ class PartialMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
-        return $this->ensureStub('partial');
+        return $this->resolveStub('partial');
     }
 }

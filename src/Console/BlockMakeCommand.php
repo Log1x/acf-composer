@@ -44,9 +44,9 @@ class BlockMakeCommand extends MakeCommand
     protected function getStub()
     {
         if ($this->option('construct')) {
-            return $this->ensureStub('block.construct');
+            return $this->resolveStub('block.construct');
         }
 
-        return $this->ensureStub('block');
+        return $this->resolveStub('block');
     }
 }

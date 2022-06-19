@@ -42,9 +42,9 @@ class OptionsMakeCommand extends MakeCommand
     protected function getStub()
     {
         if ($this->option('full')) {
-            return $this->ensureStub('options.full');
+            return $this->resolveStub('options.full');
         }
 
-        return $this->ensureStub('options');
+        return $this->resolveStub('options');
     }
 }

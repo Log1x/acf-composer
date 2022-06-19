@@ -33,6 +33,6 @@ class FieldMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
-        return $this->ensureStub('field');
+        return $this->resolveStub('field');
     }
 }

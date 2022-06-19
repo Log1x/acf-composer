@@ -40,6 +40,6 @@ class WidgetMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
-        return $this->ensureStub('widget');
+        return $this->resolveStub('widget');
     }
 }

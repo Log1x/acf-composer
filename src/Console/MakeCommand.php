@@ -23,8 +23,6 @@ class MakeCommand extends GeneratorCommand
      */
     protected $path;
 
-    protected $defaultStubDir = __DIR__ . "/stubs";
-
     /**
      * Execute the console command.
      *
@@ -133,7 +131,7 @@ class MakeCommand extends GeneratorCommand
             return;
         }
 
-        return $this->ensureStub("views/{$this->view}");
+        return $this->resolveStub("views/{$this->view}");
     }
 
     /**
@@ -264,34 +262,17 @@ class MakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the path to the stub directory.
+     * Get the resolved stub file path.
      *
+     * @param  string $name
      * @return string
      */
-    protected function getStubDir()
-    {
-        return Arr::get(
-            $this->app->config->get('acf'),
-            'stubs.dir',
-            $this->defaultStubDir
-        );
-    }
-
-    /**
-     * Get the path to the stub file for the given name.
-     *
-     * When the stub file doesn't exist within the current user configured
-     * stub directory fallback to the default stub directory.
-     *
-     * @param string $name
-     * @return string
-     */
-    protected function ensureStub($name)
+    protected function resolveStub($name)
     {
         $path = '/' . $name . '.stub';
 
-        return $this->files->exists($this->getStubDir() . $path)
-            ? $this->getStubDir() . $path
-            : $this->defaultStubDir . $path;
+        return $this->files->exists($stubsPath = $this->app->basePath('stubs/acf-composer') . $path)
+            ? $stubsPath
+            : __DIR__ . '/stubs' . $path;
     }
 }

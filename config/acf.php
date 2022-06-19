@@ -20,17 +20,4 @@ return [
         'trueFalse' => ['ui' => 1],
         'select' => ['ui' => 1],
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Stub Settings
-    |--------------------------------------------------------------------------
-    |
-    | Here you can specify settings that will be used during file generation.
-    |
-    */
-
-    // 'stubs' => [
-    //     'dir' => __DIR__ . "/acf/stubs"
-    // ]
 ];
