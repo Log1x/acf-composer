@@ -33,6 +33,6 @@ class PartialMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/stubs/partial.stub';
+        return $this->resolveStub('partial');
     }
 }

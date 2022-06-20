@@ -3,6 +3,7 @@
 namespace Log1x\AcfComposer\Console;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Roots\Acorn\Console\Commands\GeneratorCommand;
 
@@ -130,7 +131,7 @@ class MakeCommand extends GeneratorCommand
             return;
         }
 
-        return __DIR__ . "/stubs/views/{$this->view}.stub";
+        return $this->resolveStub("views/{$this->view}");
     }
 
     /**
@@ -258,5 +259,20 @@ class MakeCommand extends GeneratorCommand
     protected function getStub()
     {
         //
+    }
+
+    /**
+     * Get the resolved stub file path.
+     *
+     * @param  string $name
+     * @return string
+     */
+    protected function resolveStub($name)
+    {
+        $path = '/' . $name . '.stub';
+
+        return $this->files->exists($stubsPath = $this->app->basePath('stubs/acf-composer') . $path)
+            ? $stubsPath
+            : __DIR__ . '/stubs' . $path;
     }
 }

@@ -42,9 +42,9 @@ class OptionsMakeCommand extends MakeCommand
     protected function getStub()
     {
         if ($this->option('full')) {
-            return __DIR__ . '/stubs/options.full.stub';
+            return $this->resolveStub('options.full');
         }
 
-        return __DIR__ . '/stubs/options.stub';
+        return $this->resolveStub('options');
     }
 }

@@ -33,6 +33,6 @@ class FieldMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/stubs/field.stub';
+        return $this->resolveStub('field');
     }
 }

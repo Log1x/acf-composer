@@ -40,6 +40,6 @@ class WidgetMakeCommand extends MakeCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/stubs/widget.stub';
+        return $this->resolveStub('widget');
     }
 }

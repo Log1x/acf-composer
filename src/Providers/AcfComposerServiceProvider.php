@@ -38,6 +38,7 @@ class AcfComposerServiceProvider extends ServiceProvider
             \Log1x\AcfComposer\Console\PartialMakeCommand::class,
             \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
             \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
+            \Log1x\AcfComposer\Console\StubPublishCommand::class,
         ]);
     }
 }
