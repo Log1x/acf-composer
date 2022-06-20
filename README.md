@@ -39,7 +39,7 @@ $ composer require log1x/acf-composer
 Start by publishing the `config/acf.php` configuration file using Acorn:
 
 ```bash
-$ wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerServiceProvider" --tag="config"
+$ wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerServiceProvider"
 ```
 
 ### Generating a Field
