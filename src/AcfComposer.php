@@ -3,16 +3,14 @@
 namespace Log1x\AcfComposer;
 
 use ReflectionClass;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Composer;
-use Log1x\AcfComposer\Partial;
 use Roots\Acorn\Application;
 use Symfony\Component\Finder\Finder;
-use Illuminate\Support\Facades\File;
 
 class AcfComposer
 {
-   /**
+    /**
      * The application instance.
      *
      * @var \Roots\Acorn\Application
@@ -61,7 +59,6 @@ class AcfComposer
     public function __construct(Application $app)
     {
         $this->app = $app;
-
         $this->registerPath($this->app->path());
     }
 
@@ -90,14 +87,23 @@ class AcfComposer
             $namespace = $this->app->getNamespace();
         }
 
-        foreach ((new Finder())->in($paths->toArray())->files()->sortByName() as $file) {
+        foreach ((new Finder())->in($paths->toArray())->files() as $file) {
+            $relativePath = Str::remove(
+                $this->app->path() . DIRECTORY_SEPARATOR,
+                $file->getPathname()
+            );
+
+            $folders = Str::beforeLast(
+                $relativePath,
+                DIRECTORY_SEPARATOR
+            ) . DIRECTORY_SEPARATOR;
+
+            $className = Str::after($relativePath, $folders);
+
             $composer = $namespace . str_replace(
                 ['/', '.php'],
                 ['\\', ''],
-                Str::after(
-                    $file->getPathname(),
-                    Str::beforeLast($file->getPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR
-                )
+                $folders . $className
             );
 
             if (
