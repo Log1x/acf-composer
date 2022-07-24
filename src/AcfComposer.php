@@ -88,8 +88,9 @@ class AcfComposer
         }
 
         foreach ((new Finder())->in($paths->toArray())->files()->sortByName() as $file) {
-            $relativePath = Str::remove(
+            $relativePath = str_replace(
                 $this->app->path() . DIRECTORY_SEPARATOR,
+                '',
                 $file->getPathname()
             );
 
