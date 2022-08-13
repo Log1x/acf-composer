@@ -243,7 +243,7 @@ abstract class Block extends Composer implements BlockContract
         }
 
         $this->register(function () {
-            acf_register_block([
+            $settings = [
                 'name' => $this->slug,
                 'title' => $this->name,
                 'description' => $this->description,
@@ -258,19 +258,24 @@ abstract class Block extends Composer implements BlockContract
                 'align_content' => $this->align_content,
                 'styles' => $this->styles,
                 'supports' => $this->supports,
-                'example' => [
-                    'attributes' => [
-                        'mode' => 'preview',
-                        'data' => $this->example,
-                    ]
-                ],
                 'enqueue_assets' => function () {
                     return $this->enqueue();
                 },
                 'render_callback' => function ($block, $content = '', $preview = false, $post_id = 0) {
                     echo $this->render($block, $content, $preview, $post_id);
-                }
-            ]);
+                },
+            ];
+
+            if (! empty($this->example)) {
+                $settings = Arr::add($settings, 'example', [
+                    'attributes' => [
+                        'mode' => 'preview',
+                        'data' => $this->example,
+                    ],
+                ]);
+            }
+
+            acf_register_block_type($settings);
         });
 
         return $this;
