@@ -275,7 +275,7 @@ abstract class Block extends Composer implements BlockContract
                 ]);
             }
 
-            acf_register_block($settings);
+            acf_register_block_type($settings);
         });
 
         return $this;
