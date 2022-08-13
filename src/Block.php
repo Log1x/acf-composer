@@ -263,7 +263,7 @@ abstract class Block extends Composer implements BlockContract
                 },
                 'render_callback' => function ($block, $content = '', $preview = false, $post_id = 0) {
                     echo $this->render($block, $content, $preview, $post_id);
-                }
+                },
             ];
 
             if (! empty($this->example)) {
