@@ -61,7 +61,7 @@ abstract class Composer implements FieldContract
             : $this->fields;
 
         if ($this->defaults->has('field_group')) {
-            $this->fields = array_merge($this->fields ?? [], $this->defaults->get('field_group'));
+            $this->fields = array_merge($this->defaults->get('field_group'), $this->fields ?? []);
         }
     }
 
