@@ -10,7 +10,7 @@ class DummyClass extends Partial
     /**
      * The partial field group.
      *
-     * @return array
+     * @return \StoutLogic\AcfBuilder\FieldsBuilder
      */
     public function fields()
     {
