@@ -37,6 +37,27 @@ abstract class Block extends Composer implements BlockContract
      *
      * @param int
      */
+    public $post_id;
+
+    /**
+     * The block instance.
+     *
+     * @var \WP_Block
+     */
+    public $instance;
+
+    /**
+     * The block context.
+     *
+     * @var array
+     */
+    public $context;
+
+    /**
+     * The current post.
+     *
+     * @param \WP_Post
+     */
     public $post;
 
     /**
@@ -261,8 +282,8 @@ abstract class Block extends Composer implements BlockContract
                 'enqueue_assets' => function () {
                     return $this->enqueue();
                 },
-                'render_callback' => function ($block, $content = '', $preview = false, $post_id = 0) {
-                    echo $this->render($block, $content, $preview, $post_id);
+                'render_callback' => function ($block, $content = '', $preview = false, $post_id = 0, $wp_block = false, $context = false) {
+                    echo $this->render($block, $content, $preview, $post_id, $wp_block, $context);
                 },
             ];
 
@@ -290,14 +311,16 @@ abstract class Block extends Composer implements BlockContract
      * @param  int $post_id
      * @return string
      */
-    public function render($block, $content = '', $preview = false, $post_id = 0)
+    public function render($block, $content = '', $preview = false, $post_id = 0, $wp_block = false, $context = false)
     {
         $this->block = (object) $block;
         $this->content = $content;
         $this->preview = $preview;
+        $this->post_id = $post_id;
+        $this->instance = $wp_block;
+        $this->context = $context;
 
         $this->post = get_post($post_id);
-        $this->post_id = $post_id;
 
         $this->classes = collect([
             'slug' => Str::start(
