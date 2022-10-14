@@ -312,10 +312,12 @@ abstract class Block extends Composer implements BlockContract
     /**
      * Render the ACF block.
      *
-     * @param  array $block
-     * @param  string $content
-     * @param  bool $preview
-     * @param  int $post_id
+     * @param  array     $block
+     * @param  string    $content
+     * @param  bool      $preview
+     * @param  int       $post_id
+     * @param  \WP_Block $wp_block
+     * @param  array     $context
      * @return string
      */
     public function render($block, $content = '', $preview = false, $post_id = 0, $wp_block = false, $context = false)
