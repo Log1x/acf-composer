@@ -282,7 +282,14 @@ abstract class Block extends Composer implements BlockContract
                 'enqueue_assets' => function () {
                     return $this->enqueue();
                 },
-                'render_callback' => function ($block, $content = '', $preview = false, $post_id = 0, $wp_block = false, $context = false) {
+                'render_callback' => function (
+                    $block,
+                    $content = '',
+                    $preview = false,
+                    $post_id = 0,
+                    $wp_block = false,
+                    $context = false
+                ) {
                     echo $this->render($block, $content, $preview, $post_id, $wp_block, $context);
                 },
             ];
