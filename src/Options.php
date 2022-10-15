@@ -132,7 +132,7 @@ abstract class Options extends Composer
         }
 
         $this->register(function () {
-            if (! $this->show_in_menu) {
+            if (! $this->menu) {
                 return;
             }
 
