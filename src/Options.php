@@ -47,7 +47,7 @@ abstract class Options extends Composer
      *
      * @var boolean
      */
-    public $show_in_menu = true;
+    public $menu = true;
 
     /**
      * The slug of another admin page to be used as a parent.
