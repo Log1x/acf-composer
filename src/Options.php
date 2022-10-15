@@ -43,6 +43,13 @@ abstract class Options extends Composer
     public $position = PHP_INT_MAX;
 
     /**
+     * The option page visibility in the admin menu.
+     *
+     * @var boolean
+     */
+    public $menu = true;
+
+    /**
      * The slug of another admin page to be used as a parent.
      *
      * @var string
@@ -125,6 +132,10 @@ abstract class Options extends Composer
         }
 
         $this->register(function () {
+            if (! $this->menu) {
+                return;
+            }
+
             acf_add_options_page([
                 'menu_title' => $this->name,
                 'menu_slug' => $this->slug,

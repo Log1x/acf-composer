@@ -43,6 +43,13 @@ class DummyClass extends Field
     public $position = PHP_INT_MAX;
 
     /**
+     * The option page visibility in the admin menu.
+     *
+     * @var boolean
+     */
+    public $menu = true;
+
+    /**
      * The slug of another admin page to be used as a parent.
      *
      * @var string
