@@ -43,7 +43,7 @@ class DummyClass extends Field
     public $position = PHP_INT_MAX;
 
     /**
-     * The option page visibility in the menu admin menu.
+     * The option page visibility in the admin menu.
      *
      * @var boolean
      */
