@@ -138,6 +138,13 @@ abstract class Block extends Composer implements BlockContract
     public $parent = [];
 
     /**
+     * The ancestor block type allow list.
+     *
+     * @var array
+     */
+    public $ancestor = [];
+
+    /**
      * The block post type allow list.
      *
      * @var array
@@ -272,6 +279,7 @@ abstract class Block extends Composer implements BlockContract
                 'icon' => $this->icon,
                 'keywords' => $this->keywords,
                 'parent' => $this->parent ?: null,
+                'anscestor' => $this->anscestor ?: null,
                 'post_types' => $this->post_types,
                 'mode' => $this->mode,
                 'align' => $this->align,
