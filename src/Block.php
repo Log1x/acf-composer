@@ -350,6 +350,12 @@ abstract class Block extends Composer implements BlockContract
                 'full-height' :
                 false,
             'classes' => $this->block->className ?? false,
+            'backgroundColor' => ! empty($this->block->backgroundColor) ?
+                sprintf('has-background has-%s-background-color', $this->block->backgroundColor) :
+                false,
+            'textColor' => ! empty($this->block->textColor) ?
+                sprintf('has-%s-color', $this->block->textColor) :
+                false,
         ])->filter()->implode(' ');
 
         $this->style = $this->getStyle();
