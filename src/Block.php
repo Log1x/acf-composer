@@ -201,6 +201,13 @@ abstract class Block extends Composer implements BlockContract
     public $example = [];
 
     /**
+     * The block dimensions.
+     *
+     * @var string
+     */
+    public $inlineStyle;
+
+    /**
      * Assets enqueued when rendering the block.
      *
      * @return void
@@ -222,6 +229,26 @@ abstract class Block extends Composer implements BlockContract
             ->matchAll('/is-style-(\S+)/')
             ->get(0) ??
             Arr::get(collect($this->block->styles)->firstWhere('isDefault'), 'name');
+    }
+
+    /**
+     * Returns the active block spacing based on the selected block dimensions.
+     *
+     * @return string|null
+     */
+    public function getInlineStyle(): string
+    {
+        return collect([
+            'padding' => !empty($this->block->style['spacing']['padding'])
+                ? sprintf('padding: %s;', collect($this->block->style['spacing']['padding'])->implode(' '))
+                : null,
+            'margin'  => !empty($this->block->style['spacing']['margin'])
+                ? sprintf('margin: %s;', collect($this->block->style['spacing']['margin'])->implode(' '))
+                : null,
+            'color' => !empty($this->block->style['color']['gradient'])
+                ? sprintf('background: %s;', collect($this->block->style['color']['gradient'])->get(0))
+                : null,
+        ])->implode('');
     }
 
     /**
@@ -359,6 +386,8 @@ abstract class Block extends Composer implements BlockContract
         ])->filter()->implode(' ');
 
         $this->style = $this->getStyle();
+
+        $this->inlineStyle = $this->getInlineStyle();
 
         return $this->view($this->view, ['block' => $this]);
     }
