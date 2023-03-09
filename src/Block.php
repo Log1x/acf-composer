@@ -294,7 +294,7 @@ abstract class Block extends Composer implements BlockContract
                 },
             ];
 
-            if ($this->example !== false) {
+            if ($this->example !== false || method_exists($this, 'example')) {
                 $settings = Arr::add($settings, 'example', [
                     'attributes' => [
                         'mode' => 'preview',
