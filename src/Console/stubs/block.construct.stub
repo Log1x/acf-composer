@@ -185,9 +185,11 @@ class DummyClass extends Block
     /**
      * Assets to be enqueued when rendering the block.
      *
+     * @param array $block
+     *
      * @return void
      */
-    public function enqueue()
+    public function enqueue(array $block = [])
     {
         //
     }
