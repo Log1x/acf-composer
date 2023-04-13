@@ -85,6 +85,13 @@ abstract class Options extends Composer
     public $autoload = true;
 
     /**
+     * The additional option page settings.
+     *
+     * @var array
+     */
+    public $settings = [];
+
+    /**
      * Localized text displayed on the submit button.
      *
      * @return string
@@ -136,20 +143,22 @@ abstract class Options extends Composer
                 return;
             }
 
-            acf_add_options_page([
-                'menu_title' => $this->name,
-                'menu_slug' => $this->slug,
-                'page_title' => $this->title,
-                'capability' => $this->capability,
-                'position' => $this->position,
-                'parent_slug' => $this->parent,
-                'icon_url' => $this->icon,
-                'redirect' => $this->redirect,
-                'post_id' => $this->post,
-                'autoload' => $this->autoload,
-                'update_button' => $this->updateButton(),
-                'updated_message' => $this->updatedMessage()
-            ]);
+            acf_add_options_page(
+                array_merge([
+                    'menu_title' => $this->name,
+                    'menu_slug' => $this->slug,
+                    'page_title' => $this->title,
+                    'capability' => $this->capability,
+                    'position' => $this->position,
+                    'parent_slug' => $this->parent,
+                    'icon_url' => $this->icon,
+                    'redirect' => $this->redirect,
+                    'post_id' => $this->post,
+                    'autoload' => $this->autoload,
+                    'update_button' => $this->updateButton(),
+                    'updated_message' => $this->updatedMessage()
+                ], $this->settings)
+            );
         });
 
         return $this;
