@@ -23,6 +23,7 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 
 - [Sage](https://github.com/roots/sage) >= 10.0
 - [ACF](https://www.advancedcustomfields.com/) >= 5.8.0
+- :warning: Certain features need [ACF PRO](https://www.advancedcustomfields.com/pro/) >= 5.8.0
 
 ## Installation
 
@@ -165,6 +166,9 @@ class Example extends Field
 ```
 
 ### Generating a Block
+
+> :warning: **Generating a block requires having ACF PRO installed**
+
 
 Generating a block is generally the same as generating a field as seen above.
 
@@ -390,6 +394,8 @@ Out of the box, the Example widget is ready to go and should appear in the backe
 
 ### Generating an Options Page
 
+> :warning: **Generating an Options Page requires having ACF PRO installed**
+
 Creating an options page is similar to creating a regular field group in additional to a few configuration options available to customize the page (most of which, are optional.)
 
 Start by creating an option page using Acorn:
@@ -508,6 +514,10 @@ Here are a couple defaults I personally use. Any prefixed with `acfe_` are relat
     'sidebar_selector' => ['default_value' => 'sidebar-primary', 'allow_null' => 1]
 ],
 ```
+
+### Gotchas
+- If running ```wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerServiceProvider"``` returns ```No publishable resources for tag [].``` you might want to consider running ```wp acorn optimize:clear``` and ```wp acorn vendor:publish```
+
 
 ## Bug Reports
 
