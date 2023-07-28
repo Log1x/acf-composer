@@ -22,7 +22,7 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 ## Requirements
 
 - [Sage](https://github.com/roots/sage) >= 10.0
-- [ACF](https://www.advancedcustomfields.com/) >= 5.8.0
+- [ACF Pro](https://www.advancedcustomfields.com/) >= 5.8.0
 
 ## Installation
 
