@@ -15,7 +15,7 @@
     }
   },
   "require": {
-    "php": "^7.3|^8.0",
+    "php": "^7.4|^8.0",
     "stoutlogic/acf-builder": "^1.11"
   },
   "require-dev": {
