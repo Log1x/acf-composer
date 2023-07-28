@@ -194,18 +194,18 @@ abstract class Block extends Composer implements BlockContract
     public $style;
 
     /**
-     * Context values inherited by block
+     * Context values inherited by the block.
      *
-     * @var string
+     * @var string[]
      */
-    public $uses_context = null;
+    public $uses_context = [];
 
     /**
-     * Context provided by block
+     * Context provided by the block.
      *
-     * @var string
+     * @var string[]
      */
-    public $provides_context = null;
+    public $provides_context = [];
 
     /**
      * The block preview example data.
@@ -317,11 +317,11 @@ abstract class Block extends Composer implements BlockContract
                 ]);
             }
 
-            if(! is_null($this->uses_context)) {
+            if (! empty($this->uses_context)) {
                 $settings['uses_context'] = $this->uses_context;
             }
 
-            if(! is_null($this->provides_context)) {
+            if (! empty($this->provides_context)) {
                 $settings['provides_context'] = $this->provides_context;
             }
 
