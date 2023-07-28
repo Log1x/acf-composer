@@ -131,6 +131,16 @@ class DummyClass extends Block
     ];
 
     /**
+     * The block template.
+     *
+     * @var array
+     */
+    public $template = [
+        'core/heading' => ['placeholder' => 'Hello World'],
+        'core/paragraph' => ['placeholder' => 'Welcome to the DummyTitle block.'],
+    ];
+    
+    /**
      * Data to be passed to the block before rendering.
      *
      * @return array

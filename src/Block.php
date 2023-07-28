@@ -201,6 +201,13 @@ abstract class Block extends Composer implements BlockContract
     public $example = [];
 
     /**
+     * The block template.
+     *
+     * @var array
+     */
+    public $template = [];
+
+    /**
      * Assets enqueued when rendering the block.
      *
      * @return void
@@ -222,6 +229,27 @@ abstract class Block extends Composer implements BlockContract
             ->matchAll('/is-style-(\S+)/')
             ->get(0) ??
             Arr::get(collect($this->block->styles)->firstWhere('isDefault'), 'name');
+    }
+
+    /**
+     * Returns the block template.
+     *
+     * @param  array $template
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTemplate($template = [])
+    {
+        return collect($template)->map(function ($value, $key) {
+            if (Arr::has($value, 'innerBlocks')) {
+                $innerBlocks = collect($value['innerBlocks'])->map(function ($innerBlock) {
+                    return $this->getTemplate($innerBlock)->all();
+                })->collapse();
+
+                return [$key, Arr::except($value, 'innerBlocks') ?? [], $innerBlocks->all()];
+            }
+
+            return [$key, $value];
+        })->values();
     }
 
     /**
@@ -353,6 +381,7 @@ abstract class Block extends Composer implements BlockContract
         ])->filter()->implode(' ');
 
         $this->style = $this->getStyle();
+        $this->template = $this->getTemplate($this->template)->toJson();
 
         return $this->view($this->view, ['block' => $this]);
     }
