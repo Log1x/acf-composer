@@ -201,6 +201,20 @@ abstract class Block extends Composer implements BlockContract
     public $style;
 
     /**
+     * Context values inherited by the block.
+     *
+     * @var string[]
+     */
+    public $uses_context = [];
+
+    /**
+     * Context provided by the block.
+     *
+     * @var string[]
+     */
+    public $provides_context = [];
+
+    /**
      * The block preview example data.
      *
      * @var array
@@ -337,6 +351,14 @@ abstract class Block extends Composer implements BlockContract
                         'data' => method_exists($this, 'example') ? $this->example() : $this->example,
                     ],
                 ]);
+            }
+
+            if (! empty($this->uses_context)) {
+                $settings['uses_context'] = $this->uses_context;
+            }
+
+            if (! empty($this->provides_context)) {
+                $settings['provides_context'] = $this->provides_context;
             }
 
             acf_register_block_type($settings);
