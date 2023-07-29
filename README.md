@@ -288,7 +288,8 @@ Simply duplicate your existing view prefixing it with `preview-` (e.g. `preview-
 ### Generating a Widget
 
 > [!IMPORTANT]
-> With WordPress 5.8, Blocks can now be used as widgets making the feature above somewhat deprecated as you would just make a block instead. If you are on the latest WordPress and would like to use the classic widget functionality from ACF Composer, you will need to [opt-out of the widget block editor](https://developer.wordpress.org/block-editor/how-to-guides/widgets/opting-out/).
+> With WordPress 5.8, Blocks can now be used as widgets making the feature above somewhat deprecated as you would just make a block instead.
+> If you are on the latest WordPress and would like to use the classic widget functionality from ACF Composer, you will need to [opt-out of the widget block editor](https://developer.wordpress.org/block-editor/how-to-guides/widgets/opting-out/).
 
 Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade, as well as registered with `WP_Widget` which is usually rather annoying.
 
