@@ -77,15 +77,13 @@ abstract class Composer implements FieldContract
             return;
         }
 
-        add_filter('init', function () use ($callback) {
-            if ($callback) {
-                $callback();
-            }
+        if ($callback) {
+            $callback();
+        }
 
-            acf_add_local_field_group(
-                $this->build($this->fields)
-            );
-        }, 20);
+        acf_add_local_field_group(
+            $this->build($this->fields)
+        );
     }
 
     /**

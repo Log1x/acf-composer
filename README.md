@@ -2,7 +2,7 @@
 
 ![Latest Stable Version](https://img.shields.io/packagist/v/log1x/acf-composer.svg?style=flat-square)
 ![Total Downloads](https://img.shields.io/packagist/dt/log1x/acf-composer.svg?style=flat-square)
-![Build Status](https://img.shields.io/github/workflow/status/log1x/acf-composer/Compatibility%20Checks?style=flat-square)
+![Build Status](https://img.shields.io/github/actions/workflow/status/log1x/acf-composer/compatibility.yml?branch=master&style=flat-square)
 
 ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
 
@@ -22,7 +22,7 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 ## Requirements
 
 - [Sage](https://github.com/roots/sage) >= 10.0
-- [ACF](https://www.advancedcustomfields.com/) >= 5.8.0
+- [ACF Pro](https://www.advancedcustomfields.com/) >= 5.8.0
 
 ## Installation
 
@@ -286,6 +286,11 @@ While `$block->preview` is an option for conditionally modifying your block when
 Simply duplicate your existing view prefixing it with `preview-` (e.g. `preview-example.blade.php`).
 
 ### Generating a Widget
+
+> [!IMPORTANT]
+> With WordPress 5.8, Blocks can now be used as widgets making this feature somewhat deprecated as you would just make a block instead.
+> 
+> If you are on the latest WordPress and would like to use the classic widget functionality from ACF Composer, you will need to [opt-out of the widget block editor](https://developer.wordpress.org/block-editor/how-to-guides/widgets/opting-out/).
 
 Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade, as well as registered with `WP_Widget` which is usually rather annoying.
 

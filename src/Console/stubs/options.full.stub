@@ -85,6 +85,13 @@ class DummyClass extends Field
     public $autoload = true;
 
     /**
+     * The additional option page settings.
+     *
+     * @var array
+     */
+    public $settings = [];
+
+    /**
      * Localized text displayed on the submit button.
      *
      * @return string

@@ -59,7 +59,10 @@ class AcfComposer
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->registerPath($this->app->path());
+
+        add_action('acf/init', function () {
+            $this->registerPath($this->app->path());
+        });
     }
 
     /**

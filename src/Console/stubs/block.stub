@@ -57,6 +57,13 @@ class DummyClass extends Block
     public $parent = [];
 
     /**
+     * The ancestor block type allow list.
+     *
+     * @var array
+     */
+    public $ancestor = [];
+
+    /**
      * The default block mode.
      *
      * @var string
@@ -134,6 +141,16 @@ class DummyClass extends Block
         ],
     ];
 
+    /**
+     * The block template.
+     *
+     * @var array
+     */
+    public $template = [
+        'core/heading' => ['placeholder' => 'Hello World'],
+        'core/paragraph' => ['placeholder' => 'Welcome to the DummyTitle block.'],
+    ];
+    
     /**
      * Data to be passed to the block before rendering.
      *

@@ -138,6 +138,13 @@ abstract class Block extends Composer implements BlockContract
     public $parent = [];
 
     /**
+     * The ancestor block type allow list.
+     *
+     * @var array
+     */
+    public $ancestor = [];
+
+    /**
      * The block post type allow list.
      *
      * @var array
@@ -194,11 +201,32 @@ abstract class Block extends Composer implements BlockContract
     public $style;
 
     /**
+     * Context values inherited by the block.
+     *
+     * @var string[]
+     */
+    public $uses_context = [];
+
+    /**
+     * Context provided by the block.
+     *
+     * @var string[]
+     */
+    public $provides_context = [];
+
+    /**
      * The block preview example data.
      *
      * @var array
      */
     public $example = [];
+  
+    /**
+     * The block template.
+     *
+     * @var array
+     */
+    public $template = [];
 
     /**
      * The block dimensions.
@@ -250,6 +278,27 @@ abstract class Block extends Composer implements BlockContract
                 : null,
         ])->implode('');
     }
+  
+    /**
+     * Returns the block template.
+     *
+     * @param  array $template
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTemplate($template = [])
+    {
+        return collect($template)->map(function ($value, $key) {
+            if (Arr::has($value, 'innerBlocks')) {
+                $innerBlocks = collect($value['innerBlocks'])->map(function ($innerBlock) {
+                    return $this->getTemplate($innerBlock)->all();
+                })->collapse();
+
+                return [$key, Arr::except($value, 'innerBlocks') ?? [], $innerBlocks->all()];
+            }
+
+            return [$key, $value];
+        })->values();
+    }
 
     /**
      * Compose the defined field group and register it
@@ -299,6 +348,7 @@ abstract class Block extends Composer implements BlockContract
                 'icon' => $this->icon,
                 'keywords' => $this->keywords,
                 'parent' => $this->parent ?: null,
+                'ancestor' => $this->ancestor ?: null,
                 'post_types' => $this->post_types,
                 'mode' => $this->mode,
                 'align' => $this->align,
@@ -321,13 +371,21 @@ abstract class Block extends Composer implements BlockContract
                 },
             ];
 
-            if ($this->example !== false) {
+            if ($this->example !== false || method_exists($this, 'example')) {
                 $settings = Arr::add($settings, 'example', [
                     'attributes' => [
                         'mode' => 'preview',
-                        'data' => $this->example,
+                        'data' => method_exists($this, 'example') ? $this->example() : $this->example,
                     ],
                 ]);
+            }
+
+            if (! empty($this->uses_context)) {
+                $settings['uses_context'] = $this->uses_context;
+            }
+
+            if (! empty($this->provides_context)) {
+                $settings['provides_context'] = $this->provides_context;
             }
 
             acf_register_block_type($settings);
@@ -386,6 +444,7 @@ abstract class Block extends Composer implements BlockContract
         ])->filter()->implode(' ');
 
         $this->style = $this->getStyle();
+        $this->template = $this->getTemplate($this->template)->toJson();
 
         $this->inlineStyle = $this->getInlineStyle();
 

@@ -67,6 +67,13 @@ class DummyClass extends Block
         $this->parent = [];
 
         /**
+         * The ancestor block type allow list.
+         *
+         * @var array
+         */
+        $this->ancestor = [];
+
+        /**
          * The default block mode.
          *
          * @var string
