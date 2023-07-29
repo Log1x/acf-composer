@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Contracts\Block as BlockContract;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
+use Log1x\AcfComposer\Helpers\CssFormatter;
 
 abstract class Block extends Composer implements BlockContract
 {
@@ -260,23 +261,27 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
-     * Returns the active block spacing based on the selected block dimensions.
+     * Returns the active block inline styles based on the selected block properties.
      *
-     * @return string|null
+     * @return string
      */
     public function getInlineStyle(): string
     {
         return collect([
             'padding' => !empty($this->block->style['spacing']['padding'])
-                ? sprintf('padding: %s;', collect($this->block->style['spacing']['padding'])->implode(' '))
+                ? collect($this->block->style['spacing']['padding'])->map(function ($value, $side) {
+                    return CssFormatter::formatCss($value, $side);
+                })->implode(' ')
                 : null,
             'margin'  => !empty($this->block->style['spacing']['margin'])
-                ? sprintf('margin: %s;', collect($this->block->style['spacing']['margin'])->implode(' '))
+                ? collect($this->block->style['spacing']['margin'])->map(function ($value, $side) {
+                    return CssFormatter::formatCss($value, $side, 'margin');
+                })->implode(' ')
                 : null,
             'color' => !empty($this->block->style['color']['gradient'])
-                ? sprintf('background: %s;', collect($this->block->style['color']['gradient'])->get(0))
+                ? sprintf('background: %s;', $this->block->style['color']['gradient'])
                 : null,
-        ])->implode('');
+        ])->filter()->implode(' ');
     }
 
     /**
@@ -440,6 +445,9 @@ abstract class Block extends Composer implements BlockContract
                 false,
             'textColor' => ! empty($this->block->textColor) ?
                 sprintf('has-%s-color', $this->block->textColor) :
+                false,
+            'gradient' => ! empty($this->block->gradient) ?
+                sprintf('has-%s-gradient-background', $this->block->gradient) :
                 false,
         ])->filter()->implode(' ');
 
