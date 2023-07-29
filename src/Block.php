@@ -220,7 +220,7 @@ abstract class Block extends Composer implements BlockContract
      * @var array
      */
     public $example = [];
-  
+
     /**
      * The block template.
      *
@@ -278,7 +278,7 @@ abstract class Block extends Composer implements BlockContract
                 : null,
         ])->implode('');
     }
-  
+
     /**
      * Returns the block template.
      *
