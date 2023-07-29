@@ -261,7 +261,7 @@ abstract class Block extends Composer implements BlockContract
     public function getTemplate($template = [])
     {
         return collect($template)->map(function ($value, $key) {
-            if (Arr::has($value, 'innerBlocks')) {
+            if (is_array($value) && Arr::has($value, 'innerBlocks')) {
                 $innerBlocks = collect($value['innerBlocks'])->map(function ($innerBlock) {
                     return $this->getTemplate($innerBlock)->all();
                 })->collapse();
