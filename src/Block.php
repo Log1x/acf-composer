@@ -4,13 +4,14 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Concerns\FormatsCss;
 use Log1x\AcfComposer\Contracts\Block as BlockContract;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
-use Log1x\AcfComposer\Helpers\CssFormatter;
 
 abstract class Block extends Composer implements BlockContract
 {
     use InteractsWithBlade;
+    use FormatsCss;
 
     /**
      * The block properties.
@@ -270,12 +271,12 @@ abstract class Block extends Composer implements BlockContract
         return collect([
             'padding' => !empty($this->block->style['spacing']['padding'])
                 ? collect($this->block->style['spacing']['padding'])->map(function ($value, $side) {
-                    return CssFormatter::formatCss($value, $side);
+                    return $this->format($value, $side);
                 })->implode(' ')
                 : null,
             'margin'  => !empty($this->block->style['spacing']['margin'])
                 ? collect($this->block->style['spacing']['margin'])->map(function ($value, $side) {
-                    return CssFormatter::formatCss($value, $side, 'margin');
+                    return $this->format($value, $side, 'margin');
                 })->implode(' ')
                 : null,
             'color' => !empty($this->block->style['color']['gradient'])

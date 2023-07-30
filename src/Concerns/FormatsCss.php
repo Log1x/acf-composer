@@ -1,10 +1,10 @@
 <?php
 
-namespace Log1x\AcfComposer\Helpers;
+namespace Log1x\AcfComposer\Concerns;
 
-class CssFormatter
+trait FormatsCss
 {
-    public static function formatCss($value, $side, $type = 'padding'): string
+    public function format($value, $side, $type = 'padding'): string
     {
         if (strpos($value, 'var:preset|') === 0) {
             $segments = explode('|', $value);

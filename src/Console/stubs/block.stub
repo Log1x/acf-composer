@@ -108,6 +108,7 @@ class DummyClass extends Block
         'color' => [
             'background' => true,
             'text' => true,
+            'gradient' => true,
         ],
     ];
 
@@ -150,7 +151,7 @@ class DummyClass extends Block
         'core/heading' => ['placeholder' => 'Hello World'],
         'core/paragraph' => ['placeholder' => 'Welcome to the DummyTitle block.'],
     ];
-    
+
     /**
      * Data to be passed to the block before rendering.
      *
