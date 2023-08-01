@@ -2,17 +2,28 @@
 
 namespace Log1x\AcfComposer\Concerns;
 
+use Illuminate\Support\Str;
+
 trait FormatsCss
 {
-    public function format($value, $side, $type = 'padding'): string
+    /**
+     * Format the given value into a CSS style.
+     *
+     * @param  string $value
+     * @param  string $side
+     * @param  string $type
+     * @return string
+     */
+    public function formatCss($value, $side, $type = 'padding'): string
     {
-        if (strpos($value, 'var:preset|') === 0) {
-            $segments = explode('|', $value);
-            array_shift($segments);
-
-            return sprintf('%s-%s: var(--wp--preset--%s);', $type, $side, implode('--', $segments));
+        if (! Str::startsWith($value, 'var:preset|')) {
+            return sprintf('%s-%s: %s;', $type, $side, $value);
         }
 
-        return sprintf('%s-%s: %s;', $type, $side, $value);
+        $segments = explode('|', $value);
+
+        array_shift($segments);
+
+        return sprintf('%s-%s: var(--wp--preset--%s);', $type, $side, implode('--', $segments));
     }
 }

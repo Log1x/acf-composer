@@ -10,8 +10,7 @@ use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 
 abstract class Block extends Composer implements BlockContract
 {
-    use InteractsWithBlade;
-    use FormatsCss;
+    use InteractsWithBlade, FormatsCss;
 
     /**
      * The block properties.
@@ -271,12 +270,12 @@ abstract class Block extends Composer implements BlockContract
         return collect([
             'padding' => !empty($this->block->style['spacing']['padding'])
                 ? collect($this->block->style['spacing']['padding'])->map(function ($value, $side) {
-                    return $this->format($value, $side);
+                    return $this->formatCss($value, $side);
                 })->implode(' ')
                 : null,
             'margin'  => !empty($this->block->style['spacing']['margin'])
                 ? collect($this->block->style['spacing']['margin'])->map(function ($value, $side) {
-                    return $this->format($value, $side, 'margin');
+                    return $this->formatCss($value, $side, 'margin');
                 })->implode(' ')
                 : null,
             'color' => !empty($this->block->style['color']['gradient'])
