@@ -10,7 +10,8 @@ use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 
 abstract class Block extends Composer implements BlockContract
 {
-    use InteractsWithBlade, FormatsCss;
+    use InteractsWithBlade;
+    use FormatsCss;
 
     /**
      * The block properties.
