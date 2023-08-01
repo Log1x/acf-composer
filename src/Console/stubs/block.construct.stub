@@ -115,6 +115,11 @@ class DummyClass extends Block
             'mode' => false,
             'multiple' => true,
             'jsx' => true,
+            'color' => [
+                'background' => true,
+                'text' => true,
+                'gradient' => true,
+            ],
         ];
 
         /**

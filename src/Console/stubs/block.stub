@@ -105,6 +105,11 @@ class DummyClass extends Block
         'mode' => false,
         'multiple' => true,
         'jsx' => true,
+        'color' => [
+            'background' => true,
+            'text' => true,
+            'gradient' => true,
+        ],
     ];
 
     /**
@@ -146,7 +151,7 @@ class DummyClass extends Block
         'core/heading' => ['placeholder' => 'Hello World'],
         'core/paragraph' => ['placeholder' => 'Welcome to the DummyTitle block.'],
     ];
-    
+
     /**
      * Data to be passed to the block before rendering.
      *
