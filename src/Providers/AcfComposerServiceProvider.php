@@ -2,7 +2,7 @@
 
 namespace Log1x\AcfComposer\Providers;
 
-use Roots\Acorn\ServiceProvider;
+use Illuminate\Support\ServiceProvider;
 use Log1x\AcfComposer\AcfComposer;
 
 class AcfComposerServiceProvider extends ServiceProvider
