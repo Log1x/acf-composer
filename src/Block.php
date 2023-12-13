@@ -360,6 +360,8 @@ abstract class Block extends Composer implements BlockContract
                 'align' => $this->align,
                 'align_text' => $this->align_text ?? $this->align,
                 'align_content' => $this->align_content,
+                'alignText' => $this->align_text ?? $this->align,
+                'alignContent' => $this->align_content,
                 'styles' => $this->styles,
                 'supports' => $this->supports,
                 'enqueue_assets' => function () {
