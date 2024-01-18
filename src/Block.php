@@ -255,10 +255,10 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getStyle()
     {
-        return Str::of($this->block->className ?? null)
+        return apply_filters("acf-composer/render/style", Str::of($this->block->className ?? null)
             ->matchAll('/is-style-(\S+)/')
             ->get(0) ??
-            Arr::get(collect($this->block->styles)->firstWhere('isDefault'), 'name');
+            Arr::get(collect($this->block->styles)->firstWhere('isDefault'), 'name'), $this);
     }
 
     /**
@@ -268,7 +268,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getInlineStyle(): string
     {
-        return collect([
+        return collect(apply_filters("acf-composer/render/style", [
             'padding' => !empty($this->block->style['spacing']['padding'])
                 ? collect($this->block->style['spacing']['padding'])->map(function ($value, $side) {
                     return $this->formatCss($value, $side);
@@ -282,13 +282,13 @@ abstract class Block extends Composer implements BlockContract
             'color' => !empty($this->block->style['color']['gradient'])
                 ? sprintf('background: %s;', $this->block->style['color']['gradient'])
                 : null,
-        ])->filter()->implode(' ');
+        ], $this))->filter()->implode(' ');
     }
 
     /**
      * Returns the block template.
      *
-     * @param  array $template
+     * @param array $template
      * @return \Illuminate\Support\Collection
      */
     public function getTemplate($template = [])
@@ -318,7 +318,7 @@ abstract class Block extends Composer implements BlockContract
             return;
         }
 
-        if (! empty($this->name) && empty($this->slug)) {
+        if (empty($this->slug)) {
             $this->slug = Str::slug(Str::kebab($this->name));
         }
 
@@ -422,7 +422,7 @@ abstract class Block extends Composer implements BlockContract
 
         $this->post = get_post($post_id);
 
-        $this->classes = collect([
+        $this->classes = collect(apply_filters("acf-composer/render/classes", [
             'slug' => Str::start(
                 Str::slug($this->slug),
                 'wp-block-'
@@ -431,13 +431,12 @@ abstract class Block extends Composer implements BlockContract
                 Str::start($this->block->align, 'align') :
                 false,
             'align_text' => ! empty($this->supports['align_text']) ?
-                Str::start($this->block->align_text, 'align-text-') :
+                Str::start($this->block->align_text, 'has-text-align-') :
                 false,
             'align_content' => ! empty($this->supports['align_content']) ?
                 Str::start($this->block->align_content, 'is-position-') :
                 false,
-            'full_height' => ! empty($this->supports['full_height'])
-                && ! empty($this->block->full_height) ?
+            'full_height' => ! empty($this->supports['full_height']) && ! empty($this->block->full_height) ?
                 'full-height' :
                 false,
             'classes' => $this->block->className ?? false,
@@ -450,7 +449,10 @@ abstract class Block extends Composer implements BlockContract
             'gradient' => ! empty($this->block->gradient) ?
                 sprintf('has-%s-gradient-background', $this->block->gradient) :
                 false,
-        ])->filter()->implode(' ');
+            'fontSize' => ! empty($this->block->fontSize) ?
+                sprintf('has-%s-font-size', Str::kebab(preg_replace('/(\d+)/', '${1} ', $this->block->fontSize))) :
+                false,
+        ], $this))->filter()->implode(' ');
 
         $this->style = $this->getStyle();
         $this->template = $this->getTemplate($this->template)->toJson();
