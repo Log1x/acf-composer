@@ -2,8 +2,6 @@
 
 namespace Log1x\AcfComposer\Console;
 
-use Illuminate\Support\Str;
-
 class BlockMakeCommand extends MakeCommand
 {
     /**
