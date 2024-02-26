@@ -15,14 +15,12 @@
     }
   },
   "require": {
-    "php": "^7.4|^8.0",
-    "stoutlogic/acf-builder": "^1.11"
+    "php": "^8.0",
+    "stoutlogic/acf-builder": "^1.11",
+    "roots/acorn": "^3.0|^4.0"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^3.5"
-  },
-  "suggest": {
-    "log1x/modern-acf-options": "Gives ACF option pages a much needed design overhaul."
+    "laravel/pint": "^1.14"
   },
   "extra": {
     "acorn": {
@@ -30,10 +28,5 @@
         "Log1x\\AcfComposer\\Providers\\AcfComposerServiceProvider"
       ]
     }
-  },
-  "scripts": {
-    "lint": [
-      "phpcs --ignore=vendor --extensions=php --standard=PSR12 ."
-    ]
   }
 }
