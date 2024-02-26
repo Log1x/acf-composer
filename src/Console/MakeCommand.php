@@ -3,7 +3,6 @@
 namespace Log1x\AcfComposer\Console;
 
 use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Roots\Acorn\Console\Commands\GeneratorCommand;
 
@@ -117,7 +116,7 @@ class MakeCommand extends GeneratorCommand
      */
     public function getViewPath()
     {
-        return $this->getPaths() . '/' . Str::slug(Str::plural($this->type)) . '/';
+        return $this->getPaths().'/'.Str::slug(Str::plural($this->type)).'/';
     }
 
     /**
@@ -142,13 +141,13 @@ class MakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\\' . Str::plural($this->type);
+        return $rootNamespace.'\\'.Str::plural($this->type);
     }
 
     /**
      * Return the applications view path.
      *
-     * @param  string $name
+     * @param  string  $name
      * @return void
      */
     protected function getPaths()
@@ -182,7 +181,7 @@ class MakeCommand extends GeneratorCommand
     protected function createClass()
     {
         if ($this->isReservedName($this->getNameInput())) {
-            throw new Exception('The name "' . $this->getNameInput() . '" is reserved by PHP.');
+            throw new Exception('The name "'.$this->getNameInput().'" is reserved by PHP.');
         }
 
         if (
@@ -190,7 +189,7 @@ class MakeCommand extends GeneratorCommand
             ! $this->option('force')) &&
             $this->alreadyExists($this->getNameInput())
         ) {
-            throw new Exception('File `' . $this->shortenPath($this->path) . '` already exists.');
+            throw new Exception('File `'.$this->shortenPath($this->path).'` already exists.');
         }
 
         $this->makeDirectory($this->path);
@@ -235,20 +234,26 @@ class MakeCommand extends GeneratorCommand
         if ($this->view) {
             $this->line("     ⮑  <fg=blue>{$this->shortenPath($this->getView(), 4)}</>");
         }
+
+        if (! function_exists('acf')) {
+            $this->newLine();
+
+            $this->components->warn('<fg=yellow>Advanced Custom Fields</> does not appear to be activated.');
+        }
     }
 
     /**
      * Returns a shortened path.
      *
-     * @param  string $path
-     * @param  int $i
+     * @param  string  $path
+     * @param  int  $index
      * @return string
      */
-    protected function shortenPath($path, $i = 3)
+    protected function shortenPath($path, $index = 3)
     {
         return collect(
             explode('/', $path)
-        )->slice(-$i, $i)->implode('/');
+        )->slice(-$index, $index)->implode('/');
     }
 
     /**
@@ -264,15 +269,15 @@ class MakeCommand extends GeneratorCommand
     /**
      * Get the resolved stub file path.
      *
-     * @param  string $name
+     * @param  string  $name
      * @return string
      */
     protected function resolveStub($name)
     {
-        $path = '/' . $name . '.stub';
+        $path = '/'.$name.'.stub';
 
-        return $this->files->exists($stubsPath = $this->app->basePath('stubs/acf-composer') . $path)
+        return $this->files->exists($stubsPath = $this->app->basePath('stubs/acf-composer').$path)
             ? $stubsPath
-            : __DIR__ . '/stubs' . $path;
+            : __DIR__.'/stubs'.$path;
     }
 }
