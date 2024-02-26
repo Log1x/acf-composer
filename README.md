@@ -60,8 +60,8 @@ Taking a glance at the generated `Example.php` stub, you will notice that it has
 
 namespace App\Fields;
 
-use Log1x\AcfComposer\Field;
 use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Field;
 
 class Example extends Field
 {
@@ -104,8 +104,8 @@ $ wp acorn acf:partial ListItems
 
 namespace App\Fields\Partials;
 
-use Log1x\AcfComposer\Partial;
 use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Partial;
 
 class ListItems extends Partial
 {
@@ -139,9 +139,9 @@ This can be utilized in our _Example_ field by passing the `::class` constant to
 
 namespace App\Fields;
 
-use Log1x\AcfComposer\Field;
-use Log1x\AcfComposer\Builder;
 use App\Fields\Partials\ListItems;
+use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Field;
 
 class Example extends Field
 {
@@ -306,8 +306,8 @@ $ wp acorn acf:widget Example
 
 namespace App\Widgets;
 
-use Log1x\AcfComposer\Widget;
 use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Widget;
 
 class Example extends Widget
 {
@@ -409,8 +409,8 @@ $ wp acorn acf:options Example
 
 namespace App\Options;
 
-use Log1x\AcfComposer\Options as Field;
 use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Options as Field;
 
 class Example extends Field
 {
