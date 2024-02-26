@@ -4,6 +4,7 @@ namespace Log1x\AcfComposer\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Log1x\AcfComposer\AcfComposer;
+use Log1x\AcfComposer\Console;
 
 class AcfComposerServiceProvider extends ServiceProvider
 {
@@ -14,9 +15,7 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('AcfComposer', function () {
-            return new AcfComposer($this->app);
-        });
+        $this->app->singleton('AcfComposer', fn () => AcfComposer::make($this->app));
     }
 
     /**
@@ -27,16 +26,20 @@ class AcfComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
-        ], 'config');
+            __DIR__.'/../../config/acf.php' => $this->app->configPath('acf.php'),
+        ], 'acf-composer');
+
+        $this->mergeConfigFrom(__DIR__.'/../../config/acf.php', 'acf');
 
         $this->commands([
-            \Log1x\AcfComposer\Console\BlockMakeCommand::class,
-            \Log1x\AcfComposer\Console\FieldMakeCommand::class,
-            \Log1x\AcfComposer\Console\PartialMakeCommand::class,
-            \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
-            \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
-            \Log1x\AcfComposer\Console\StubPublishCommand::class,
+            Console\BlockMakeCommand::class,
+            Console\CacheCommand::class,
+            Console\FieldMakeCommand::class,
+            Console\OptionsMakeCommand::class,
+            Console\PartialMakeCommand::class,
+            Console\StubPublishCommand::class,
+            Console\WidgetMakeCommand::class,
+            Console\UpgradeCommand::class,
         ]);
 
         $this->app->make('AcfComposer');
