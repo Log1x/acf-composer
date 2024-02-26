@@ -13,7 +13,8 @@ class CacheCommand extends Command
      * @var string
      */
     protected $signature = 'acf:cache
-                            {--clear : Clear the cached field groups}';
+                            {--clear : Clear the cached field groups}
+                            {--status : Show the current cache status}';
 
     /**
      * The console command description.
@@ -41,6 +42,12 @@ class CacheCommand extends Command
 
         if ($this->option('clear')) {
             return $this->call('acf:clear');
+        }
+
+        if ($this->option('status')) {
+            return $this->composer->manifestExists()
+                ? $this->components->info('The <fg=blue>ACF Composer</> field groups are currently <fg=green;options=bold>cached</>.')
+                : $this->components->info('The <fg=blue>ACF Composer</> field groups are currently <fg=red;options=bold>not cached</>.');
         }
 
         $composers = collect(
