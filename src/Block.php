@@ -239,7 +239,7 @@ abstract class Block extends Composer implements BlockContract
     /**
      * Assets enqueued when rendering the block.
      *
-     * @param  array $block
+     * @param  array  $block
      * @return void
      */
     public function enqueue($block = [])
