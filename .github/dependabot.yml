@@ -1,10 +1,11 @@
 version: 2
 updates:
-  - package-ecosystem: 'github-actions'
+  - package-ecosystem: 'composer'
     directory: '/'
     schedule:
-      interval: 'monthly'
-  - package-ecosystem: 'composer'
+      interval: 'daily'
+
+  - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'monthly'
