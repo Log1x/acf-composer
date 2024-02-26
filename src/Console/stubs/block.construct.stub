@@ -3,8 +3,8 @@
 namespace DummyNamespace;
 
 use Log1x\AcfComposer\Block;
+use Log1x\AcfComposer\Builder;
 use Roots\Acorn\Application;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Block
 {
@@ -174,7 +174,7 @@ class DummyClass extends Block
      */
     public function fields()
     {
-        $DummyCamel = new FieldsBuilder('DummySnake');
+        $DummyCamel = Builder::make('DummySnake');
 
         $DummyCamel
             ->addRepeater('items')
