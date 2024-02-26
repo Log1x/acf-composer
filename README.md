@@ -2,7 +2,7 @@
 
 ![Latest Stable Version](https://img.shields.io/packagist/v/log1x/acf-composer.svg?style=flat-square)
 ![Total Downloads](https://img.shields.io/packagist/dt/log1x/acf-composer.svg?style=flat-square)
-![Build Status](https://img.shields.io/github/actions/workflow/status/log1x/acf-composer/compatibility.yml?branch=master&style=flat-square)
+![Build Status](https://img.shields.io/github/actions/workflow/status/log1x/acf-composer/main.yml?branch=master&style=flat-square)
 
 ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
 
@@ -14,7 +14,7 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 - 🔥 Instantly generate working fields, blocks, widgets, and option pages. Batteries included.
 - 🔥 Instantly generate re-usable field group partials.
 - 🔥 Blocks and widgets are fully rendered using Blade with a native Sage 10 feel for passing view data.
-- 🔥 Blocks are automatically generated with `<InnerBlocks />` support if [ACF v5.9.0+](https://www.advancedcustomfields.com/blog/acf-5-9-exciting-new-features/#InnerBlocks) is installed.
+- 🔥 Blocks are automatically generated with `<InnerBlocks />` support.
 - 🔥 Automatically hooks widgets with `WP_Widget` making them instantly ready to use.
 - 🔥 Automatically sets field location on blocks, widgets, and option pages.
 - 🔥 Globally set default field type and field group settings. No more repeating `['ui' => 1]` on every select field.
@@ -22,7 +22,8 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 ## Requirements
 
 - [Sage](https://github.com/roots/sage) >= 10.0
-- [ACF](https://www.advancedcustomfields.com/) >= 5.8.0
+- [Acorn](https://github.com/roots/acorn) >= 3.0
+- [ACF Pro](https://www.advancedcustomfields.com/) >= 5.8.0
 
 ## Installation
 
@@ -39,7 +40,7 @@ $ composer require log1x/acf-composer
 Start by publishing the `config/acf.php` configuration file using Acorn:
 
 ```bash
-$ wp acorn vendor:publish --provider="Log1x\AcfComposer\Providers\AcfComposerServiceProvider"
+$ wp acorn vendor:publish --tag="acf-composer"
 ```
 
 ### Generating a Field
@@ -59,8 +60,8 @@ Taking a glance at the generated `Example.php` stub, you will notice that it has
 
 namespace App\Fields;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Field;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class Example extends Field
 {
@@ -71,7 +72,7 @@ class Example extends Field
      */
     public function fields()
     {
-        $example = new FieldsBuilder('example');
+        $example = Builder::make('example');
 
         $example
             ->setLocation('post_type', '==', 'post');
@@ -103,8 +104,8 @@ $ wp acorn acf:partial ListItems
 
 namespace App\Fields\Partials;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Partial;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class ListItems extends Partial
 {
@@ -115,7 +116,7 @@ class ListItems extends Partial
      */
     public function fields()
     {
-        $listItems = new FieldsBuilder('listItems');
+        $listItems = Builder::make('listItems');
 
         $listItems
             ->addRepeater('items')
@@ -131,16 +132,16 @@ Looking at `ListItems.php`, you will see out of the box it consists of an identi
 
 A key difference to note compared to an ordinary field is the omitting of `->build()` instead returning the `FieldsBuilder` instance itself.
 
-This can be utilized in our _Example_ field by passing the `::class` constant to `->addFields()`.
+This can be utilized in our _Example_ field by passing the `::class` constant to `->addPartial()`:
 
 ```php
 <?php
 
 namespace App\Fields;
 
-use Log1x\AcfComposer\Field;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 use App\Fields\Partials\ListItems;
+use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Field;
 
 class Example extends Field
 {
@@ -151,13 +152,13 @@ class Example extends Field
      */
     public function fields()
     {
-        $example = new FieldsBuilder('example');
+        $example = Builder::make('example');
 
         $example
             ->setLocation('post_type', '==', 'post');
 
         $example
-            ->addFields($this->get(ListItems::class));
+            ->addPartial(ListItems::class);
 
         return $example->build();
     }
@@ -180,7 +181,7 @@ $ wp acorn acf:block Example
 namespace App\Blocks;
 
 use Log1x\AcfComposer\Block;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class Example extends Block
 {
@@ -231,7 +232,7 @@ class Example extends Block
      */
     public function fields()
     {
-        $example = new FieldsBuilder('example');
+        $example = Builder::make('example');
 
         $example
             ->addRepeater('items')
@@ -287,6 +288,11 @@ Simply duplicate your existing view prefixing it with `preview-` (e.g. `preview-
 
 ### Generating a Widget
 
+> [!IMPORTANT]
+> With WordPress 5.8, Blocks can now be used as widgets making this feature somewhat deprecated as you would just make a block instead.
+>
+> If you are on the latest WordPress and would like to use the classic widget functionality from ACF Composer, you will need to [opt-out of the widget block editor](https://developer.wordpress.org/block-editor/how-to-guides/widgets/opting-out/).
+
 Creating a sidebar widget using ACF Composer is extremely easy. Widgets are automatically loaded and rendered with Blade, as well as registered with `WP_Widget` which is usually rather annoying.
 
 Start by creating a widget using Acorn:
@@ -300,8 +306,8 @@ $ wp acorn acf:widget Example
 
 namespace App\Widgets;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Widget;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class Example extends Widget
 {
@@ -347,7 +353,7 @@ class Example extends Widget
      */
     public function fields()
     {
-        $example = new FieldsBuilder('example');
+        $example = Builder::make('example');
 
         $example
             ->addText('title');
@@ -403,8 +409,8 @@ $ wp acorn acf:options Example
 
 namespace App\Options;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Options as Field;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class Example extends Field
 {
@@ -429,7 +435,7 @@ class Example extends Field
      */
     public function fields()
     {
-        $example = new FieldsBuilder('example');
+        $example = Builder::make('example');
 
         $example
             ->addRepeater('items')

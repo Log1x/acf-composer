@@ -2,9 +2,9 @@
 
 namespace Log1x\AcfComposer\Concerns;
 
-use ReflectionClass;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Partial;
+use ReflectionClass;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 trait InteractsWithPartial
@@ -12,8 +12,10 @@ trait InteractsWithPartial
     /**
      * Compose a field partial instance or file.
      *
-     * @param  mixed $partial
+     * @param  mixed  $partial
      * @return array
+     *
+     * @deprecated Use `addPartial()` on Builder instead.
      */
     protected function get($partial = null)
     {
@@ -21,7 +23,7 @@ trait InteractsWithPartial
             is_subclass_of($partial, Partial::class) &&
             ! (new ReflectionClass($partial))->isAbstract()
         ) {
-            return (new $partial($this->app))->compose();
+            return $partial::make($this->composer)->compose();
         }
 
         if (is_a($partial, FieldsBuilder::class) || is_array($partial)) {

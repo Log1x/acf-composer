@@ -3,7 +3,7 @@
 namespace DummyNamespace;
 
 use Log1x\AcfComposer\Block;
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use Log1x\AcfComposer\Builder;
 
 class DummyClass extends Block
 {
@@ -57,6 +57,13 @@ class DummyClass extends Block
     public $parent = [];
 
     /**
+     * The ancestor block type allow list.
+     *
+     * @var array
+     */
+    public $ancestor = [];
+
+    /**
      * The default block mode.
      *
      * @var string
@@ -98,6 +105,11 @@ class DummyClass extends Block
         'mode' => false,
         'multiple' => true,
         'jsx' => true,
+        'color' => [
+            'background' => true,
+            'text' => true,
+            'gradient' => true,
+        ],
     ];
 
     /**
@@ -131,6 +143,16 @@ class DummyClass extends Block
     ];
 
     /**
+     * The block template.
+     *
+     * @var array
+     */
+    public $template = [
+        'core/heading' => ['placeholder' => 'Hello World'],
+        'core/paragraph' => ['placeholder' => 'Welcome to the DummyTitle block.'],
+    ];
+
+    /**
      * Data to be passed to the block before rendering.
      *
      * @return array
@@ -149,7 +171,7 @@ class DummyClass extends Block
      */
     public function fields()
     {
-        $DummyCamel = new FieldsBuilder('DummySnake');
+        $DummyCamel = Builder::make('DummySnake');
 
         $DummyCamel
             ->addRepeater('items')

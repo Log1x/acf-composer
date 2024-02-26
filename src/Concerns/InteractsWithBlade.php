@@ -11,7 +11,7 @@ trait InteractsWithBlade
     /**
      * Render the specified view using Blade.
      *
-     * @param  string $view
+     * @param  string  $view
      * @param  array  $with
      * @return string
      */

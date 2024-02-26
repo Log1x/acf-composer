@@ -2,9 +2,10 @@
 
 namespace Log1x\AcfComposer;
 
-use ReflectionClass;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use ReflectionClass;
 use Roots\Acorn\Application;
 use Symfony\Component\Finder\Finder;
 
@@ -15,35 +16,39 @@ class AcfComposer
      *
      * @var \Roots\Acorn\Application
      */
-    protected $app;
+    public $app;
 
     /**
      * The registered paths.
-     *
-     * @var array
      */
-    protected $paths = [];
+    protected array $paths = [];
 
     /**
      * The registered composers.
-     *
-     * @var array
      */
-    protected $composers = [];
+    protected array $composers = [];
+
+    /**
+     * The deferred composers.
+     */
+    protected array $deferredComposers = [];
 
     /**
      * The registered plugin paths.
-     *
-     * @var array
      */
-    protected $plugins = [];
+    protected array $plugins = [];
+
+    /**
+     * The cached manifest.
+     *
+     * @var \Illuminate\Support\Collection
+     */
+    protected $manifest;
 
     /**
      * The composer classes.
-     *
-     * @var array
      */
-    protected $classes = [
+    protected array $classes = [
         'Fields',
         'Blocks',
         'Widgets',
@@ -52,35 +57,68 @@ class AcfComposer
 
     /**
      * Create a new Composer instance.
-     *
-     * @param  \Roots\Acorn\Application $app
-     * @return void
      */
     public function __construct(Application $app)
     {
         $this->app = $app;
+    }
+
+    /**
+     * Make a new Composer instance.
+     */
+    public static function make(Application $app): self
+    {
+        return new static($app);
+    }
+
+    /**
+     * Handle the ACF Composer instance.
+     */
+    public function handle(): void
+    {
+        add_action('acf/init', fn () => $this->boot());
+    }
+
+    /**
+     * Boot the registered Composers.
+     */
+    public function boot(): void
+    {
+        $this->registerDefaultPath();
+
+        foreach ($this->composers as $namespace => $composers) {
+            foreach ($composers as $i => $composer) {
+                $this->composers[$namespace][$i] = $composer->compose();
+            }
+        }
+
+        foreach ($this->deferredComposers as $namespace => $composers) {
+            foreach ($composers as $index => $composer) {
+                $this->composers[$namespace][] = $composer->compose();
+            }
+        }
+
+        $this->deferredComposers = [];
+    }
+
+    /**
+     * Register the default application path.
+     */
+    public function registerDefaultPath(): void
+    {
         $this->registerPath($this->app->path());
     }
 
     /**
-     * Register the default theme paths with ACF Composer.
-     *
-     * @param  string $path
-     * @param  string $namespace
-     * @return array
+     * Register the specified path with ACF Composer.
      */
-    public function registerPath($path, $namespace = null)
+    public function registerPath(string $path, ?string $namespace = null): array
     {
-        if (! function_exists('acf')) {
-            return;
-        }
-
-        $paths = collect(File::directories($path))->filter(function ($item) {
-            return Str::contains($item, $this->classes);
-        });
+        $paths = collect(File::directories($path))
+            ->filter(fn ($item) => Str::contains($item, $this->classes));
 
         if ($paths->isEmpty()) {
-            return;
+            return [];
         }
 
         if (empty($namespace)) {
@@ -97,37 +135,54 @@ class AcfComposer
             $folders = Str::beforeLast(
                 $relativePath,
                 DIRECTORY_SEPARATOR
-            ) . DIRECTORY_SEPARATOR;
+            ).DIRECTORY_SEPARATOR;
 
             $className = Str::after($relativePath, $folders);
 
-            $composer = $namespace . str_replace(
+            $composer = $namespace.str_replace(
                 ['/', '.php'],
                 ['\\', ''],
-                $folders . $className
+                $folders.$className
             );
 
-            if (
-                ! is_subclass_of($composer, Composer::class) ||
-                is_subclass_of($composer, Partial::class) ||
-                (new ReflectionClass($composer))->isAbstract()
-            ) {
-                continue;
+            if ($this->register($composer, $namespace)) {
+                $this->paths[basename($path)][] = $composer;
             }
-
-            $this->composers[$namespace][] = (new $composer($this->app))->compose();
-            $this->paths[dirname($file->getPath())][] = $composer;
         }
 
         return $this->paths;
     }
 
     /**
-     * Register an ACF Composer plugin with the container.
-     *
-     * @return void
+     * Register a Composer with ACF Composer.
      */
-    public function registerPlugin($path, $namespace)
+    public function register(string $composer, string $namespace): bool
+    {
+        if (
+            ! is_subclass_of($composer, Composer::class) ||
+            is_subclass_of($composer, Partial::class) ||
+            (new ReflectionClass($composer))->isAbstract()
+        ) {
+            return false;
+        }
+
+        $composer = $composer::make($this);
+
+        if (is_subclass_of($composer, Options::class) && ! is_null($composer->parent)) {
+            $this->deferredComposers[$namespace][] = $composer;
+
+            return true;
+        }
+
+        $this->composers[$namespace][] = $composer;
+
+        return true;
+    }
+
+    /**
+     * Register an ACF Composer plugin with the container.
+     */
+    public function registerPlugin(string $path, string $namespace): void
     {
         $namespace = str_replace('Providers', '', $namespace);
 
@@ -138,31 +193,104 @@ class AcfComposer
 
     /**
      * Retrieve the registered composers.
-     *
-     * @return array
      */
-    public function getComposers()
+    public function getComposers(): array
     {
         return $this->composers;
     }
 
     /**
      * Retrieve the registered paths.
-     *
-     * @return array
      */
-    public function getPaths()
+    public function getPaths(): array
     {
         return array_unique($this->paths);
     }
 
     /**
      * Retrieve the registered plugins.
-     *
-     * @return array
      */
-    public function getPlugins()
+    public function getPlugins(): array
     {
         return $this->plugins;
+    }
+
+    /**
+     * Retrieve the cache manifest.
+     */
+    protected function manifest(): Collection
+    {
+        if ($this->manifest) {
+            return $this->manifest;
+        }
+
+        if (! $this->manifestExists()) {
+            return $this->manifest = collect();
+        }
+
+        return $this->manifest = Collection::make(require $this->manifestPath());
+    }
+
+    /**
+     * Retrieve the cache manifest path.
+     */
+    protected function manifestPath(): string
+    {
+        $path = config('acf-composer.manifest', storage_path('framework/cache'));
+
+        if (Str::endsWith($path, '.php')) {
+            return $path;
+        }
+
+        return Str::finish($path, '/').'acf-composer.php';
+    }
+
+    /**
+     * Determine if the cache manifest exists.
+     */
+    public function manifestExists(): bool
+    {
+        return file_exists($this->manifestPath());
+    }
+
+    /**
+     * Cache the composer.
+     */
+    public function cache(Composer $composer): bool
+    {
+        $manifest = $this->manifest()
+            ->put($composer::class, $composer->getFields())
+            ->all();
+
+        return file_put_contents(
+            $this->manifestPath(),
+            '<?php return '.var_export($manifest, true).';'
+        ) !== false;
+    }
+
+    /**
+     * Retrieve the cached composer.
+     */
+    public function getCache(Composer $composer): array
+    {
+        return $this->manifest()->get($composer::class);
+    }
+
+    /**
+     * Determine if the composer is cached.
+     */
+    public function hasCache(Composer $class): bool
+    {
+        return $this->manifest()->has($class::class);
+    }
+
+    /**
+     * Clear the cache.
+     */
+    public function clearCache(): bool
+    {
+        return $this->manifestExists()
+            ? unlink($this->manifestPath())
+            : false;
     }
 }

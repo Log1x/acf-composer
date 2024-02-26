@@ -2,8 +2,11 @@
 
 namespace Log1x\AcfComposer\Providers;
 
-use Roots\Acorn\ServiceProvider;
+use Composer\InstalledVersions;
+use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Support\ServiceProvider;
 use Log1x\AcfComposer\AcfComposer;
+use Log1x\AcfComposer\Console;
 
 class AcfComposerServiceProvider extends ServiceProvider
 {
@@ -14,9 +17,7 @@ class AcfComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('AcfComposer', function () {
-            return new AcfComposer($this->app);
-        });
+        $this->app->singleton('AcfComposer', fn () => AcfComposer::make($this->app));
     }
 
     /**
@@ -27,18 +28,34 @@ class AcfComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../config/acf.php' => $this->app->configPath('acf.php'),
-        ], 'config');
+            __DIR__.'/../../config/acf.php' => $this->app->configPath('acf.php'),
+        ], 'acf-composer');
 
-        $this->commands([
-            \Log1x\AcfComposer\Console\BlockMakeCommand::class,
-            \Log1x\AcfComposer\Console\FieldMakeCommand::class,
-            \Log1x\AcfComposer\Console\PartialMakeCommand::class,
-            \Log1x\AcfComposer\Console\WidgetMakeCommand::class,
-            \Log1x\AcfComposer\Console\OptionsMakeCommand::class,
-            \Log1x\AcfComposer\Console\StubPublishCommand::class,
-        ]);
+        $this->mergeConfigFrom(__DIR__.'/../../config/acf.php', 'acf');
 
-        $this->app->make('AcfComposer');
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Console\BlockMakeCommand::class,
+                Console\CacheCommand::class,
+                Console\ClearCommand::class,
+                Console\FieldMakeCommand::class,
+                Console\OptionsMakeCommand::class,
+                Console\PartialMakeCommand::class,
+                Console\StubPublishCommand::class,
+                Console\UpgradeCommand::class,
+                Console\WidgetMakeCommand::class,
+            ]);
+        }
+
+        $composer = $this->app->make('AcfComposer');
+
+        $composer->handle();
+
+        if (class_exists(AboutCommand::class) && class_exists(InstalledVersions::class)) {
+            AboutCommand::add('ACF Composer', [
+                'Status' => $composer->manifestExists() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
+                'Version' => InstalledVersions::getPrettyVersion('log1x/acf-composer'),
+            ]);
+        }
     }
 }
