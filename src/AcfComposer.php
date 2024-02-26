@@ -210,7 +210,7 @@ class AcfComposer
     /**
      * Determine if the cache manifest exists.
      */
-    protected function manifestExists(): bool
+    public function manifestExists(): bool
     {
         return file_exists($this->manifestPath());
     }
