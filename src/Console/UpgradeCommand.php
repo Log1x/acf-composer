@@ -42,7 +42,7 @@ class UpgradeCommand extends Command
         $this->replacements = [
             'use StoutLogic\\AcfBuilder\\FieldsBuilder;' => 'use Log1x\\AcfComposer\\Builder;',
             'new FieldsBuilder(' => 'Builder::make(',
-            'public function enqueue()', 'public function enqueue($block)',
+            'public function enqueue()' => 'public function enqueue($block)',
             '/->addFields\(\$this->get\((.*?)\)\)/' => fn ($match) => "->addPartial({$match[1]})",
         ];
 
