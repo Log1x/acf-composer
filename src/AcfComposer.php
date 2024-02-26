@@ -61,8 +61,6 @@ class AcfComposer
     public function __construct(Application $app)
     {
         $this->app = $app;
-
-        add_action('acf/init', fn () => $this->registerPath($this->app->path()));
     }
 
     /**
@@ -71,6 +69,44 @@ class AcfComposer
     public static function make(Application $app): self
     {
         return new static($app);
+    }
+
+    /**
+     * Handle the ACF Composer instance.
+     */
+    public function handle(): void
+    {
+        add_action('acf/init', fn () => $this->boot());
+    }
+
+    /**
+     * Boot the registered Composers.
+     */
+    public function boot(): void
+    {
+        $this->registerDefaultPath();
+
+        foreach ($this->composers as $namespace => $composers) {
+            foreach ($composers as $i => $composer) {
+                $this->composers[$namespace][$i] = $composer->compose();
+            }
+        }
+
+        foreach ($this->deferredComposers as $namespace => $composers) {
+            foreach ($composers as $index => $composer) {
+                $this->composers[$namespace][] = $composer->compose();
+            }
+        }
+
+        $this->deferredComposers = [];
+    }
+
+    /**
+     * Register the default application path.
+     */
+    public function registerDefaultPath(): void
+    {
+        $this->registerPath($this->app->path());
     }
 
     /**
@@ -109,36 +145,38 @@ class AcfComposer
                 $folders.$className
             );
 
-            if (
-                ! is_subclass_of($composer, Composer::class) ||
-                is_subclass_of($composer, Partial::class) ||
-                (new ReflectionClass($composer))->isAbstract()
-            ) {
-                continue;
-            }
-
-            $this->paths[dirname($file->getPath())][] = $composer;
-
-            $composer = $composer::make($this);
-
-            if (is_subclass_of($composer, Options::class) && ! is_null($composer->parent)) {
-                $this->deferredComposers[$namespace][] = $composer;
-
-                continue;
-            }
-
-            $this->composers[$namespace][] = $composer->compose();
-        }
-
-        foreach ($this->deferredComposers as $namespace => $composers) {
-            foreach ($composers as $composer) {
-                $this->composers[$namespace][] = $composer->compose();
+            if ($this->register($composer, $namespace)) {
+                $this->paths[basename($path)][] = $composer;
             }
         }
-
-        $this->deferredComposers = [];
 
         return $this->paths;
+    }
+
+    /**
+     * Register a Composer with ACF Composer.
+     */
+    public function register(string $composer, string $namespace): bool
+    {
+        if (
+            ! is_subclass_of($composer, Composer::class) ||
+            is_subclass_of($composer, Partial::class) ||
+            (new ReflectionClass($composer))->isAbstract()
+        ) {
+            return false;
+        }
+
+        $composer = $composer::make($this);
+
+        if (is_subclass_of($composer, Options::class) && ! is_null($composer->parent)) {
+            $this->deferredComposers[$namespace][] = $composer;
+
+            return true;
+        }
+
+        $this->composers[$namespace][] = $composer;
+
+        return true;
     }
 
     /**

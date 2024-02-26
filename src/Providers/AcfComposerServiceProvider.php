@@ -49,6 +49,8 @@ class AcfComposerServiceProvider extends ServiceProvider
 
         $composer = $this->app->make('AcfComposer');
 
+        $composer->handle();
+
         if (class_exists(AboutCommand::class) && class_exists(InstalledVersions::class)) {
             AboutCommand::add('ACF Composer', [
                 'Status' => $composer->manifestExists() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
