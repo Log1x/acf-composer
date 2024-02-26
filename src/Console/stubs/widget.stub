@@ -2,8 +2,8 @@
 
 namespace DummyNamespace;
 
+use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Widget;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class DummyClass extends Widget
 {
@@ -50,7 +50,7 @@ class DummyClass extends Widget
      */
     public function fields()
     {
-        $DummyCamel = new FieldsBuilder('DummySnake');
+        $DummyCamel = Builder::make('DummySnake');
 
         $DummyCamel
             ->addText('title');

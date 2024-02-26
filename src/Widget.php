@@ -2,11 +2,11 @@
 
 namespace Log1x\AcfComposer;
 
-use WP_Widget;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Contracts\Widget as WidgetContract;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
+use Log1x\AcfComposer\Contracts\Widget as WidgetContract;
+use WP_Widget;
 
 abstract class Widget extends Composer implements WidgetContract
 {
@@ -92,11 +92,12 @@ abstract class Widget extends Composer implements WidgetContract
      */
     protected function widget()
     {
-        return (new class ($this) extends WP_Widget {
+        return new class($this) extends WP_Widget
+        {
             /**
              * Create a new WP_Widget instance.
              *
-             * @param  \Log1x\AcfComposer\Widget $composer
+             * @param  \Log1x\AcfComposer\Widget  $composer
              * @return void
              */
             public function __construct($composer)
@@ -113,8 +114,8 @@ abstract class Widget extends Composer implements WidgetContract
             /**
              * Render the widget.
              *
-             * @param  array $args
-             * @param  array $instance
+             * @param  array  $args
+             * @param  array  $instance
              * @return void
              */
             public function widget($args, $instance)
@@ -127,7 +128,7 @@ abstract class Widget extends Composer implements WidgetContract
                     echo collect([
                         Arr::get($args, 'before_title'),
                         $this->composer->title(),
-                        Arr::get($args, 'after_title')
+                        Arr::get($args, 'after_title'),
                     ])->implode(PHP_EOL);
                 }
 
@@ -143,13 +144,13 @@ abstract class Widget extends Composer implements WidgetContract
              * Output the widget settings update form.
              * This is intentionally blank due to it being set by ACF.
              *
-             * @param  array $instance
+             * @param  array  $instance
              * @return void
              */
             public function form($instance)
             {
                 //
             }
-        });
+        };
     }
 }

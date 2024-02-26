@@ -5,13 +5,12 @@ namespace Log1x\AcfComposer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Concerns\FormatsCss;
-use Log1x\AcfComposer\Contracts\Block as BlockContract;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
+use Log1x\AcfComposer\Contracts\Block as BlockContract;
 
 abstract class Block extends Composer implements BlockContract
 {
-    use InteractsWithBlade;
-    use FormatsCss;
+    use FormatsCss, InteractsWithBlade;
 
     /**
      * The block properties.
@@ -263,23 +262,21 @@ abstract class Block extends Composer implements BlockContract
 
     /**
      * Returns the active block inline styles based on the selected block properties.
-     *
-     * @return string
      */
     public function getInlineStyle(): string
     {
         return collect([
-            'padding' => !empty($this->block->style['spacing']['padding'])
+            'padding' => ! empty($this->block->style['spacing']['padding'])
                 ? collect($this->block->style['spacing']['padding'])->map(function ($value, $side) {
                     return $this->formatCss($value, $side);
                 })->implode(' ')
                 : null,
-            'margin'  => !empty($this->block->style['spacing']['margin'])
+            'margin' => ! empty($this->block->style['spacing']['margin'])
                 ? collect($this->block->style['spacing']['margin'])->map(function ($value, $side) {
                     return $this->formatCss($value, $side, 'margin');
                 })->implode(' ')
                 : null,
-            'color' => !empty($this->block->style['color']['gradient'])
+            'color' => ! empty($this->block->style['color']['gradient'])
                 ? sprintf('background: %s;', $this->block->style['color']['gradient'])
                 : null,
         ])->filter()->implode(' ');
@@ -288,7 +285,7 @@ abstract class Block extends Composer implements BlockContract
     /**
      * Returns the block template.
      *
-     * @param  array $template
+     * @param  array  $template
      * @return \Illuminate\Support\Collection
      */
     public function getTemplate($template = [])
@@ -362,9 +359,7 @@ abstract class Block extends Composer implements BlockContract
                 'align_content' => $this->align_content,
                 'styles' => $this->styles,
                 'supports' => $this->supports,
-                'enqueue_assets' => function () {
-                    return $this->enqueue();
-                },
+                'enqueue_assets' => fn () => $this->enqueue(),
                 'render_callback' => function (
                     $block,
                     $content = '',
@@ -403,12 +398,12 @@ abstract class Block extends Composer implements BlockContract
     /**
      * Render the ACF block.
      *
-     * @param  array     $block
-     * @param  string    $content
-     * @param  bool      $preview
-     * @param  int       $post_id
-     * @param  \WP_Block $wp_block
-     * @param  array     $context
+     * @param  array  $block
+     * @param  string  $content
+     * @param  bool  $preview
+     * @param  int  $post_id
+     * @param  \WP_Block  $wp_block
+     * @param  array  $context
      * @return string
      */
     public function render($block, $content = '', $preview = false, $post_id = 0, $wp_block = false, $context = false)

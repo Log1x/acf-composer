@@ -9,10 +9,9 @@ trait FormatsCss
     /**
      * Format the given value into a CSS style.
      *
-     * @param  string $value
-     * @param  string $side
-     * @param  string $type
-     * @return string
+     * @param  string  $value
+     * @param  string  $side
+     * @param  string  $type
      */
     public function formatCss($value, $side, $type = 'padding'): string
     {

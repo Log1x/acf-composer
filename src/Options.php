@@ -45,7 +45,7 @@ abstract class Options extends Composer
     /**
      * The option page visibility in the admin menu.
      *
-     * @var boolean
+     * @var bool
      */
     public $menu = true;
 
@@ -66,9 +66,9 @@ abstract class Options extends Composer
     /**
      * Redirect to the first child page if one exists.
      *
-     * @var boolean
+     * @var bool
      */
-    public $redirect = true;
+    public $redirect = false;
 
     /**
      * The post ID to save and load values from.
@@ -156,7 +156,7 @@ abstract class Options extends Composer
                     'post_id' => $this->post,
                     'autoload' => $this->autoload,
                     'update_button' => $this->updateButton(),
-                    'updated_message' => $this->updatedMessage()
+                    'updated_message' => $this->updatedMessage(),
                 ], $this->settings)
             );
         });

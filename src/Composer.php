@@ -2,76 +2,69 @@
 
 namespace Log1x\AcfComposer;
 
-use Log1x\AcfComposer\Contracts\Field as FieldContract;
-use Log1x\AcfComposer\Concerns\InteractsWithPartial;
-use StoutLogic\AcfBuilder\FieldsBuilder;
-use Roots\Acorn\Application;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Concerns\InteractsWithPartial;
+use Log1x\AcfComposer\Contracts\Field as FieldContract;
+use Roots\Acorn\Application;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
 abstract class Composer implements FieldContract
 {
     use InteractsWithPartial;
 
     /**
-     * The application instance.
-     *
-     * @var \Roots\Acorn\Application
+     * The ACF Composer instance.
      */
-    protected $app;
+    protected AcfComposer $composer;
+
+    /**
+     * The application instance.
+     */
+    protected Application $app;
 
     /**
      * The field keys.
-     *
-     * @var array
      */
-    protected $keys = ['fields', 'sub_fields', 'layouts'];
+    protected array $keys = ['fields', 'sub_fields', 'layouts'];
 
     /**
      * The field groups.
-     *
-     * @var \StoutLogic\AcfBuilder\FieldsBuilder|array
      */
-    protected $fields;
+    protected array $fields = [];
 
     /**
      * The default field settings.
-     *
-     * @var \Illuminate\Support\Collection|array
      */
-    protected $defaults = [];
+    protected Collection|array $defaults = [];
 
     /**
      * Create a new Composer instance.
-     *
-     * @param  \Roots\Acorn\Application $app
-     * @return void
      */
-    public function __construct(Application $app)
+    public function __construct(AcfComposer $composer)
     {
-        $this->app = $app;
+        $this->composer = $composer;
+        $this->app = $composer->app;
 
-        $this->defaults = collect(
-            $this->app->config->get('acf.defaults')
-        )->merge($this->defaults)->mapWithKeys(function ($value, $key) {
-            return [Str::snake($key) => $value];
-        });
+        $this->defaults = collect($this->app->config->get('acf.defaults'))
+            ->merge($this->defaults)
+            ->mapWithKeys(fn ($value, $key) => [Str::snake($key) => $value]);
 
-        $this->fields = is_a($this->fields = $this->fields(), FieldsBuilder::class)
-            ? $this->fields->build()
-            : $this->fields;
+        $this->fields = $this->getFields();
+    }
 
-        if ($this->defaults->has('field_group')) {
-            $this->fields = array_merge($this->defaults->get('field_group'), $this->fields ?? []);
-        }
+    /**
+     * Make a new instance of the Composer.
+     */
+    public static function make(AcfComposer $composer): self
+    {
+        return new static($composer);
     }
 
     /**
      * Register the field group with Advanced Custom Fields.
-     *
-     * @param  callable $callback
-     * @return void
      */
-    protected function register($callback = null)
+    protected function register(?callable $callback = null): void
     {
         if (empty($this->fields)) {
             return;
@@ -87,12 +80,37 @@ abstract class Composer implements FieldContract
     }
 
     /**
-     * Build the field group with the default field type settings.
-     *
-     * @param  array $fields
-     * @return array
+     * Retrieve the field group fields.
      */
-    protected function build($fields = [])
+    public function getFields(): array
+    {
+        if ($this->fields) {
+            return $this->fields;
+        }
+
+        if ($this->composer->hasCache($this)) {
+            return $this->composer->getCache($this);
+        }
+
+        $fields = is_a($fields = $this->fields(), FieldsBuilder::class)
+            ? $fields->build()
+            : $fields;
+
+        if (! is_array($fields)) {
+            throw new Exception('Fields must be an array or an instance of Builder.');
+        }
+
+        if ($this->defaults->has('field_group')) {
+            $fields = array_merge($this->defaults->get('field_group'), $fields);
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Build the field group with the default field type settings.
+     */
+    public function build(array $fields = []): array
     {
         return collect($fields)->map(function ($value, $key) {
             if (
