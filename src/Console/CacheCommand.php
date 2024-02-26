@@ -40,9 +40,7 @@ class CacheCommand extends Command
         $this->composer = $this->laravel['AcfComposer'];
 
         if ($this->option('clear')) {
-            return $this->composer->clearCache()
-                ? $this->components->info('Successfully cleared the <fg=blue>ACF Composer</> cache manifest.')
-                : $this->components->info('The <fg=blue>ACF Composer</> cache manifest is already cleared.');
+            return $this->call('acf:clear');
         }
 
         $composers = collect(

@@ -37,12 +37,13 @@ class AcfComposerServiceProvider extends ServiceProvider
             $this->commands([
                 Console\BlockMakeCommand::class,
                 Console\CacheCommand::class,
+                Console\ClearCommand::class,
                 Console\FieldMakeCommand::class,
                 Console\OptionsMakeCommand::class,
                 Console\PartialMakeCommand::class,
                 Console\StubPublishCommand::class,
-                Console\WidgetMakeCommand::class,
                 Console\UpgradeCommand::class,
+                Console\WidgetMakeCommand::class,
             ]);
         }
 
