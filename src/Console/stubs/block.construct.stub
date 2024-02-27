@@ -2,13 +2,13 @@
 
 namespace DummyNamespace;
 
+use Log1x\AcfComposer\AcfComposer;
 use Log1x\AcfComposer\Block;
 use Log1x\AcfComposer\Builder;
-use Roots\Acorn\Application;
 
 class DummyClass extends Block
 {
-    public function __construct(Application $app)
+    public function __construct(AcfComposer $composer)
     {
         /**
          * The block name.
@@ -152,7 +152,7 @@ class DummyClass extends Block
            ],
         ];
 
-        parent::__construct($app);
+        parent::__construct($composer);
     }
 
     /**
