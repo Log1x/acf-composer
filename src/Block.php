@@ -239,10 +239,22 @@ abstract class Block extends Composer implements BlockContract
     /**
      * Assets enqueued when rendering the block.
      *
+     * @return void
+     *
+     * @deprecated Use `assets($block)` instead.
+     */
+    public function enqueue()
+    {
+        //
+    }
+
+    /**
+     * Assets enqueued when rendering the block.
+     *
      * @param  array  $block
      * @return void
      */
-    public function enqueue($block = [])
+    public function assets($block)
     {
         //
     }
@@ -360,7 +372,7 @@ abstract class Block extends Composer implements BlockContract
                 'align_content' => $this->align_content,
                 'styles' => $this->styles,
                 'supports' => $this->supports,
-                'enqueue_assets' => fn ($block) => $this->enqueue($block),
+                'enqueue_assets' => fn ($block) => $this->assets($block ?? []),
                 'render_callback' => function (
                     $block,
                     $content = '',
