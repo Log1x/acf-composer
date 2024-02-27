@@ -23,7 +23,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Custom field types.
+    | Custom Field Types
     |--------------------------------------------------------------------------
     |
     | Here you can define custom field types that are not included with ACF
