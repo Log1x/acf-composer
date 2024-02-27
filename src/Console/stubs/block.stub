@@ -197,7 +197,7 @@ class DummyClass extends Block
      * @param  array $block
      * @return void
      */
-    public function enqueue($block = [])
+    public function assets($block)
     {
         //
     }

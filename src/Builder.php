@@ -4,9 +4,60 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Log1x\AcfComposer\Builder\FieldBuilder;
+use Log1x\AcfComposer\Builder\FlexibleContentBuilder;
+use Log1x\AcfComposer\Builder\GroupBuilder;
+use Log1x\AcfComposer\Builder\RepeaterBuilder;
 use ReflectionClass;
 use StoutLogic\AcfBuilder\FieldsBuilder;
+use StoutLogic\AcfBuilder\LocationBuilder;
 
+/**
+ * Builds configurations for an ACF Field.
+ *
+ * @method Builder addLayout(string|FieldsBuilder $layout, array $args = [])
+ * @method Builder endFlexibleContent()
+ * @method Builder endGroup()
+ * @method Builder endRepeater()
+ * @method FieldBuilder addCheckbox(string $name, array $args = [])
+ * @method FieldBuilder addChoiceField(string $name, string $type, array $args = [])
+ * @method FieldBuilder addColorPicker(string $name, array $args = [])
+ * @method FieldBuilder addDatePicker(string $name, array $args = [])
+ * @method FieldBuilder addDateTimePicker(string $name, array $args = [])
+ * @method FieldBuilder addEmail(string $name, array $args = [])
+ * @method FieldBuilder addField(string $name, string $type, array $args = [])
+ * @method FieldBuilder addFields(FieldsBuilder|array $fields)
+ * @method FieldBuilder addFile(string $name, array $args = [])
+ * @method FieldBuilder addGallery(string $name, array $args = [])
+ * @method FieldBuilder addGoogleMap(string $name, array $args = [])
+ * @method FieldBuilder addImage(string $name, array $args = [])
+ * @method FieldBuilder addLink(string $name, array $args = [])
+ * @method FieldBuilder addMessage(string $label, string $message, array $args = [])
+ * @method FieldBuilder addNumber(string $name, array $args = [])
+ * @method FieldBuilder addOembed(string $name, array $args = [])
+ * @method FieldBuilder addPageLink(string $name, array $args = [])
+ * @method FieldBuilder addPartial(string $partial)
+ * @method FieldBuilder addPassword(string $name, array $args = [])
+ * @method FieldBuilder addPostObject(string $name, array $args = [])
+ * @method FieldBuilder addRadio(string $name, array $args = [])
+ * @method FieldBuilder addRange(string $name, array $args = [])
+ * @method FieldBuilder addRelationship(string $name, array $args = [])
+ * @method FieldBuilder addSelect(string $name, array $args = [])
+ * @method FieldBuilder addTab(string $label, array $args = [])
+ * @method FieldBuilder addTaxonomy(string $name, array $args = [])
+ * @method FieldBuilder addText(string $name, array $args = [])
+ * @method FieldBuilder addTextarea(string $name, array $args = [])
+ * @method FieldBuilder addTimePicker(string $name, array $args = [])
+ * @method FieldBuilder addTrueFalse(string $name, array $args = [])
+ * @method FieldBuilder addUrl(string $name, array $args = [])
+ * @method FieldBuilder addUser(string $name, array $args = [])
+ * @method FieldBuilder addWysiwyg(string $name, array $args = [])
+ * @method FlexibleContentBuilder addFlexibleContent(string $name, array $args = [])
+ * @method GroupBuilder addGroup(string $name, array $args = [])
+ * @method GroupBuilder end()
+ * @method LocationBuilder setLocation(string $param, string $operator, string $value)
+ * @method RepeaterBuilder addRepeater(string $name, array $args = [])
+ */
 class Builder extends FieldsBuilder
 {
     /**
@@ -86,6 +137,17 @@ class Builder extends FieldsBuilder
     /**
      * {@inheritdoc}
      */
+    public function addField($name, $type, array $args = [])
+    {
+        return $this->initializeField(new FieldBuilder($name, $type, $args));
+    }
+
+    /**
+     * Initialize the field and push it to the field manager.
+     *
+     * @param  FieldBuilder  $field
+     * @return FieldBuilder
+     */
     protected function initializeField($field)
     {
         $field->setParentContext($this);
@@ -93,6 +155,54 @@ class Builder extends FieldsBuilder
         $this->getFieldManager()->pushField($field);
 
         return $field;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocation($param, $operator, $value)
+    {
+        $location = parent::setLocation($param, $operator, $value);
+
+        $location->setParentContext($this);
+
+        return $location;
+    }
+
+    /**
+     * Add a group field.
+     *
+     * @param  string  $name
+     * @return \Log1x\AcfComposer\Builder\GroupBuilder
+     */
+    public function addGroup($name, array $args = [])
+    {
+        return $this->initializeField(new GroupBuilder($name, 'group', $args));
+    }
+
+    /**
+     * Add a repeater field. Any fields added after will be added to the repeater
+     * until `endRepeater` is called.
+     *
+     * @param  string  $name
+     * @return \Log1x\AcfComposer\Builder\RepeaterBuilder
+     */
+    public function addRepeater($name, array $args = [])
+    {
+        return $this->initializeField(new RepeaterBuilder($name, 'repeater', $args));
+    }
+
+    /**
+     * Add a flexible content field. Once adding a layout with `addLayout`,
+     * any fields added after will be added to that layout until another
+     * `addLayout` call is made, or until `endFlexibleContent` is called.
+     *
+     * @param  string  $name
+     * @return \Log1x\AcfComposer\Builder\FlexibleContentBuilder
+     */
+    public function addFlexibleContent($name, array $args = [])
+    {
+        return $this->initializeField(new FlexibleContentBuilder($name, 'flexible_content', $args));
     }
 
     /**
@@ -104,12 +214,14 @@ class Builder extends FieldsBuilder
      */
     public function __call($method, $arguments)
     {
-        if (method_exists($this, $method) || ! $type = $this->getFieldType($method)) {
-            return parent::__call($method, $arguments);
+        if ($context = $this->getParentContext()) {
+            if ($type = $context->getFieldType($method)) {
+                $name = array_shift($arguments);
+
+                return $this->addField($name, $type, ...$arguments);
+            }
         }
 
-        $name = array_shift($arguments);
-
-        return $this->addField($name, $type, ...$arguments);
+        return parent::__call($method, $arguments);
     }
 }
