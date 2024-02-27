@@ -5,6 +5,9 @@ namespace Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Builder;
 use StoutLogic\AcfBuilder\RepeaterBuilder as GroupBuilder;
 
+/**
+ * @method FieldBuilder addPartial(string $partial)
+ */
 class RepeaterBuilder extends GroupBuilder
 {
     /**
