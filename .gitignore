@@ -1,2 +1,3 @@
 /vendor
 composer.lock
+_ide-helpers.php
