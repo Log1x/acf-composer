@@ -82,13 +82,13 @@ abstract class Composer implements FieldContract
     /**
      * Retrieve the field group fields.
      */
-    public function getFields(): array
+    public function getFields(bool $cache = true): array
     {
-        if ($this->fields) {
+        if ($this->fields && $cache) {
             return $this->fields;
         }
 
-        if ($this->composer->hasCache($this)) {
+        if ($cache && $this->composer->hasCache($this)) {
             return $this->composer->getCache($this);
         }
 
