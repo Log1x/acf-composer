@@ -59,7 +59,7 @@ class UpgradeCommand extends Command
             ->filter(fn ($class) => Str::contains($class, array_keys($this->replacements)));
 
         if ($classes->isEmpty()) {
-            return $this->components->info('No outdated ACF Composer classes found.');
+            return $this->components->info('No outdated <fg=blue>ACF Composer</> classes found.');
         }
 
         $files = $classes

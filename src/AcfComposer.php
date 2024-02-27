@@ -145,9 +145,9 @@ class AcfComposer
                 $folders.$className
             );
 
-            if ($this->register($composer, $namespace)) {
-                $this->paths[basename($path)][] = $composer;
-            }
+            $this->paths[basename($path)][] = $composer;
+
+            $this->register($composer, $namespace);
         }
 
         return $this->paths;
