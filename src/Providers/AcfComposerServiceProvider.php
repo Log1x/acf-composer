@@ -39,6 +39,7 @@ class AcfComposerServiceProvider extends ServiceProvider
                 Console\CacheCommand::class,
                 Console\ClearCommand::class,
                 Console\FieldMakeCommand::class,
+                Console\IdeHelpersCommand::class,
                 Console\OptionsMakeCommand::class,
                 Console\PartialMakeCommand::class,
                 Console\StubPublishCommand::class,
