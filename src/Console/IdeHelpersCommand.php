@@ -5,7 +5,6 @@ namespace Log1x\AcfComposer\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\AcfComposer;
 
 class IdeHelpersCommand extends Command
 {
@@ -25,11 +24,6 @@ class IdeHelpersCommand extends Command
     protected $description = 'Generate IDE helpers for configured custom field types';
 
     /**
-     * The ACF Composer instance.
-     */
-    protected AcfComposer $composer;
-
-    /**
      * Execute the console command.
      */
     public function handle()
@@ -40,6 +34,10 @@ class IdeHelpersCommand extends Command
             return $this->components->info('You <fg=blue>do not</> have any configured custom field types.');
         }
 
+        $path = $this->option('path') ?
+            base_path($this->option('path')) :
+            __DIR__.'/../../_ide-helpers.php';
+
         $methods = [];
 
         foreach ($types as $key => $value) {
@@ -49,10 +47,6 @@ class IdeHelpersCommand extends Command
         }
 
         $methods = implode("\n\t ", $methods);
-
-        $path = $this->option('path') ?
-            base_path($this->option('path')) :
-            __DIR__.'/../../_ide-helpers.php';
 
         $builder = <<<EOT
         namespace Log1x\AcfComposer {
@@ -97,8 +91,6 @@ class IdeHelpersCommand extends Command
             }
         }
         EOT;
-
-        File::ensureDirectoryExists(dirname($path));
 
         File::put($path, "<?php\n\n{$builder}\n\n{$fieldBuilder}");
 
