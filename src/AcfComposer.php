@@ -259,7 +259,7 @@ class AcfComposer
     public function cache(Composer $composer): bool
     {
         $manifest = $this->manifest()
-            ->put($composer::class, $composer->getFields())
+            ->put($composer::class, $composer->getFields(cache: false))
             ->all();
 
         return file_put_contents(
