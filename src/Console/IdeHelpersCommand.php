@@ -14,7 +14,8 @@ class IdeHelpersCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'acf:ide-helpers';
+    protected $signature = 'acf:ide-helpers
+                            {--path= : The path to generate the IDE helpers}';
 
     /**
      * The console command description.
@@ -49,7 +50,9 @@ class IdeHelpersCommand extends Command
 
         $methods = implode("\n\t ", $methods);
 
-        $path = storage_path('framework/cache/acf-ide-helpers.php');
+        $path = $this->option('path') ?
+            base_path($this->option('path')) :
+            __DIR__.'/../../_ide-helpers.php';
 
         $builder = <<<EOT
         namespace Log1x\AcfComposer {
