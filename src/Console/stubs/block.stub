@@ -197,7 +197,7 @@ class DummyClass extends Block
      * @param  array $block
      * @return void
      */
-    public function assets($block)
+    public function assets(array $block): void
     {
         //
     }

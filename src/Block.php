@@ -241,7 +241,7 @@ abstract class Block extends Composer implements BlockContract
      *
      * @return void
      *
-     * @deprecated Use `assets($block)` instead.
+     * @deprecated Use `assets(array $block): void` instead.
      */
     public function enqueue()
     {
@@ -250,11 +250,8 @@ abstract class Block extends Composer implements BlockContract
 
     /**
      * Assets enqueued when rendering the block.
-     *
-     * @param  array  $block
-     * @return void
      */
-    public function assets($block)
+    public function assets(array $block): void
     {
         //
     }
