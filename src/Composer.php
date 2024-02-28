@@ -2,6 +2,7 @@
 
 namespace Log1x\AcfComposer;
 
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Concerns\InteractsWithPartial;
