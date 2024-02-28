@@ -196,9 +196,6 @@ class DummyClass extends Block
 
     /**
      * Assets enqueued when rendering the block.
-     *
-     * @param  array $block
-     * @return void
      */
     public function assets(array $block): void
     {
