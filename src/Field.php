@@ -42,6 +42,10 @@ abstract class Field extends Composer
 
         $fields = $this->fields();
 
+        if (empty($fields)) {
+            return [];
+        }
+
         $fields = is_a($fields, FieldsBuilder::class)
             ? [$fields]
             : $fields;
