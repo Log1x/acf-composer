@@ -405,11 +405,15 @@ abstract class Block extends Composer implements BlockContract
                 },
             ];
 
-            if ($this->example !== false || method_exists($this, 'example')) {
+            if ($this->example !== false) {
+                if (method_exists($this, 'example') && is_array($example = $this->example())) {
+                    $this->example = array_merge($this->example, $example);
+                }
+
                 $settings = Arr::add($settings, 'example', [
                     'attributes' => [
                         'mode' => 'preview',
-                        'data' => method_exists($this, 'example') ? $this->example() : $this->example,
+                        'data' => $this->example,
                     ],
                 ]);
             }
