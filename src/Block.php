@@ -36,7 +36,7 @@ abstract class Block extends Composer implements BlockContract
     /**
      * The current post ID.
      *
-     * @param int
+     * @var int
      */
     public $post_id;
 
@@ -57,14 +57,14 @@ abstract class Block extends Composer implements BlockContract
     /**
      * The current post.
      *
-     * @param \WP_Post
+     * @var \WP_Post
      */
     public $post;
 
     /**
      * The block classes.
      *
-     * @param string
+     * @var string
      */
     public $classes;
 
@@ -326,14 +326,10 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
-     * Returns the block template.
-     *
-     * @param  array  $template
-     * @return string|\Illuminate\Support\Collection
+     * Retrieve the block template.
      */
-    public function getTemplate($template = [])
+    public function getTemplate(string|array $template = []): string
     {
-
         if (is_string($template)) {
             return $template;
         }
@@ -352,8 +348,7 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
-     * Compose the defined field group and register it
-     * with Advanced Custom Fields.
+     * Compose the fields and register the block.
      */
     public function compose(): ?self
     {
