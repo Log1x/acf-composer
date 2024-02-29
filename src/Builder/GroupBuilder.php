@@ -3,6 +3,7 @@
 namespace Log1x\AcfComposer\Builder;
 
 use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Builder\Concerns\HasParentContext;
 use StoutLogic\AcfBuilder\GroupBuilder as GroupBuilderBase;
 
 /**
@@ -10,6 +11,8 @@ use StoutLogic\AcfBuilder\GroupBuilder as GroupBuilderBase;
  */
 class GroupBuilder extends GroupBuilderBase
 {
+    use HasParentContext;
+
     /**
      * The fields builder instance.
      *
