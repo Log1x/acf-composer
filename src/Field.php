@@ -50,7 +50,7 @@ abstract class Field extends Composer
             throw new Exception('Fields must be an array or an instance of Builder.');
         }
 
-        $fields = ! empty($fields['fields']) ? [$fields] : $fields;
+        $fields = ! empty($fields['key']) ? [$fields] : $fields;
 
         foreach ($fields as $key => $field) {
             $fields[$key] = is_a($field, FieldsBuilder::class)
