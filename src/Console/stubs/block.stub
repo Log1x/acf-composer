@@ -180,7 +180,7 @@ class DummyClass extends Block
     /**
      * Assets enqueued when rendering the block.
      */
-    public function assets(array $block):void
+    public function assets(array $block): void
     {
         //
     }
