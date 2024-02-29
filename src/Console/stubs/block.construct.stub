@@ -56,7 +56,7 @@ class DummyClass extends Block
     {
         return [
             'items' => [
-                ['item' => 'Item onez'],
+                ['item' => 'Item one'],
                 ['item' => 'Item two'],
                 ['item' => 'Item three'],
             ],
