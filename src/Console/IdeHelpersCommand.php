@@ -52,8 +52,6 @@ class IdeHelpersCommand extends Command
         namespace Log1x\AcfComposer {
             /**
              {$methods}
-             *
-             * @codeCoverageIgnore
              */
             class Builder
             {
@@ -65,8 +63,6 @@ class IdeHelpersCommand extends Command
         namespace Log1x\AcfComposer\Builder {
             /**
              {$methods}
-             *
-             * @codeCoverageIgnore
              */
             class FieldBuilder
             {
@@ -74,8 +70,6 @@ class IdeHelpersCommand extends Command
 
             /**
              {$methods}
-             *
-             * @codeCoverageIgnore
              */
             class GroupBuilder
             {
@@ -83,10 +77,29 @@ class IdeHelpersCommand extends Command
 
             /**
              {$methods}
-             *
-             * @codeCoverageIgnore
              */
             class RepeaterBuilder
+            {
+            }
+
+            /**
+             {$methods}
+             */
+            class AccordionBuilder
+            {
+            }
+
+            /**
+             {$methods}
+             */
+            class TabBuilder
+            {
+            }
+
+            /**
+             {$methods}
+             */
+            class ChoiceFieldBuilder
             {
             }
         }

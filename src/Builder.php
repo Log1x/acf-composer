@@ -4,10 +4,13 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Log1x\AcfComposer\Builder\AccordionBuilder;
+use Log1x\AcfComposer\Builder\ChoiceFieldBuilder;
 use Log1x\AcfComposer\Builder\FieldBuilder;
 use Log1x\AcfComposer\Builder\FlexibleContentBuilder;
 use Log1x\AcfComposer\Builder\GroupBuilder;
 use Log1x\AcfComposer\Builder\RepeaterBuilder;
+use Log1x\AcfComposer\Builder\TabBuilder;
 use ReflectionClass;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use StoutLogic\AcfBuilder\LocationBuilder;
@@ -15,12 +18,16 @@ use StoutLogic\AcfBuilder\LocationBuilder;
 /**
  * Builds configurations for an ACF Field.
  *
+ * @method AccordionBuilder addAccordion(string $label, array $args = [])
  * @method Builder addLayout(string|FieldsBuilder $layout, array $args = [])
  * @method Builder endFlexibleContent()
  * @method Builder endGroup()
  * @method Builder endRepeater()
- * @method FieldBuilder addCheckbox(string $name, array $args = [])
- * @method FieldBuilder addChoiceField(string $name, string $type, array $args = [])
+ * @method ChoiceFieldBuilder addButtonGroup(string $name, array $args = [])
+ * @method ChoiceFieldBuilder addCheckbox(string $name, array $args = [])
+ * @method ChoiceFieldBuilder addChoiceField(string $name, string $type, array $args = [])
+ * @method ChoiceFieldBuilder addRadio(string $name, array $args = [])
+ * @method ChoiceFieldBuilder addSelect(string $name, array $args = [])
  * @method FieldBuilder addColorPicker(string $name, array $args = [])
  * @method FieldBuilder addDatePicker(string $name, array $args = [])
  * @method FieldBuilder addDateTimePicker(string $name, array $args = [])
@@ -39,11 +46,8 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  * @method FieldBuilder addPartial(string $partial)
  * @method FieldBuilder addPassword(string $name, array $args = [])
  * @method FieldBuilder addPostObject(string $name, array $args = [])
- * @method FieldBuilder addRadio(string $name, array $args = [])
  * @method FieldBuilder addRange(string $name, array $args = [])
  * @method FieldBuilder addRelationship(string $name, array $args = [])
- * @method FieldBuilder addSelect(string $name, array $args = [])
- * @method FieldBuilder addTab(string $label, array $args = [])
  * @method FieldBuilder addTaxonomy(string $name, array $args = [])
  * @method FieldBuilder addText(string $name, array $args = [])
  * @method FieldBuilder addTextarea(string $name, array $args = [])
@@ -57,6 +61,7 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  * @method GroupBuilder end()
  * @method LocationBuilder setLocation(string $param, string $operator, string $value)
  * @method RepeaterBuilder addRepeater(string $name, array $args = [])
+ * @method TabBuilder addTab(string $label, array $args = [])
  */
 class Builder extends FieldsBuilder
 {
@@ -181,8 +186,7 @@ class Builder extends FieldsBuilder
     }
 
     /**
-     * Add a repeater field. Any fields added after will be added to the repeater
-     * until `endRepeater` is called.
+     * Add a repeater field.
      *
      * @param  string  $name
      * @return \Log1x\AcfComposer\Builder\RepeaterBuilder
@@ -193,9 +197,7 @@ class Builder extends FieldsBuilder
     }
 
     /**
-     * Add a flexible content field. Once adding a layout with `addLayout`,
-     * any fields added after will be added to that layout until another
-     * `addLayout` call is made, or until `endFlexibleContent` is called.
+     * Add a flexible content field.
      *
      * @param  string  $name
      * @return \Log1x\AcfComposer\Builder\FlexibleContentBuilder
@@ -203,6 +205,40 @@ class Builder extends FieldsBuilder
     public function addFlexibleContent($name, array $args = [])
     {
         return $this->initializeField(new FlexibleContentBuilder($name, 'flexible_content', $args));
+    }
+
+    /**
+     * Add a tab field.
+     *
+     * @param  string  $label
+     * @return \Log1x\AcfComposer\Builder\TabBuilder
+     */
+    public function addTab($label, array $args = [])
+    {
+        return $this->initializeField(new TabBuilder($label, 'tab', $args));
+    }
+
+    /**
+     * Add an accordion field.
+     *
+     * @param  string  $label
+     * @return \Log1x\AcfComposer\Builder\AccordionBuilder
+     */
+    public function addAccordion($label, array $args = [])
+    {
+        return $this->initializeField(new AccordionBuilder($label, 'accordion', $args));
+    }
+
+    /**
+     * Add a choice field.
+     *
+     * @param  string  $name
+     * @param  string  $type
+     * @return \Log1x\AcfComposer\Builder\ChoiceFieldBuilder
+     */
+    public function addChoiceField($name, $type, array $args = [])
+    {
+        return $this->initializeField(new ChoiceFieldBuilder($name, $type, $args));
     }
 
     /**
