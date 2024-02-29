@@ -3,6 +3,7 @@
 namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Concerns\FormatsCss;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
@@ -326,25 +327,21 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
-     * Retrieve the block template.
+     * Handle the block template.
      */
-    public function getTemplate(string|array $template = []): string
+    public function handleTemplate(array $template = []): Collection
     {
-        if (is_string($template)) {
-            return $template;
-        }
-
         return collect($template)->map(function ($value, $key) {
             if (is_array($value) && Arr::has($value, 'innerBlocks')) {
-                $innerBlocks = collect($value['innerBlocks'])->map(function ($innerBlock) {
-                    return $this->getTemplate($innerBlock)->all();
-                })->collapse();
+                $blocks = collect($value['innerBlocks'])
+                    ->map(fn ($block) => $this->handleTemplate($block)->all())
+                    ->collapse();
 
-                return [$key, Arr::except($value, 'innerBlocks') ?? [], $innerBlocks->all()];
+                return [$key, Arr::except($value, 'innerBlocks') ?? [], $blocks->all()];
             }
 
             return [$key, $value];
-        })->values()->toJson();
+        })->values();
     }
 
     /**
@@ -408,11 +405,15 @@ abstract class Block extends Composer implements BlockContract
                 },
             ];
 
-            if ($this->example !== false || method_exists($this, 'example')) {
+            if ($this->example !== false) {
+                if (method_exists($this, 'example') && is_array($example = $this->example())) {
+                    $this->example = array_merge($this->example, $example);
+                }
+
                 $settings = Arr::add($settings, 'example', [
                     'attributes' => [
                         'mode' => 'preview',
-                        'data' => method_exists($this, 'example') ? $this->example() : $this->example,
+                        'data' => $this->example,
                     ],
                 ]);
             }
@@ -483,9 +484,11 @@ abstract class Block extends Composer implements BlockContract
                 false,
         ])->filter()->implode(' ');
 
-        $this->style = $this->getStyle();
-        $this->template = $this->getTemplate($this->template);
+        $this->template = is_array($this->template)
+            ? $this->handleTemplate($this->template)->toJson()
+            : $this->template;
 
+        $this->style = $this->getStyle();
         $this->inlineStyle = $this->getInlineStyle();
 
         return $this->view($this->view, ['block' => $this]);
