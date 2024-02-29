@@ -4,6 +4,13 @@ namespace Log1x\AcfComposer\Builder\Concerns;
 
 trait HasParentContext
 {
+    /**
+     * Handle dynamic method calls into the fields builder.
+     *
+     * @param  string  $method
+     * @param  array  $args
+     * @return mixed
+     */
     public function __call($method, $args)
     {
         if (
