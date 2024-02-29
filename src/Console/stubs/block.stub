@@ -168,7 +168,7 @@ class DummyClass extends Block
     }
 
     /**
-     * Return the items field.
+     * Retrieve the items.
      *
      * @return array
      */
