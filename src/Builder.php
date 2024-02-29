@@ -222,6 +222,12 @@ class Builder extends FieldsBuilder
             }
         }
 
+        if ($type = $this->getFieldType($method)) {
+            $name = array_shift($arguments);
+
+            return $this->addField($name, $type, ...$arguments);
+        }
+
         return parent::__call($method, $arguments);
     }
 }
