@@ -2,17 +2,14 @@
 
 namespace Log1x\AcfComposer\Builder;
 
-use Log1x\AcfComposer\Builder;
-use StoutLogic\AcfBuilder\FieldBuilder as FieldBuilderBase;
-use StoutLogic\AcfBuilder\FieldsBuilder;
-use StoutLogic\AcfBuilder\LocationBuilder;
+use StoutLogic\AcfBuilder\TabBuilder as TabBuilderBase;
 
 /**
  * @method AccordionBuilder addAccordion(string $label, array $args = [])
- * @method Builder addLayout(string|FieldsBuilder $layout, array $args = [])
- * @method Builder endFlexibleContent()
- * @method Builder endGroup()
- * @method Builder endRepeater()
+ * @method \Log1x\AcfComposer\Builder addLayout(string|FieldsBuilder $layout, array $args = [])
+ * @method \Log1x\AcfComposer\Builder endFlexibleContent()
+ * @method \Log1x\AcfComposer\Builder endGroup()
+ * @method \Log1x\AcfComposer\Builder endRepeater()
  * @method ChoiceFieldBuilder addButtonGroup(string $name, array $args = [])
  * @method ChoiceFieldBuilder addCheckbox(string $name, array $args = [])
  * @method ChoiceFieldBuilder addChoiceField(string $name, string $type, array $args = [])
@@ -53,7 +50,7 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  * @method RepeaterBuilder addRepeater(string $name, array $args = [])
  * @method TabBuilder addTab(string $label, array $args = [])
  */
-class FieldBuilder extends FieldBuilderBase
+class TabBuilder extends TabBuilderBase
 {
     //
 }

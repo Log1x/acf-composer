@@ -2,10 +2,7 @@
 
 namespace Log1x\AcfComposer\Builder;
 
-use Log1x\AcfComposer\Builder;
-use StoutLogic\AcfBuilder\FieldBuilder as FieldBuilderBase;
-use StoutLogic\AcfBuilder\FieldsBuilder;
-use StoutLogic\AcfBuilder\LocationBuilder;
+use StoutLogic\AcfBuilder\ChoiceFieldBuilder as ChoiceFieldBuilderBase;
 
 /**
  * @method AccordionBuilder addAccordion(string $label, array $args = [])
@@ -53,7 +50,7 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  * @method RepeaterBuilder addRepeater(string $name, array $args = [])
  * @method TabBuilder addTab(string $label, array $args = [])
  */
-class FieldBuilder extends FieldBuilderBase
+class ChoiceFieldBuilder extends ChoiceFieldBuilderBase
 {
     //
 }
