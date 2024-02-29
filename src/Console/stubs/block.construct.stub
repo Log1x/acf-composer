@@ -8,159 +8,65 @@ use Log1x\AcfComposer\Builder;
 
 class DummyClass extends Block
 {
-    public function __construct(AcfComposer $composer)
+    /**
+     * The block attributes.
+     */
+    public function attributes(): array
     {
-        /**
-         * The block name.
-         *
-         * @var string
-         */
-        $this->name = __('DummyTitle', 'sage');
-
-        /**
-         * The block slug.
-         *
-         * @var string
-         */
-        $this->slug = 'DummySlug';
-
-        /**
-         * The block description.
-         *
-         * @var string
-         */
-        $this->description = __('A simple DummyTitle block.', 'sage');
-
-        /**
-         * The block category.
-         *
-         * @var string
-         */
-        $this->category = 'formatting';
-
-        /**
-         * The block icon.
-         *
-         * @var string|array
-         */
-        $this->icon = 'editor-ul';
-
-        /**
-         * The block keywords.
-         *
-         * @var array
-         */
-        $this->keywords = [];
-
-        /**
-         * The block post type allow list.
-         *
-         * @var array
-         */
-        $this->post_types = [];
-
-        /**
-         * The parent block type allow list.
-         *
-         * @var array
-         */
-        $this->parent = [];
-
-        /**
-         * The ancestor block type allow list.
-         *
-         * @var array
-         */
-        $this->ancestor = [];
-
-        /**
-         * The default block mode.
-         *
-         * @var string
-         */
-        $this->mode = 'preview';
-
-        /**
-         * The default block alignment.
-         *
-         * @var string
-         */
-        $this->align = '';
-
-        /**
-         * The default block text alignment.
-         *
-         * @var string
-         */
-        $this->align_text = '';
-
-        /**
-         * The default block content alignment.
-         *
-         * @var string
-         */
-        $this->align_content = '';
-
-        /**
-         * The supported block features.
-         *
-         * @var array
-         */
-        $this->supports = [
-            'align' => true,
-            'align_text' => false,
-            'align_content' => false,
-            'full_height' => false,
-            'anchor' => false,
-            'mode' => false,
-            'multiple' => true,
-            'jsx' => true,
-            'color' => [
-                'background' => true,
-                'text' => true,
-                'gradient' => true,
+        return [
+            'name' => __('DummyTitle', 'sage'),
+            'description' => __('A simple DummyTitle block.', 'sage'),
+            'category' => 'formatting',
+            'icon' => 'editor-ul',
+            'keywords' => [],
+            'post_types' => [],
+            'parent' => [],
+            'ancestor' => [],
+            'mode' => 'preview',
+            'align' => '',
+            'align_text' => '',
+            'align_content' => '',
+            'supports' => [
+                'align' => true,
+                'align_text' => false,
+                'align_content' => false,
+                'full_height' => false,
+                'anchor' => false,
+                'mode' => false,
+                'multiple' => true,
+                'jsx' => true,
+                'color' => [
+                    'background' => true,
+                    'text' => true,
+                    'gradient' => true,
+                ],
+            ],
+            'styles' => ['light', 'dark'],
+            'template' => [
+                'core/heading' => ['placeholder' => 'Hello World'],
+                'core/paragraph' => ['placeholder' => 'Welcome to the DummyTitle block.'],
             ],
         ];
+    }
 
-        /**
-         * The block styles.
-         *
-         * @var array
-         */
-        $this->styles = [
-            [
-                'name' => 'light',
-                'label' => 'Light',
-                'isDefault' => true,
+    /**
+     * The example data.
+     */
+    public function example(): array
+    {
+        return [
+            'items' => [
+                ['item' => 'Item onez'],
+                ['item' => 'Item two'],
+                ['item' => 'Item three'],
             ],
-            [
-                'name' => 'dark',
-                'label' => 'Dark',
-            ]
         ];
-
-        /**
-         * The block preview example data.
-         *
-         * @var array
-         */
-        $this->example = [
-           'items' => [
-               ['item' => 'Item one'],
-               ['item' => 'Item two'],
-               ['item' => 'Item three'],
-           ],
-        ];
-
-        parent::__construct($composer);
     }
 
     /**
      * Data to be passed to the block before rendering.
-     *
-     * @return array
      */
-    public function with()
+    public function with(): array
     {
         return [
             'items' => $this->items(),
@@ -169,10 +75,8 @@ class DummyClass extends Block
 
     /**
      * The block field group.
-     *
-     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
         $DummyCamel = Builder::make('DummySnake');
 
@@ -196,11 +100,8 @@ class DummyClass extends Block
 
     /**
      * Assets enqueued when rendering the block.
-     *
-     * @param  array $block
-     * @return void
      */
-    public function assets($block)
+    public function assets(array $block): void
     {
         //
     }

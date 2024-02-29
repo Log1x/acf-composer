@@ -9,10 +9,8 @@ class DummyClass extends Field
 {
     /**
      * The field group.
-     *
-     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
         $DummyCamel = Builder::make('DummySnake');
 

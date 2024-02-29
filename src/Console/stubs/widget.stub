@@ -23,10 +23,8 @@ class DummyClass extends Widget
 
     /**
      * Data to be passed to the widget before rendering.
-     *
-     * @return array
      */
-    public function with()
+    public function with(): array
     {
         return [
             'items' => $this->items(),
@@ -35,20 +33,16 @@ class DummyClass extends Widget
 
     /**
      * The widget title.
-     *
-     * @return string
      */
-    public function title()
+    public function title(): string
     {
         return get_field('title', $this->widget->id);
     }
 
     /**
      * The widget field group.
-     *
-     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
         $DummyCamel = Builder::make('DummySnake');
 

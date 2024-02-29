@@ -93,30 +93,24 @@ class DummyClass extends Field
 
     /**
      * Localized text displayed on the submit button.
-     *
-     * @return string
      */
-    public function updateButton()
+    public function updateButton(): string
     {
         return __('Update', 'acf');
     }
 
     /**
      * Localized text displayed after form submission.
-     *
-     * @return string
      */
-    public function updatedMessage()
+    public function updatedMessage(): string
     {
         return __('DummyTitle Updated', 'acf');
     }
 
     /**
      * The option page field group.
-     *
-     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
         $DummyCamel = Builder::make('DummySnake');
 

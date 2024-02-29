@@ -237,35 +237,35 @@ abstract class Block extends Composer implements BlockContract
     public $inlineStyle;
 
     /**
-     * Assets enqueued when rendering the block.
-     *
-     * @return void
-     *
-     * @deprecated Use `assets($block)` instead.
+     * The block attributes.
      */
-    public function enqueue()
+    public function attributes(): array
     {
-        //
+        return [];
     }
 
     /**
-     * Assets enqueued when rendering the block.
-     *
-     * @param  array  $block
-     * @return void
+     * Set the attributes to the block properties.
      */
-    public function assets($block)
+    public function mergeAttributes(): void
     {
-        //
+        if (! $attributes = $this->attributes()) {
+            return;
+        }
+
+        foreach ($attributes as $key => $value) {
+            if (! property_exists($this, $key)) {
+                continue;
+            }
+
+            $this->{$key} = $value;
+        }
     }
 
     /**
-     * Returns the active block style based on the block CSS classes.
-     * If none is found, it returns the default style set in $styles.
-     *
-     * @return string|null
+     * Retrieve the active block style.
      */
-    public function getStyle()
+    public function getStyle(): ?string
     {
         return Str::of($this->block->className ?? null)
             ->matchAll('/is-style-(\S+)/')
@@ -274,7 +274,37 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
-     * Returns the active block inline styles based on the selected block properties.
+     * Retrieve the block styles.
+     */
+    public function getStyles(): array
+    {
+        $styles = collect($this->styles)->map(function ($value, $key) {
+            if (is_array($value)) {
+                return $value;
+            }
+
+            $name = is_bool($value) ? $key : $value;
+            $default = is_bool($value) ? $value : false;
+
+            return [
+                'name' => $name,
+                'label' => Str::headline($name),
+                'isDefault' => $default,
+            ];
+        });
+
+        if (! $styles->where('isDefault', true)->count()) {
+            $styles = $styles->map(fn ($style, $key) => $key === 0
+                ? Arr::set($style, 'isDefault', true)
+                : $style
+            );
+        }
+
+        return $styles->all();
+    }
+
+    /**
+     * Retrieve the inline block styles.
      */
     public function getInlineStyle(): string
     {
@@ -319,13 +349,13 @@ abstract class Block extends Composer implements BlockContract
     /**
      * Compose the defined field group and register it
      * with Advanced Custom Fields.
-     *
-     * @return void
      */
-    public function compose()
+    public function compose(): ?self
     {
+        $this->mergeAttributes();
+
         if (empty($this->name)) {
-            return;
+            return null;
         }
 
         if (! empty($this->name) && empty($this->slug)) {
@@ -348,13 +378,6 @@ abstract class Block extends Composer implements BlockContract
             ]);
         }
 
-        // The matrix isn't available on WP < 5.5
-        if (Arr::has($this->supports, 'align_content') && version_compare('5.5', get_bloginfo('version'), '>')) {
-            if (! is_bool($this->supports['align_content'])) {
-                $this->supports['align_content'] = true;
-            }
-        }
-
         $this->register(function () {
             $settings = [
                 'name' => $this->slug,
@@ -370,9 +393,9 @@ abstract class Block extends Composer implements BlockContract
                 'align' => $this->align,
                 'align_text' => $this->align_text ?? $this->align,
                 'align_content' => $this->align_content,
-                'styles' => $this->styles,
+                'styles' => $this->getStyles(),
                 'supports' => $this->supports,
-                'enqueue_assets' => fn ($block) => $this->assets($block ?? []),
+                'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
                 'render_callback' => function (
                     $block,
                     $content = '',
@@ -466,5 +489,17 @@ abstract class Block extends Composer implements BlockContract
         $this->inlineStyle = $this->getInlineStyle();
 
         return $this->view($this->view, ['block' => $this]);
+    }
+
+    /**
+     * Assets enqueued when rendering the block.
+     *
+     * @return void
+     *
+     * @deprecated Use `assets($block)` instead.
+     */
+    public function enqueue()
+    {
+        //
     }
 }

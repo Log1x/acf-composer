@@ -9,10 +9,8 @@ class DummyClass extends Partial
 {
     /**
      * The partial field group.
-     *
-     * @return \Log1x\AcfComposer\Builder
      */
-    public function fields()
+    public function fields(): Builder
     {
         $DummyCamel = Builder::make('DummySnake');
 

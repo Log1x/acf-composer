@@ -117,17 +117,7 @@ class DummyClass extends Block
      *
      * @var array
      */
-    public $styles = [
-        [
-            'name' => 'light',
-            'label' => 'Light',
-            'isDefault' => true,
-        ],
-        [
-            'name' => 'dark',
-            'label' => 'Dark',
-        ]
-    ];
+    public $styles = ['light', 'dark'];
 
     /**
      * The block preview example data.
@@ -154,10 +144,8 @@ class DummyClass extends Block
 
     /**
      * Data to be passed to the block before rendering.
-     *
-     * @return array
      */
-    public function with()
+    public function with(): array
     {
         return [
             'items' => $this->items(),
@@ -166,10 +154,8 @@ class DummyClass extends Block
 
     /**
      * The block field group.
-     *
-     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
         $DummyCamel = Builder::make('DummySnake');
 
@@ -193,11 +179,8 @@ class DummyClass extends Block
 
     /**
      * Assets enqueued when rendering the block.
-     *
-     * @param  array $block
-     * @return void
      */
-    public function assets($block)
+    public function assets(array $block): void
     {
         //
     }

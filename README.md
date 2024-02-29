@@ -254,7 +254,7 @@ class Example extends Block
 }
 ```
 
-You may also pass `--construct` to the command above to generate a stub with the block properties set within the constructor. This can be useful for localization, etc.
+You may also pass `--construct` to the command above to generate a stub with the block properties set within an `attributes` method. This can be useful for localization, etc.
 
 ```bash
 $ wp acorn acf:block Example --construct
