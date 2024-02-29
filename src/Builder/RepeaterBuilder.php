@@ -3,6 +3,7 @@
 namespace Log1x\AcfComposer\Builder;
 
 use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Builder\Concerns\HasParentContext;
 use StoutLogic\AcfBuilder\RepeaterBuilder as GroupBuilder;
 
 /**
@@ -10,6 +11,8 @@ use StoutLogic\AcfBuilder\RepeaterBuilder as GroupBuilder;
  */
 class RepeaterBuilder extends GroupBuilder
 {
+    use HasParentContext;
+
     /**
      * The fields builder instance.
      *
