@@ -23,10 +23,8 @@ class DummyClass extends Field
 
     /**
      * The option page field group.
-     *
-     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
         $DummyCamel = Builder::make('DummySnake');
 
