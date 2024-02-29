@@ -329,10 +329,15 @@ abstract class Block extends Composer implements BlockContract
      * Returns the block template.
      *
      * @param  array  $template
-     * @return \Illuminate\Support\Collection
+     * @return string|\Illuminate\Support\Collection
      */
     public function getTemplate($template = [])
     {
+
+        if (is_string($template)) {
+            return $template;
+        }
+
         return collect($template)->map(function ($value, $key) {
             if (is_array($value) && Arr::has($value, 'innerBlocks')) {
                 $innerBlocks = collect($value['innerBlocks'])->map(function ($innerBlock) {
@@ -343,7 +348,7 @@ abstract class Block extends Composer implements BlockContract
             }
 
             return [$key, $value];
-        })->values();
+        })->values()->toJson();
     }
 
     /**
@@ -484,7 +489,7 @@ abstract class Block extends Composer implements BlockContract
         ])->filter()->implode(' ');
 
         $this->style = $this->getStyle();
-        $this->template = $this->getTemplate($this->template)->toJson();
+        $this->template = $this->getTemplate($this->template);
 
         $this->inlineStyle = $this->getInlineStyle();
 
