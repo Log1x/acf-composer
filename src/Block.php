@@ -457,7 +457,6 @@ abstract class Block extends Composer implements BlockContract
             'render_callback',
             'mode',
         ])->put('acf', [
-            'composer' => $this::class,
             'mode' => $this->mode,
             'renderTemplate' => $this::class,
         ])->prepend(3, 'apiVersion');
