@@ -36,8 +36,8 @@ abstract class Field extends Composer
             return $this->fields;
         }
 
-        if ($cache && $this->composer->hasCache($this)) {
-            return $this->composer->getCache($this);
+        if ($cache && $this->composer->manifest()->has($this)) {
+            return $this->composer->manifest()->get($this);
         }
 
         $fields = $this->fields();

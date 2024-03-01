@@ -33,7 +33,7 @@ class ClearCommand extends Command
     {
         $this->composer = $this->laravel['AcfComposer'];
 
-        return $this->composer->clearCache()
+        return $this->composer->manifest()->delete()
             ? $this->components->info('Successfully cleared the <fg=blue>ACF Composer</> cache manifest.')
             : $this->components->info('The <fg=blue>ACF Composer</> cache manifest is already cleared.');
     }
