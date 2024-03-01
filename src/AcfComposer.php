@@ -79,10 +79,6 @@ class AcfComposer
      */
     public function handle(): void
     {
-        if ($this->booted()) {
-            return;
-        }
-
         add_action('acf/init', fn () => $this->boot());
     }
 
@@ -91,6 +87,10 @@ class AcfComposer
      */
     public function boot(): void
     {
+        if ($this->booted()) {
+            return;
+        }
+
         $this->registerDefaultPath();
 
         foreach ($this->composers as $namespace => $composers) {
