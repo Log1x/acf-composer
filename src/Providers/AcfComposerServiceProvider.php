@@ -58,5 +58,13 @@ class AcfComposerServiceProvider extends ServiceProvider
                 'Version' => InstalledVersions::getPrettyVersion('log1x/acf-composer'),
             ]);
         }
+
+        add_filter('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {
+            if (! class_exists($composer = $block['render_template'])) {
+                return;
+            }
+
+            echo app('AcfComposer')->getComposer($composer)->render($block, $content, $is_preview, $post_id, $wp_block, $context);
+        }, 10, 6);
     }
 }

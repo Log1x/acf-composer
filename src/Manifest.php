@@ -4,6 +4,7 @@ namespace Log1x\AcfComposer;
 
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class Manifest
@@ -19,11 +20,26 @@ class Manifest
     protected Collection $manifest;
 
     /**
+     * The block collection.
+     */
+    protected array $blocks = [];
+
+    /**
+     * The cache path.
+     */
+    protected string $path;
+
+    /**
      * Create a new Manifest instance.
      */
     public function __construct(AcfComposer $composer)
     {
         $this->composer = $composer;
+
+        $this->path = Str::finish(
+            config('acf-composer.manifest', storage_path('framework/cache')),
+            '/acf-composer'
+        );
 
         $this->manifest = $this->exists()
             ? Collection::make(require $this->path())
@@ -41,23 +57,17 @@ class Manifest
     /**
      * Retrieve the manifest path.
      */
-    protected function path(): string
+    public function path(?string $filename = 'manifest.php'): string
     {
-        $path = config('acf-composer.manifest', storage_path('framework/cache'));
-
-        if (Str::endsWith($path, '.php')) {
-            return $path;
-        }
-
-        return Str::finish($path, '/').'acf-composer.php';
+        return "{$this->path}/{$filename}";
     }
 
     /**
      * Determine if the manifest exists.
      */
-    public function exists(): bool
+    public function exists(?string $filename = null): bool
     {
-        return file_exists($this->path());
+        return file_exists($this->path($filename));
     }
 
     /**
@@ -67,6 +77,10 @@ class Manifest
     {
         try {
             $this->manifest->put($composer::class, $composer->getFields(cache: false));
+
+            if (is_a($composer, Block::class)) {
+                $this->blocks[$composer->jsonPath()] = $composer->toJson();
+            }
 
             return true;
         } catch (Exception) {
@@ -95,6 +109,17 @@ class Manifest
      */
     public function write(): bool
     {
+        File::ensureDirectoryExists($this->path);
+
+        if ($this->blocks) {
+            $path = $this->path('blocks');
+
+            foreach ($this->blocks as $path => $block) {
+                File::ensureDirectoryExists(dirname($path));
+                File::put($path, $block);
+            }
+        }
+
         return file_put_contents(
             $this->path(),
             '<?php return '.var_export($this->toArray(), true).';'
@@ -106,8 +131,8 @@ class Manifest
      */
     public function delete(): bool
     {
-        return $this->exists()
-            ? unlink($this->path())
+        return File::isDirectory($this->path)
+            ? File::deleteDirectory($this->path)
             : false;
     }
 

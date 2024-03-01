@@ -105,6 +105,11 @@ abstract class Block extends Composer implements BlockContract
     public $view;
 
     /**
+     * The block settings.
+     */
+    public ?Collection $settings = null;
+
+    /**
      * The block description.
      *
      * @var string
@@ -271,7 +276,7 @@ abstract class Block extends Composer implements BlockContract
         return Str::of($this->block->className ?? null)
             ->matchAll('/is-style-(\S+)/')
             ->get(0) ??
-            Arr::get(collect($this->block->styles)->firstWhere('isDefault'), 'name');
+            Arr::get(collect($this->getStyles())->firstWhere('isDefault'), 'name');
     }
 
     /**
@@ -375,61 +380,105 @@ abstract class Block extends Composer implements BlockContract
             ]);
         }
 
-        $this->register(function () {
-            $settings = [
-                'name' => $this->slug,
-                'title' => $this->name,
-                'description' => $this->description,
-                'category' => $this->category,
-                'icon' => $this->icon,
-                'keywords' => $this->keywords,
-                'parent' => $this->parent ?: null,
-                'ancestor' => $this->ancestor ?: null,
-                'post_types' => $this->post_types,
-                'mode' => $this->mode,
-                'align' => $this->align,
-                'align_text' => $this->align_text ?? $this->align,
-                'align_content' => $this->align_content,
-                'styles' => $this->getStyles(),
-                'supports' => $this->supports,
-                'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
-                'render_callback' => function (
-                    $block,
-                    $content = '',
-                    $preview = false,
-                    $post_id = 0,
-                    $wp_block = false,
-                    $context = false
-                ) {
-                    echo $this->render($block, $content, $preview, $post_id, $wp_block, $context);
-                },
-            ];
-
-            if ($this->example !== false) {
-                if (method_exists($this, 'example') && is_array($example = $this->example())) {
-                    $this->example = array_merge($this->example, $example);
-                }
-
-                $settings = Arr::add($settings, 'example', [
-                    'attributes' => [
-                        'mode' => 'preview',
-                        'data' => $this->example,
-                    ],
-                ]);
-            }
-
-            if (! empty($this->uses_context)) {
-                $settings['uses_context'] = $this->uses_context;
-            }
-
-            if (! empty($this->provides_context)) {
-                $settings['provides_context'] = $this->provides_context;
-            }
-
-            acf_register_block_type($settings);
-        });
+        $this->register(fn () => $this->hasJson() ? register_block_type($this->jsonPath()) : acf_register_block_type($this->settings()->all()));
 
         return $this;
+    }
+
+    /**
+     * Retrieve the block settings.
+     */
+    public function settings(): Collection
+    {
+        if ($this->settings) {
+            return $this->settings;
+        }
+
+        $settings = Collection::make([
+            'name' => $this->slug,
+            'title' => $this->name,
+            'description' => $this->description,
+            'category' => $this->category,
+            'icon' => $this->icon,
+            'keywords' => $this->keywords,
+            'parent' => $this->parent ?: null,
+            'ancestor' => $this->ancestor ?: null,
+            'post_types' => $this->post_types,
+            'mode' => $this->mode,
+            'align' => $this->align,
+            'align_text' => $this->align_text ?? $this->align,
+            'align_content' => $this->align_content,
+            'styles' => $this->getStyles(),
+            'supports' => $this->supports,
+            'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
+            'render_callback' => function (
+                $block,
+                $content = '',
+                $preview = false,
+                $post_id = 0,
+                $wp_block = false,
+                $context = false
+            ) {
+                echo $this->render($block, $content, $preview, $post_id, $wp_block, $context);
+            },
+        ]);
+
+        if ($this->example !== false) {
+            if (method_exists($this, 'example') && is_array($example = $this->example())) {
+                $this->example = array_merge($this->example, $example);
+            }
+
+            $settings = $settings->put('example', [
+                'attributes' => [
+                    'mode' => 'preview',
+                    'data' => $this->example,
+                ],
+            ]);
+        }
+
+        if (! empty($this->uses_context)) {
+            $settings = $settings->put('uses_context', $this->uses_context);
+        }
+
+        if (! empty($this->provides_context)) {
+            $settings = $settings->put('provides_context', $this->provides_context);
+        }
+
+        return $this->settings = $settings;
+    }
+
+    /**
+     * Retrieve the Block settings as JSON.
+     */
+    public function toJson(): string
+    {
+        $settings = $this->settings()->forget([
+            'enqueue_assets',
+            'render_callback',
+            'mode',
+        ])->put('acf', [
+            'composer' => $this::class,
+            'mode' => $this->mode,
+            'renderTemplate' => $this::class,
+        ])->prepend(3, 'apiVersion');
+
+        return $settings->filter()->toJson(JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Retrieve the Block JSON path.
+     */
+    public function jsonPath(): string
+    {
+        return $this->composer->manifest()->path("blocks/{$this->slug}/block.json");
+    }
+
+    /**
+     * Determine if the block has a JSON file.
+     */
+    public function hasJson(): bool
+    {
+        return file_exists($this->jsonPath());
     }
 
     /**
