@@ -33,6 +33,10 @@ class AcfComposerServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../../config/acf.php', 'acf');
 
+        $composer = $this->app->make('AcfComposer');
+
+        $composer->handle();
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\BlockMakeCommand::class,
@@ -46,17 +50,13 @@ class AcfComposerServiceProvider extends ServiceProvider
                 Console\UpgradeCommand::class,
                 Console\WidgetMakeCommand::class,
             ]);
-        }
 
-        $composer = $this->app->make('AcfComposer');
-
-        $composer->handle();
-
-        if (class_exists(AboutCommand::class) && class_exists(InstalledVersions::class)) {
-            AboutCommand::add('ACF Composer', [
-                'Status' => $composer->manifest()->exists() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
-                'Version' => InstalledVersions::getPrettyVersion('log1x/acf-composer'),
-            ]);
+            if (class_exists(AboutCommand::class) && class_exists(InstalledVersions::class)) {
+                AboutCommand::add('ACF Composer', [
+                    'Status' => $composer->manifest()->exists() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
+                    'Version' => InstalledVersions::getPrettyVersion('log1x/acf-composer'),
+                ]);
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ class ClearCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Clear the ACF field group cache';
+    protected $description = 'Clear the ACF Composer cache.';
 
     /**
      * The ACF Composer instance.
@@ -34,7 +34,7 @@ class ClearCommand extends Command
         $this->composer = $this->laravel['AcfComposer'];
 
         return $this->composer->manifest()->delete()
-            ? $this->components->info('Successfully cleared the <fg=blue>ACF Composer</> cache manifest.')
-            : $this->components->info('The <fg=blue>ACF Composer</> cache manifest is already cleared.');
+            ? $this->components->info('Successfully cleared the <fg=blue>ACF Composer</> cache.')
+            : $this->components->info('The <fg=blue>ACF Composer</> cache is already cleared.');
     }
 }
