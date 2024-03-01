@@ -198,6 +198,22 @@ class AcfComposer
     }
 
     /**
+     * Retrieve a Composer instance by class name.
+     */
+    public function getComposer(string $class): ?Composer
+    {
+        foreach ($this->composers as $composers) {
+            foreach ($composers as $composer) {
+                if ($composer::class === $class) {
+                    return $composer;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Retrieve the registered paths.
      */
     public function paths(): array
