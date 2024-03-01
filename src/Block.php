@@ -401,7 +401,6 @@ abstract class Block extends Composer implements BlockContract
             $this->supports = collect($this->supports)
                 ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
                 ->merge($this->supports)
-                ->unique()
                 ->all();
         }
 
