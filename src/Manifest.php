@@ -107,23 +107,35 @@ class Manifest
     /**
      * Write the the manifest to disk.
      */
-    public function write(): bool
+    public function write(): ?int
     {
         File::ensureDirectoryExists($this->path);
 
-        if ($this->blocks) {
-            $path = $this->path('blocks');
-
-            foreach ($this->blocks as $path => $block) {
-                File::ensureDirectoryExists(dirname($path));
-                File::put($path, $block);
-            }
-        }
+        $manifest = $this->toArray();
 
         return file_put_contents(
             $this->path(),
-            '<?php return '.var_export($this->toArray(), true).';'
-        ) !== false;
+            '<?php return '.var_export($manifest, true).';'
+        ) !== false ? count($manifest) : null;
+    }
+
+    /**
+     * Write the block JSON to disk.
+     */
+    public function writeBlocks(): int
+    {
+        if (! $this->blocks) {
+            return 0;
+        }
+
+        $path = $this->path('blocks');
+
+        foreach ($this->blocks as $path => $block) {
+            File::ensureDirectoryExists(dirname($path));
+            File::put($path, $block);
+        }
+
+        return count($this->blocks);
     }
 
     /**

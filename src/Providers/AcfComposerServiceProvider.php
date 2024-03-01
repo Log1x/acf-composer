@@ -33,6 +33,12 @@ class AcfComposerServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../../config/acf.php', 'acf');
 
+        $composer = $this->app->make('AcfComposer');
+
+        $composer->handle();
+
+        $this->handleBlocks();
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\BlockMakeCommand::class,
@@ -46,21 +52,23 @@ class AcfComposerServiceProvider extends ServiceProvider
                 Console\UpgradeCommand::class,
                 Console\WidgetMakeCommand::class,
             ]);
+
+            if (class_exists(AboutCommand::class) && class_exists(InstalledVersions::class)) {
+                AboutCommand::add('ACF Composer', [
+                    'Status' => $composer->manifest()->exists() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
+                    'Version' => InstalledVersions::getPrettyVersion('log1x/acf-composer'),
+                ]);
+            }
         }
+    }
 
-        $composer = $this->app->make('AcfComposer');
-
-        $composer->handle();
-
-        if (class_exists(AboutCommand::class) && class_exists(InstalledVersions::class)) {
-            AboutCommand::add('ACF Composer', [
-                'Status' => $composer->manifest()->exists() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
-                'Version' => InstalledVersions::getPrettyVersion('log1x/acf-composer'),
-            ]);
-        }
-
+    /**
+     * Handle the block rendering.
+     */
+    protected function handleBlocks(): void
+    {
         add_filter('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {
-            if (! class_exists($composer = $block['render_template'])) {
+            if (! class_exists($composer = $block['render_template'] ?? '')) {
                 return;
             }
 

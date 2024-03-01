@@ -380,7 +380,10 @@ abstract class Block extends Composer implements BlockContract
             ]);
         }
 
-        $this->register(fn () => $this->hasJson() ? register_block_type($this->jsonPath()) : acf_register_block_type($this->settings()->all()));
+        $this->register(fn () => $this->hasJson()
+            ? register_block_type($this->jsonPath())
+            : acf_register_block_type($this->settings()->all())
+        );
 
         return $this;
     }
@@ -392,6 +395,14 @@ abstract class Block extends Composer implements BlockContract
     {
         if ($this->settings) {
             return $this->settings;
+        }
+
+        if ($this->supports) {
+            $this->supports = collect($this->supports)
+                ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
+                ->merge($this->supports)
+                ->unique()
+                ->all();
         }
 
         $settings = Collection::make([
@@ -459,7 +470,7 @@ abstract class Block extends Composer implements BlockContract
         ])->put('acf', [
             'mode' => $this->mode,
             'renderTemplate' => $this::class,
-        ])->prepend(3, 'apiVersion');
+        ]);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
     }

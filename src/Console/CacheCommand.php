@@ -69,10 +69,14 @@ class CacheCommand extends Command
             return $this->components->error('Failed to cache the <fg=red>ACF Composer</> field groups.');
         }
 
-        if (! $this->composer->manifest()->write()) {
+        if (! $manifest = $this->composer->manifest()->write()) {
             return $this->components->error('Failed to write the <fg=red>ACF Composer</> manifest.');
         }
 
-        $this->components->info("<fg=blue>{$this->count}</> field group(s) cached successfully.");
+        if (! $blocks = $this->composer->manifest()->writeBlocks()) {
+            return $this->components->error('Failed to write the <fg=red>ACF Composer</> blocks.');
+        }
+
+        $this->components->info("Successfully cached <fg=blue>{$manifest}</> field(s) and <fg=blue>{$blocks}</> block(s).");
     }
 }
