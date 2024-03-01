@@ -18,6 +18,11 @@ class AcfComposer
     public $app;
 
     /**
+     * The booted state.
+     */
+    protected bool $booted = false;
+
+    /**
      * The registered paths.
      */
     protected array $paths = [];
@@ -82,6 +87,10 @@ class AcfComposer
      */
     public function boot(): void
     {
+        if ($this->booted()) {
+            return;
+        }
+
         $this->handleBlocks();
         $this->registerDefaultPath();
 
@@ -98,6 +107,8 @@ class AcfComposer
         }
 
         $this->deferredComposers = [];
+
+        $this->booted = true;
     }
 
     /**
@@ -164,7 +175,7 @@ class AcfComposer
                 $folders.$className
             );
 
-            $this->paths[basename($path)][] = $composer;
+            $this->paths[$path][] = $composer;
 
             $this->register($composer, $namespace);
         }
@@ -207,7 +218,7 @@ class AcfComposer
 
         $this->registerPath($path, $namespace);
 
-        $this->plugins[$namespace] = dirname($path);
+        $this->plugins[$namespace] = $path;
     }
 
     /**
@@ -256,5 +267,13 @@ class AcfComposer
     public function manifest(): Manifest
     {
         return $this->manifest;
+    }
+
+    /**
+     * Determine if ACF Composer is booted.
+     */
+    public function booted(): bool
+    {
+        return $this->booted;
     }
 }
