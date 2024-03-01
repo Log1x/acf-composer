@@ -143,7 +143,7 @@ class AcfComposer
                 $folders.$className
             );
 
-            $this->paths[basename($path)][] = $composer;
+            $this->paths[$path][] = $composer;
 
             $this->register($composer, $namespace);
         }
@@ -186,7 +186,7 @@ class AcfComposer
 
         $this->registerPath($path, $namespace);
 
-        $this->plugins[$namespace] = dirname($path);
+        $this->plugins[$namespace] = $path;
     }
 
     /**
