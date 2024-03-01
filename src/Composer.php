@@ -89,8 +89,8 @@ abstract class Composer implements FieldContract
             return $this->fields;
         }
 
-        if ($cache && $this->composer->hasCache($this)) {
-            return $this->composer->getCache($this);
+        if ($cache && $this->composer->manifest()->has($this)) {
+            return $this->composer->manifest()->get($this);
         }
 
         $fields = is_a($fields = $this->fields(), FieldsBuilder::class)

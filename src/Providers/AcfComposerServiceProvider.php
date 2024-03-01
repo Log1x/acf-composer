@@ -54,7 +54,7 @@ class AcfComposerServiceProvider extends ServiceProvider
 
         if (class_exists(AboutCommand::class) && class_exists(InstalledVersions::class)) {
             AboutCommand::add('ACF Composer', [
-                'Status' => $composer->manifestExists() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
+                'Status' => $composer->manifest()->exists() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
                 'Version' => InstalledVersions::getPrettyVersion('log1x/acf-composer'),
             ]);
         }

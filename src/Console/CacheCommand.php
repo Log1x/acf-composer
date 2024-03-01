@@ -14,7 +14,8 @@ class CacheCommand extends Command
      */
     protected $signature = 'acf:cache
                             {--clear : Clear the cached field groups}
-                            {--status : Show the current cache status}';
+                            {--status : Show the current cache status}
+                            {--force : Force cache the field groups}';
 
     /**
      * The console command description.
@@ -45,24 +46,32 @@ class CacheCommand extends Command
         }
 
         if ($this->option('status')) {
-            return $this->composer->manifestExists()
+            return $this->composer->manifest()->exists()
                 ? $this->components->info('The <fg=blue>ACF Composer</> field groups are currently <fg=green;options=bold>cached</>.')
                 : $this->components->info('The <fg=blue>ACF Composer</> field groups are currently <fg=red;options=bold>not cached</>.');
         }
 
         $composers = collect(
-            $this->composer->getComposers()
+            $this->composer->composers()
         )->flatten();
 
         $composers->each(function ($composer) {
-            if (! $this->composer->cache($composer)) {
-                $this->components->error('<fg=red>'.$composer::class.'</fg> failed to cache.');
+            if (! $this->composer->manifest()->add($composer)) {
+                $name = $composer::class;
 
-                return;
+                return $this->components->error("Failed to add <fg=red>{$name}</> to the manifest.");
             }
 
             $this->count++;
         });
+
+        if ($this->count !== $composers->count() && ! $this->option('force')) {
+            return $this->components->error('Failed to cache the <fg=red>ACF Composer</> field groups.');
+        }
+
+        if (! $this->composer->manifest()->write()) {
+            return $this->components->error('Failed to write the <fg=red>ACF Composer</> manifest.');
+        }
 
         $this->components->info("<fg=blue>{$this->count}</> field group(s) cached successfully.");
     }

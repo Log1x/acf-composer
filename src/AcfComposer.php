@@ -2,7 +2,6 @@
 
 namespace Log1x\AcfComposer;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -39,11 +38,9 @@ class AcfComposer
     protected array $plugins = [];
 
     /**
-     * The cached manifest.
-     *
-     * @var \Illuminate\Support\Collection
+     * The cache manifest.
      */
-    protected $manifest;
+    protected Manifest $manifest;
 
     /**
      * The composer classes.
@@ -61,6 +58,7 @@ class AcfComposer
     public function __construct(Application $app)
     {
         $this->app = $app;
+        $this->manifest = Manifest::make($this);
     }
 
     /**
@@ -194,7 +192,7 @@ class AcfComposer
     /**
      * Retrieve the registered composers.
      */
-    public function getComposers(): array
+    public function composers(): array
     {
         return $this->composers;
     }
@@ -202,7 +200,7 @@ class AcfComposer
     /**
      * Retrieve the registered paths.
      */
-    public function getPaths(): array
+    public function paths(): array
     {
         return array_unique($this->paths);
     }
@@ -210,7 +208,7 @@ class AcfComposer
     /**
      * Retrieve the registered plugins.
      */
-    public function getPlugins(): array
+    public function plugins(): array
     {
         return $this->plugins;
     }
@@ -218,79 +216,8 @@ class AcfComposer
     /**
      * Retrieve the cache manifest.
      */
-    protected function manifest(): Collection
+    public function manifest(): Manifest
     {
-        if ($this->manifest) {
-            return $this->manifest;
-        }
-
-        if (! $this->manifestExists()) {
-            return $this->manifest = collect();
-        }
-
-        return $this->manifest = Collection::make(require $this->manifestPath());
-    }
-
-    /**
-     * Retrieve the cache manifest path.
-     */
-    protected function manifestPath(): string
-    {
-        $path = config('acf-composer.manifest', storage_path('framework/cache'));
-
-        if (Str::endsWith($path, '.php')) {
-            return $path;
-        }
-
-        return Str::finish($path, '/').'acf-composer.php';
-    }
-
-    /**
-     * Determine if the cache manifest exists.
-     */
-    public function manifestExists(): bool
-    {
-        return file_exists($this->manifestPath());
-    }
-
-    /**
-     * Cache the composer.
-     */
-    public function cache(Composer $composer): bool
-    {
-        $manifest = $this->manifest()
-            ->put($composer::class, $composer->getFields(cache: false))
-            ->all();
-
-        return file_put_contents(
-            $this->manifestPath(),
-            '<?php return '.var_export($manifest, true).';'
-        ) !== false;
-    }
-
-    /**
-     * Retrieve the cached composer.
-     */
-    public function getCache(Composer $composer): array
-    {
-        return $this->manifest()->get($composer::class);
-    }
-
-    /**
-     * Determine if the composer is cached.
-     */
-    public function hasCache(Composer $class): bool
-    {
-        return $this->manifest()->has($class::class);
-    }
-
-    /**
-     * Clear the cache.
-     */
-    public function clearCache(): bool
-    {
-        return $this->manifestExists()
-            ? unlink($this->manifestPath())
-            : false;
+        return $this->manifest;
     }
 }

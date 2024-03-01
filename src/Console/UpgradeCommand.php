@@ -51,7 +51,7 @@ class UpgradeCommand extends Command
 
         $this->components->info('Checking for outdated <fg=blue>ACF Composer</> classes...');
 
-        $classes = collect($this->composer->getPaths())->flatMap(fn ($classes, $path) => collect($classes)
+        $classes = collect($this->composer->paths())->flatMap(fn ($classes, $path) => collect($classes)
             ->map(fn ($class) => Str::of($class)->replace('\\', '/')->after('/')->start($path.'/')->finish('.php')->toString())
             ->all()
         )
