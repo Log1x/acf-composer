@@ -18,6 +18,11 @@ class AcfComposer
     public $app;
 
     /**
+     * The booted state.
+     */
+    protected bool $booted = false;
+
+    /**
      * The registered paths.
      */
     protected array $paths = [];
@@ -74,6 +79,10 @@ class AcfComposer
      */
     public function handle(): void
     {
+        if ($this->booted()) {
+            return;
+        }
+
         add_action('acf/init', fn () => $this->boot());
     }
 
@@ -97,6 +106,8 @@ class AcfComposer
         }
 
         $this->deferredComposers = [];
+
+        $this->booted = true;
     }
 
     /**
@@ -219,5 +230,13 @@ class AcfComposer
     public function manifest(): Manifest
     {
         return $this->manifest;
+    }
+
+    /**
+     * Determine if ACF Composer is booted.
+     */
+    public function booted(): bool
+    {
+        return $this->booted;
     }
 }
