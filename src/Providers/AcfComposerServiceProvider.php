@@ -64,7 +64,13 @@ class AcfComposerServiceProvider extends ServiceProvider
                 return;
             }
 
-            echo app('AcfComposer')->getComposer($composer)->render($block, $content, $is_preview, $post_id, $wp_block, $context);
+            if (! $composer = app('AcfComposer')->getComposer($composer)) {
+                return;
+            }
+
+            method_exists($composer, 'assets') && $composer->assets($block);
+
+            echo $composer->render($block, $content, $is_preview, $post_id, $wp_block, $context);
         }, 10, 6);
     }
 }
