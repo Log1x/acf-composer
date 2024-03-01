@@ -82,6 +82,7 @@ class AcfComposer
      */
     public function boot(): void
     {
+        $this->handleBlocks();
         $this->registerDefaultPath();
 
         foreach ($this->composers as $namespace => $composers) {
@@ -97,6 +98,26 @@ class AcfComposer
         }
 
         $this->deferredComposers = [];
+    }
+
+    /**
+     * Handle the block rendering.
+     */
+    protected function handleBlocks(): void
+    {
+        add_filter('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {
+            if (! class_exists($composer = $block['render_template'] ?? '')) {
+                return;
+            }
+
+            if (! $composer = app('AcfComposer')->getComposer($composer)) {
+                return;
+            }
+
+            method_exists($composer, 'assets') && $composer->assets($block);
+
+            echo $composer->render($block, $content, $is_preview, $post_id, $wp_block, $context);
+        }, 10, 6);
     }
 
     /**
