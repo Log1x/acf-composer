@@ -73,9 +73,7 @@ class CacheCommand extends Command
             return $this->components->error('Failed to write the <fg=red>ACF Composer</> manifest.');
         }
 
-        if (! $blocks = $this->composer->manifest()->writeBlocks()) {
-            return $this->components->error('Failed to write the <fg=red>ACF Composer</> blocks.');
-        }
+        $blocks = $this->composer->manifest()->writeBlocks();
 
         $this->components->info("Successfully cached <fg=blue>{$manifest}</> field(s) and <fg=blue>{$blocks}</> block(s).");
     }
