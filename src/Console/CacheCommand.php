@@ -13,16 +13,17 @@ class CacheCommand extends Command
      * @var string
      */
     protected $signature = 'acf:cache
-                            {--clear : Clear the cached field groups}
+                            {--clear : Clear the cache}
                             {--status : Show the current cache status}
-                            {--force : Force cache the field groups}';
+                            {--manifest : Only write the field group manifest}
+                            {--force : Ignore errors when writing cache}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Cache the ACF field groups';
+    protected $description = 'Cache the ACF Composer field groups and blocks.';
 
     /**
      * The ACF Composer instance.
@@ -73,7 +74,9 @@ class CacheCommand extends Command
             return $this->components->error('Failed to write the <fg=red>ACF Composer</> manifest.');
         }
 
-        $blocks = $this->composer->manifest()->writeBlocks();
+        $blocks = ! $this->option('manifest')
+            ? $this->composer->manifest()->writeBlocks()
+            : 0;
 
         $this->components->info("Successfully cached <fg=blue>{$manifest}</> field(s) and <fg=blue>{$blocks}</> block(s).");
     }
