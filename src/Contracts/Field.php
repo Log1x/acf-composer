@@ -7,7 +7,7 @@ interface Field
     /**
      * The field group.
      *
-     * @return \StoutLogic\AcfBuilder\FieldsBuilder|array
+     * @return \Log1x\AcfComposer\Builder|array
      */
     public function fields();
 }
