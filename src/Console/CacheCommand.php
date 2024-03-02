@@ -47,9 +47,11 @@ class CacheCommand extends Command
         }
 
         if ($this->option('status')) {
-            return $this->composer->manifest()->exists()
-                ? $this->components->info('The <fg=blue>ACF Composer</> field groups are currently <fg=green;options=bold>cached</>.')
-                : $this->components->info('The <fg=blue>ACF Composer</> field groups are currently <fg=red;options=bold>not cached</>.');
+            $status = $this->composer->manifest()->exists()
+                ? '<fg=green;options=bold>cached</>'
+                : '<fg=red;options=bold>not cached</>';
+
+            return $this->components->info("<fg=blue>ACF Composer</> is currently {$status}.");
         }
 
         $composers = collect(
@@ -78,6 +80,6 @@ class CacheCommand extends Command
             ? $this->composer->manifest()->writeBlocks()
             : 0;
 
-        $this->components->info("Successfully cached <fg=blue>{$manifest}</> field(s) and <fg=blue>{$blocks}</> block(s).");
+        $this->components->info("Successfully cached <fg=blue>{$manifest}</> field group(s) and <fg=blue>{$blocks}</> block(s).");
     }
 }

@@ -276,7 +276,15 @@ abstract class Block extends Composer implements BlockContract
         return Str::of($this->block->className ?? null)
             ->matchAll('/is-style-(\S+)/')
             ->get(0) ??
-            Arr::get(collect($this->getStyles())->firstWhere('isDefault'), 'name');
+            Arr::get($this->getDefaultStyle(), 'name');
+    }
+
+    /**
+     * Retrieve the default style.
+     */
+    public function getDefaultStyle(): array
+    {
+        return collect($this->getStyles())->firstWhere('isDefault') ?? [];
     }
 
     /**
@@ -316,19 +324,63 @@ abstract class Block extends Composer implements BlockContract
     {
         return collect([
             'padding' => ! empty($this->block->style['spacing']['padding'])
-                ? collect($this->block->style['spacing']['padding'])->map(function ($value, $side) {
-                    return $this->formatCss($value, $side);
-                })->implode(' ')
+                ? collect($this->block->style['spacing']['padding'])
+                    ->map(fn ($value, $side) => $this->formatCss($value, $side))
+                    ->implode(' ')
                 : null,
+
             'margin' => ! empty($this->block->style['spacing']['margin'])
-                ? collect($this->block->style['spacing']['margin'])->map(function ($value, $side) {
-                    return $this->formatCss($value, $side, 'margin');
-                })->implode(' ')
+                ? collect($this->block->style['spacing']['margin'])
+                    ->map(fn ($value, $side) => $this->formatCss($value, $side, 'margin'))
+                    ->implode(' ')
                 : null,
+
             'color' => ! empty($this->block->style['color']['gradient'])
                 ? sprintf('background: %s;', $this->block->style['color']['gradient'])
                 : null,
         ])->filter()->implode(' ');
+    }
+
+    /**
+     * Retrieve the block classes.
+     */
+    public function getClasses(): string
+    {
+        $classes = collect([
+            'slug' => Str::of($this->slug)->slug()->start('wp-block-')->toString(),
+
+            'className' => $this->block->className ?? null,
+
+            'align' => ! empty($this->block->align)
+                ? Str::start($this->block->align, 'align')
+                : null,
+
+            'backgroundColor' => ! empty($this->block->backgroundColor)
+                ? sprintf('has-background has-%s-background-color', $this->block->backgroundColor)
+                : null,
+
+            'textColor' => ! empty($this->block->textColor)
+                ? sprintf('has-%s-color', $this->block->textColor)
+                : null,
+
+            'gradient' => ! empty($this->block->gradient)
+                ? sprintf('has-%s-gradient-background', $this->block->gradient)
+                : null,
+        ]);
+
+        if ($alignText = $this->block->alignText ?? $this->block->align_text ?? null) {
+            $classes->add(Str::start($alignText, 'align-text-'));
+        }
+
+        if ($alignContent = $this->block->alignContent ?? $this->block->align_content ?? null) {
+            $classes->add(Str::start($alignContent, 'is-position-'));
+        }
+
+        if ($this->block->fullHeight ?? $this->block->full_height ?? null) {
+            $classes->add('full-height');
+        }
+
+        return $classes->filter()->implode(' ');
     }
 
     /**
@@ -360,17 +412,9 @@ abstract class Block extends Composer implements BlockContract
             return null;
         }
 
-        if (! empty($this->name) && empty($this->slug)) {
-            $this->slug = Str::slug(Str::kebab($this->name));
-        }
-
-        if (empty($this->view)) {
-            $this->view = Str::start($this->slug, 'blocks.');
-        }
-
-        if (empty($this->namespace)) {
-            $this->namespace = Str::start($this->slug, $this->prefix);
-        }
+        $this->slug = $this->slug ?: Str::slug(Str::kebab($this->name));
+        $this->view = $this->view ?: Str::start($this->slug, 'blocks.');
+        $this->namespace = $this->namespace ?? Str::start($this->slug, $this->prefix);
 
         if (! Arr::has($this->fields, 'location.0.0')) {
             Arr::set($this->fields, 'location.0.0', [
@@ -469,7 +513,7 @@ abstract class Block extends Composer implements BlockContract
         ])->put('acf', [
             'mode' => $this->mode,
             'renderTemplate' => $this::class,
-        ]);
+        ])->put('name', $this->namespace);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
     }
@@ -483,7 +527,7 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
-     * Determine if the block has a JSON file.
+     * Determine if the Block has a JSON file.
      */
     public function hasJson(): bool
     {
@@ -512,40 +556,11 @@ abstract class Block extends Composer implements BlockContract
 
         $this->post = get_post($post_id);
 
-        $this->classes = collect([
-            'slug' => Str::start(
-                Str::slug($this->slug),
-                'wp-block-'
-            ),
-            'align' => ! empty($this->block->align) ?
-                Str::start($this->block->align, 'align') :
-                false,
-            'align_text' => ! empty($this->supports['align_text']) ?
-                Str::start($this->block->align_text, 'align-text-') :
-                false,
-            'align_content' => ! empty($this->supports['align_content']) ?
-                Str::start($this->block->align_content, 'is-position-') :
-                false,
-            'full_height' => ! empty($this->supports['full_height'])
-                && ! empty($this->block->full_height) ?
-                'full-height' :
-                false,
-            'classes' => $this->block->className ?? false,
-            'backgroundColor' => ! empty($this->block->backgroundColor) ?
-                sprintf('has-background has-%s-background-color', $this->block->backgroundColor) :
-                false,
-            'textColor' => ! empty($this->block->textColor) ?
-                sprintf('has-%s-color', $this->block->textColor) :
-                false,
-            'gradient' => ! empty($this->block->gradient) ?
-                sprintf('has-%s-gradient-background', $this->block->gradient) :
-                false,
-        ])->filter()->implode(' ');
-
         $this->template = is_array($this->template)
             ? $this->handleTemplate($this->template)->toJson()
             : $this->template;
 
+        $this->classes = $this->getClasses();
         $this->style = $this->getStyle();
         $this->inlineStyle = $this->getInlineStyle();
 

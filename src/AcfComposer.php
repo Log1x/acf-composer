@@ -96,13 +96,13 @@ class AcfComposer
 
         foreach ($this->composers as $namespace => $composers) {
             foreach ($composers as $i => $composer) {
-                $this->composers[$namespace][$i] = $composer->compose();
+                $this->composers[$namespace][$i] = $composer->handle();
             }
         }
 
         foreach ($this->deferredComposers as $namespace => $composers) {
             foreach ($composers as $index => $composer) {
-                $this->composers[$namespace][] = $composer->compose();
+                $this->composers[$namespace][] = $composer->handle();
             }
         }
 

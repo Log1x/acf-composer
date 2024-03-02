@@ -114,7 +114,7 @@ abstract class Options extends Composer
     /**
      * Compose and register the defined ACF field groups.
      *
-     * @return void
+     * @return mixed
      */
     public function compose()
     {

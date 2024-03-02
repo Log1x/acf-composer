@@ -74,7 +74,7 @@ abstract class Field extends Composer
     /**
      * Compose and register the defined field groups with ACF.
      *
-     * @return void
+     * @return mixed
      */
     public function compose()
     {

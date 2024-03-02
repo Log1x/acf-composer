@@ -71,7 +71,7 @@ class UpgradeCommand extends Command
 
         $this->components->bulletList($files);
 
-        if (! $this->components->confirm("Found <fg=blue>{$classes->count()}</> ACF Composer classes to upgrade. Do you wish to <fg=blue>continue</>?")) {
+        if (! $this->components->confirm("Found <fg=blue>{$classes->count()}</> ACF Composer classes to upgrade. Do you wish to <fg=blue>continue</>?", true)) {
             return $this->components->error('The ACF Composer upgrade has been <fg=red>cancelled</>.');
         }
 

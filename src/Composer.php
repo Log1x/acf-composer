@@ -6,11 +6,12 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Concerns\InteractsWithPartial;
+use Log1x\AcfComposer\Contracts\Composer as ComposerContract;
 use Log1x\AcfComposer\Contracts\Field as FieldContract;
 use Roots\Acorn\Application;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-abstract class Composer implements FieldContract
+abstract class Composer implements ComposerContract, FieldContract
 {
     use InteractsWithPartial;
 
@@ -60,6 +61,36 @@ abstract class Composer implements FieldContract
     public static function make(AcfComposer $composer): self
     {
         return new static($composer);
+    }
+
+    /**
+     * Handle the Composer instance.
+     */
+    public function handle(): self
+    {
+        $this->beforeRegister();
+
+        $this->compose();
+
+        $this->afterRegister();
+
+        return $this;
+    }
+
+    /**
+     * Actions to run before registering the Composer.
+     */
+    public function beforeRegister(): void
+    {
+        //
+    }
+
+    /**
+     * Actions to run after registering the Composer.
+     */
+    public function afterRegister(): void
+    {
+        //
     }
 
     /**

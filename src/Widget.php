@@ -50,7 +50,7 @@ abstract class Widget extends Composer implements WidgetContract
     /**
      * Compose and register the defined ACF field groups.
      *
-     * @return void
+     * @return mixed
      */
     public function compose()
     {
