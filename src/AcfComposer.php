@@ -38,6 +38,11 @@ class AcfComposer
     protected array $deferredComposers = [];
 
     /**
+     * The legacy widgets.
+     */
+    protected array $legacyWidgets = [];
+
+    /**
      * The registered plugin paths.
      */
     protected array $plugins = [];
@@ -75,14 +80,6 @@ class AcfComposer
     }
 
     /**
-     * Handle the ACF Composer instance.
-     */
-    public function handle(): void
-    {
-        add_action('acf/init', fn () => $this->boot());
-    }
-
-    /**
      * Boot the registered Composers.
      */
     public function boot(): void
@@ -91,11 +88,33 @@ class AcfComposer
             return;
         }
 
-        $this->handleBlocks();
         $this->registerDefaultPath();
 
+        $this->handleBlocks();
+        $this->handleWidgets();
+
+        add_filter('acf/init', fn () => $this->handleComposers());
+
+        $this->booted = true;
+    }
+
+    /**
+     * Handle the Composer registration.
+     */
+    public function handleComposers(): void
+    {
         foreach ($this->composers as $namespace => $composers) {
             foreach ($composers as $i => $composer) {
+                $composer = $composer::make($this);
+
+                if (is_subclass_of($composer, Options::class) && ! is_null($composer->parent)) {
+                    $this->deferredComposers[$namespace][] = $composer;
+
+                    unset($this->composers[$namespace][$i]);
+
+                    continue;
+                }
+
                 $this->composers[$namespace][$i] = $composer->handle();
             }
         }
@@ -107,8 +126,22 @@ class AcfComposer
         }
 
         $this->deferredComposers = [];
+    }
 
-        $this->booted = true;
+    /**
+     * Handle the Widget Composer registration.
+     */
+    public function handleWidgets(): void
+    {
+        foreach ($this->legacyWidgets as $namespace => $composers) {
+            foreach ($composers as $composer) {
+                $composer = $composer::make($this);
+
+                $this->composers[$namespace][] = $composer->handle();
+            }
+        }
+
+        $this->legacyWidgets = [];
     }
 
     /**
@@ -196,10 +229,8 @@ class AcfComposer
             return false;
         }
 
-        $composer = $composer::make($this);
-
-        if (is_subclass_of($composer, Options::class) && ! is_null($composer->parent)) {
-            $this->deferredComposers[$namespace][] = $composer;
+        if (is_subclass_of($composer, Widget::class)) {
+            $this->legacyWidgets[$namespace][] = $composer;
 
             return true;
         }
