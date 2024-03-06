@@ -35,7 +35,7 @@ class AcfComposerServiceProvider extends ServiceProvider
 
         $composer = $this->app->make('AcfComposer');
 
-        $composer->handle();
+        $composer->boot();
 
         if ($this->app->runningInConsole()) {
             $this->commands([
