@@ -465,6 +465,7 @@ abstract class Block extends Composer implements BlockContract
             'styles' => $this->getStyles(),
             'supports' => $this->supports,
             'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
+            'acf_block_version' => 2,
             'render_callback' => function (
                 $block,
                 $content = '',
