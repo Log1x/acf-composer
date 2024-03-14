@@ -16,11 +16,11 @@
   },
   "require": {
     "php": "^8.0",
-    "stoutlogic/acf-builder": "^1.11",
-    "roots/acorn": "^3.0|^4.0"
+    "stoutlogic/acf-builder": "^1.11"
   },
   "require-dev": {
-    "laravel/pint": "^1.14"
+    "laravel/pint": "^1.14",
+    "roots/acorn": "^3.0|^4.0"
   },
   "extra": {
     "acorn": {
