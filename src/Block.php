@@ -77,6 +77,13 @@ abstract class Block extends Composer implements BlockContract
     public $prefix = 'acf/';
 
     /**
+     * The block text domain.
+     *
+     * @var string
+     */
+    public $textDomain;
+
+    /**
      * The block namespace.
      *
      * @var string
@@ -384,6 +391,16 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block text domain.
+     */
+    public function getTextDomain(): string
+    {
+        return $this->textDomain
+            ?? wp_get_theme()?->get('TextDomain')
+            ?? 'acf-composer';
+    }
+
+    /**
      * Handle the block template.
      */
     public function handleTemplate(array $template = []): Collection
@@ -465,6 +482,7 @@ abstract class Block extends Composer implements BlockContract
             'styles' => $this->getStyles(),
             'supports' => $this->supports,
             'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
+            'textdomain' => $this->getTextDomain(),
             'acf_block_version' => 2,
             'render_callback' => function (
                 $block,
@@ -508,9 +526,10 @@ abstract class Block extends Composer implements BlockContract
     public function toJson(): string
     {
         $settings = $this->settings()->forget([
+            'acf_block_version',
             'enqueue_assets',
-            'render_callback',
             'mode',
+            'render_callback',
         ])->put('acf', [
             'mode' => $this->mode,
             'renderTemplate' => $this::class,
