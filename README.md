@@ -43,9 +43,9 @@ Start by publishing the `config/acf.php` configuration file using Acorn:
 $ wp acorn vendor:publish --tag="acf-composer"
 ```
 
-### Generating a Field
+### Generating a Field Group
 
-To create your first field, start by running the following generator command from your theme directory:
+To create your first field group, start by running the following generator command from your theme directory:
 
 ```bash
 $ wp acorn acf:field Example
