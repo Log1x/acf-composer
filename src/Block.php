@@ -254,7 +254,7 @@ abstract class Block extends Composer implements BlockContract
      *
      * @var bool
      */
-    public $postMeta = false;
+    public $usePostMeta = false;
 
     /**
      * The block attributes.
@@ -491,7 +491,7 @@ abstract class Block extends Composer implements BlockContract
             'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
             'textdomain' => $this->getTextDomain(),
             'acf_block_version' => 2,
-            'use_post_meta' => $this->postMeta,
+            'use_post_meta' => $this->usePostMeta,
             'render_callback' => function (
                 $block,
                 $content = '',
@@ -542,7 +542,7 @@ abstract class Block extends Composer implements BlockContract
         ])->put('acf', [
             'mode' => $this->mode,
             'renderTemplate' => $this::class,
-            'usePostMeta' => $this->postMeta,
+            'usePostMeta' => $this->usePostMeta,
         ])->put('name', $this->namespace);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
