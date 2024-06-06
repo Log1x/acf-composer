@@ -35,7 +35,12 @@ class AcfComposer
     /**
      * The deferred composers.
      */
-    protected array $deferredComposers = [];
+    protected array $deferredOptions = [];
+
+    /**
+     * The pending composers.
+     */
+    protected array $pendingComposers = [];
 
     /**
      * The legacy widgets.
@@ -93,7 +98,7 @@ class AcfComposer
         $this->handleBlocks();
         $this->handleWidgets();
 
-        add_filter('acf/init', fn () => $this->handleComposers());
+        add_filter('acf/init', fn () => $this->handleComposers(), config('acf.hookPriority', 100));
 
         $this->booted = true;
     }
@@ -105,10 +110,18 @@ class AcfComposer
     {
         foreach ($this->composers as $namespace => $composers) {
             foreach ($composers as $i => $composer) {
+                if (! is_subclass_of($composer, Options::class)) {
+                    $this->pendingComposers[$namespace][] = $composer;
+
+                    unset($this->composers[$namespace][$i]);
+
+                    continue;
+                }
+
                 $composer = $composer::make($this);
 
-                if (is_subclass_of($composer, Options::class) && ! is_null($composer->parent)) {
-                    $this->deferredComposers[$namespace][] = $composer;
+                if (! is_null($composer->parent)) {
+                    $this->deferredOptions[$namespace][] = $composer;
 
                     unset($this->composers[$namespace][$i]);
 
@@ -119,13 +132,20 @@ class AcfComposer
             }
         }
 
-        foreach ($this->deferredComposers as $namespace => $composers) {
+        foreach ($this->deferredOptions as $namespace => $composers) {
             foreach ($composers as $index => $composer) {
                 $this->composers[$namespace][] = $composer->handle();
             }
         }
 
-        $this->deferredComposers = [];
+        foreach ($this->pendingComposers as $namespace => $composers) {
+            foreach ($composers as $composer) {
+                $this->composers[$namespace][] = $composer::make($this)->handle();
+            }
+        }
+
+        $this->deferredOptions = [];
+        $this->pendingComposers = [];
     }
 
     /**
