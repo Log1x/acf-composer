@@ -98,7 +98,7 @@ class AcfComposer
         $this->handleBlocks();
         $this->handleWidgets();
 
-        add_filter('acf/init', fn () => $this->handleComposers(), 100);
+        add_filter('acf/init', fn () => $this->handleComposers(), config('acf.hookPriority', 100));
 
         $this->booted = true;
     }
