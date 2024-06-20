@@ -10,14 +10,13 @@ ACF Composer is the ultimate tool for creating fields, blocks, widgets, and opti
 
 ## Features
 
-- 🔥 Encourages clean structuring for creating fields with Sage 10 and ACF.
-- 🔥 Instantly generate working fields, blocks, widgets, and option pages. Batteries included.
-- 🔥 Instantly generate re-usable field group partials.
-- 🔥 Blocks and widgets are fully rendered using Blade with a native Sage 10 feel for passing view data.
-- 🔥 Blocks are automatically generated with `<InnerBlocks />` support.
-- 🔥 Automatically hooks widgets with `WP_Widget` making them instantly ready to use.
-- 🔥 Automatically sets field location on blocks, widgets, and option pages.
-- 🔥 Globally set default field type and field group settings. No more repeating `['ui' => 1]` on every select field.
+- 🔧 Encourages clean structuring for creating fields with Sage 10 and ACF.
+- 🚀 Instantly generate working fields, blocks, widgets, partials, and option pages using CLI. Batteries included.
+- 🖼️ Fully rendered blocks and widgets using Blade with a native Sage 10 feel for passing view data.
+- ⚡ Seamlessly [cache](#caching-blocks--fields) blocks to `block.json` and field groups to a manifest.
+- 📦 Automatically hooks legacy widgets with `WP_Widget` making them instantly ready to use.
+- 🛠️ Automatically sets field location on blocks, widgets, and option pages.
+- 🌐 Globally define default field type and field group settings. No more repeating `['ui' => 1]` on every select field.
 
 ## Requirements
 
@@ -457,9 +456,16 @@ Once finished, you should see an Options page appear in the backend.
 
 All fields registered will have their location automatically set to this page.
 
-## Caching Fields
+## Caching Blocks & Fields
 
-Each time your application is ran, ACF Composer has to build your field groups into an array to register with ACF. In larger projects, it may be a good idea to cache the field groups into an array during deployment. This can be done using the `acf:cache` command:
+As of v3, ACF Composer now has the ability to cache registered blocks to native `block.json` files and field groups to a flat file JSON manifest automatically using CLI.
+
+This can lead to a **dramatic increase** in performance in projects both small and large, especially when loading a post in the editor containing multiple custom blocks.
+
+> [!NOTE]
+> Making changes to blocks or fields once cached will not take effect until cleared or re-cached.
+
+The best time to do this is during deployment and can be done using the `acf:cache` command:
 
 ```bash
 $ wp acorn acf:cache [--status]
@@ -470,6 +476,8 @@ Cache can then be cleared using the `acf:clear` command:
 ```bash
 $ wp acorn acf:clear
 ```
+
+The ACF Composer cache status can be found using `--status` on `acf:cache` as seen above or by running `wp acorn about`.
 
 ## Custom Stub Generation
 
