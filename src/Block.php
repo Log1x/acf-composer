@@ -491,6 +491,8 @@ abstract class Block extends Composer implements BlockContract
             'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
             'textdomain' => $this->getTextDomain(),
             'acf_block_version' => 2,
+            'api_version' => 2,
+            'validate' => true,
             'use_post_meta' => $this->usePostMeta,
             'render_callback' => function (
                 $block,
