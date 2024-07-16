@@ -245,7 +245,7 @@ abstract class Block extends Composer implements BlockContract
     /**
      * The block template.
      *
-     * @var array
+     * @var array|string
      */
     public $template = [];
 
@@ -594,7 +594,9 @@ abstract class Block extends Composer implements BlockContract
 
         $this->post = get_post($post_id);
 
-        $this->template = $this->handleTemplate($this->template)->toJson();
+        $this->template = is_array($this->template)
+            ? $this->handleTemplate($this->template)->toJson()
+            : $this->template;
 
         $this->classes = $this->getClasses();
         $this->style = $this->getStyle();
