@@ -412,16 +412,22 @@ abstract class Block extends Composer implements BlockContract
      */
     public function handleTemplate(array $template = []): Collection
     {
-        return collect($template)->map(function ($value, $key) {
-            if (is_array($value) && Arr::has($value, 'innerBlocks')) {
-                $blocks = collect($value['innerBlocks'])
-                    ->map(fn ($block) => $this->handleTemplate($block)->all())
-                    ->collapse();
+        return collect($template)->map(function ($block, $key) {
+            $name = is_numeric($key)
+                ? (is_string($block) ? $block : array_key_first($block))
+                : $key;
 
-                return [$key, Arr::except($value, 'innerBlocks') ?? [], $blocks->all()];
-            }
+            $value = is_numeric($key)
+                ? (is_string($block) ? [] : $block[$name])
+                : $block;
 
-            return [$key, $value];
+            $value = is_array($value) && Arr::has($value, 'innerBlocks')
+                ? array_merge($value, [
+                    'innerBlocks' => $this->handleTemplate($value['innerBlocks'])->all(),
+                ])
+                : $value;
+
+            return [$name, $value];
         })->values();
     }
 
@@ -588,9 +594,7 @@ abstract class Block extends Composer implements BlockContract
 
         $this->post = get_post($post_id);
 
-        $this->template = is_array($this->template)
-            ? $this->handleTemplate($this->template)->toJson()
-            : $this->template;
+        $this->template = $this->handleTemplate($this->template)->toJson();
 
         $this->classes = $this->getClasses();
         $this->style = $this->getStyle();
