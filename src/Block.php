@@ -414,18 +414,20 @@ abstract class Block extends Composer implements BlockContract
     {
         return collect($template)->map(function ($block, $key) {
             $name = is_numeric($key)
-                ? (is_string($block) ? $block : array_key_first($block))
+                ? array_key_first((array) $block)
                 : $key;
 
             $value = is_numeric($key)
-                ? (is_string($block) ? [] : $block[$name])
+                ? ($block[$name] ?? [])
                 : $block;
 
-            $value = is_array($value) && Arr::has($value, 'innerBlocks')
-                ? array_merge($value, [
-                    'innerBlocks' => $this->handleTemplate($value['innerBlocks'])->all(),
-                ])
-                : $value;
+            if (is_array($value) && isset($value['innerBlocks'])) {
+                $innerBlocks = $this->handleTemplate($value['innerBlocks'])->all();
+
+                unset($value['innerBlocks']);
+
+                return [$name, $value, $innerBlocks];
+            }
 
             return [$name, $value];
         })->values();
