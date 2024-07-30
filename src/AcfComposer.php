@@ -208,7 +208,7 @@ class AcfComposer
             $namespace = $this->app->getNamespace();
         }
 
-        foreach ((new Finder())->in($paths->toArray())->files()->sortByName() as $file) {
+        foreach ((new Finder)->in($paths->toArray())->files()->sortByName() as $file) {
             $relativePath = str_replace(
                 Str::finish($path, DIRECTORY_SEPARATOR),
                 '',
