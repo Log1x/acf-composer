@@ -12,6 +12,7 @@ use StoutLogic\AcfBuilder\GroupBuilder as GroupBuilderBase;
  * @method Builder endFlexibleContent()
  * @method Builder endGroup()
  * @method Builder endRepeater()
+ * @method Builder modifyField(string $name, array|\Closure $modify)
  * @method ChoiceFieldBuilder addButtonGroup(string $name, array $args = [])
  * @method ChoiceFieldBuilder addCheckbox(string $name, array $args = [])
  * @method ChoiceFieldBuilder addChoiceField(string $name, string $type, array $args = [])
