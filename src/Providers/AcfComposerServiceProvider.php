@@ -31,6 +31,7 @@ class AcfComposerServiceProvider extends ServiceProvider
             __DIR__.'/../../config/acf.php' => $this->app->configPath('acf.php'),
         ], 'acf-composer');
 
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'acf-composer');
         $this->mergeConfigFrom(__DIR__.'/../../config/acf.php', 'acf');
 
         $composer = $this->app->make('AcfComposer');
