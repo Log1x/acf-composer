@@ -3,6 +3,8 @@
 namespace Log1x\AcfComposer\Builder;
 
 use Log1x\AcfComposer\Builder;
+use Log1x\AcfComposer\Partial;
+use ReflectionClass;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use StoutLogic\AcfBuilder\FlexibleContentBuilder as FieldBuilder;
 
@@ -64,6 +66,14 @@ class FlexibleContentBuilder extends FieldBuilder
      */
     public function addLayout($layout, $args = [])
     {
+        if (
+            is_string($layout) &&
+            is_subclass_of($layout, Partial::class) &&
+            ! (new ReflectionClass($layout))->isAbstract()
+        ) {
+            $layout = $layout::make($this->composer())->compose();
+        }
+
         $layout = is_a($layout, FieldsBuilder::class)
             ? clone $layout
             : Builder::make($layout, $args);
