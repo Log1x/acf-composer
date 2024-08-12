@@ -12,13 +12,13 @@ class DummyClass extends Partial
      */
     public function fields(): Builder
     {
-        $DummyCamel = Builder::make('DummySnake');
+        $fields = Builder::make('DummySnake');
 
-        $DummyCamel
+        $fields
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $DummyCamel;
+        return $fields;
     }
 }
