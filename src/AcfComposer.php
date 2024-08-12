@@ -100,6 +100,10 @@ class AcfComposer
 
         add_filter('acf/init', fn () => $this->handleComposers(), config('acf.hookPriority', 100));
 
+        add_filter('acf/input/admin_footer', function () {
+            echo view('acf-composer::alpine-support')->render();
+        });
+
         $this->booted = true;
     }
 
