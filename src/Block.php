@@ -9,6 +9,8 @@ use Log1x\AcfComposer\Concerns\FormatsCss;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 use Log1x\AcfComposer\Contracts\Block as BlockContract;
 
+use function Roots\asset;
+
 abstract class Block extends Composer implements BlockContract
 {
     use FormatsCss, InteractsWithBlade;
@@ -408,6 +410,28 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block icon.
+     */
+    public function getIcon(): string|array
+    {
+        if (is_array($this->icon)) {
+            return $this->icon;
+        }
+
+        if (Str::startsWith($this->icon, 'asset:')) {
+            $asset = Str::of($this->icon)
+                ->after('asset:')
+                ->before('.svg')
+                ->replace('.', '/')
+                ->finish('.svg');
+
+            return asset($asset)->contents();
+        }
+
+        return $this->icon;
+    }
+
+    /**
      * Handle the block template.
      */
     public function handleTemplate(array $template = []): Collection
@@ -485,7 +509,7 @@ abstract class Block extends Composer implements BlockContract
             'title' => $this->name,
             'description' => $this->description,
             'category' => $this->category,
-            'icon' => $this->icon,
+            'icon' => $this->getIcon(),
             'keywords' => $this->keywords,
             'parent' => $this->parent ?: null,
             'ancestor' => $this->ancestor ?: null,
