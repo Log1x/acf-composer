@@ -47,12 +47,12 @@ $ wp acorn vendor:publish --tag="acf-composer"
 To create your first field group, start by running the following generator command from your theme directory:
 
 ```bash
-$ wp acorn acf:field Example
+$ wp acorn acf:field ExampleField
 ```
 
-This will create `src/Fields/Example.php` which is where you will create and manage your first field group.
+This will create `src/Fields/ExampleField.php` which is where you will create and manage your first field group.
 
-Taking a glance at the generated `Example.php` stub, you will notice that it has a simple list configured.
+Taking a glance at the generated `ExampleField.php` stub, you will notice that it has a simple list configured.
 
 ```php
 <?php
@@ -62,7 +62,7 @@ namespace App\Fields;
 use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Field;
 
-class Example extends Field
+class ExampleField extends Field
 {
     /**
      * The field group.
@@ -71,17 +71,17 @@ class Example extends Field
      */
     public function fields()
     {
-        $example = Builder::make('example');
+        $fields = Builder::make('example_field');
 
-        $example
+        $fields
             ->setLocation('post_type', '==', 'post');
 
-        $example
+        $fields
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $example->build();
+        return $fields->build();
     }
 }
 ```
@@ -115,14 +115,14 @@ class ListItems extends Partial
      */
     public function fields()
     {
-        $listItems = Builder::make('listItems');
+        $fields = Builder::make('listItems');
 
-        $listItems
+        $fields
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $listItems;
+        return $fields;
     }
 }
 ```
@@ -151,15 +151,15 @@ class Example extends Field
      */
     public function fields()
     {
-        $example = Builder::make('example');
+        $fields = Builder::make('example');
 
-        $example
+        $fields
             ->setLocation('post_type', '==', 'post');
 
-        $example
+        $fields
             ->addPartial(ListItems::class);
 
-        return $example->build();
+        return $fields->build();
     }
 }
 ```
@@ -171,7 +171,7 @@ Generating a block is generally the same as generating a field as seen above.
 Start by creating the block field using Acorn:
 
 ```bash
-$ wp acorn acf:block Example
+$ wp acorn acf:block ExampleBlock
 ```
 
 ```php
@@ -182,14 +182,14 @@ namespace App\Blocks;
 use Log1x\AcfComposer\Block;
 use Log1x\AcfComposer\Builder;
 
-class Example extends Block
+class ExampleBlock extends Block
 {
     /**
      * The block name.
      *
      * @var string
      */
-    public $name = 'Example';
+    public $name = 'Example Block';
 
     /**
      * The block description.
@@ -231,14 +231,14 @@ class Example extends Block
      */
     public function fields()
     {
-        $example = Builder::make('example');
+        $fields = Builder::make('example_block');
 
-        $example
+        $fields
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $example->build();
+        return $fields->build();
     }
 
     /**
@@ -297,7 +297,7 @@ Creating a sidebar widget using ACF Composer is extremely easy. Widgets are auto
 Start by creating a widget using Acorn:
 
 ```bash
-$ wp acorn acf:widget Example
+$ wp acorn acf:widget ExampleWidget
 ```
 
 ```php
@@ -308,14 +308,14 @@ namespace App\Widgets;
 use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Widget;
 
-class Example extends Widget
+class ExampleWidget extends Widget
 {
     /**
      * The widget name.
      *
      * @var string
      */
-    public $name = 'Example';
+    public $name = 'Example Widget';
 
     /**
      * The widget description.
@@ -352,17 +352,17 @@ class Example extends Widget
      */
     public function fields()
     {
-        $example = Builder::make('example');
+        $fields = Builder::make('example_widget');
 
-        $example
+        $fields
             ->addText('title');
 
-        $example
+        $fields
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $example->build();
+        return $fields->build();
     }
 
     /**
@@ -400,7 +400,7 @@ Creating an options page is similar to creating a regular field group in additio
 Start by creating an option page using Acorn:
 
 ```bash
-$ wp acorn acf:options Example
+$ wp acorn acf:options ExampleOptions
 ```
 
 ```php
@@ -411,21 +411,21 @@ namespace App\Options;
 use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Options as Field;
 
-class Example extends Field
+class ExampleOptions extends Field
 {
     /**
      * The option page menu name.
      *
      * @var string
      */
-    public $name = 'Example';
+    public $name = 'Example Options';
 
     /**
      * The option page document title.
      *
      * @var string
      */
-    public $title = 'Example | Options';
+    public $title = 'Example Options | Options';
 
     /**
      * The option page field group.
@@ -434,14 +434,14 @@ class Example extends Field
      */
     public function fields()
     {
-        $example = Builder::make('example');
+        $fields = Builder::make('example_options');
 
-        $example
+        $fields
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $example->build();
+        return $fields->build();
     }
 }
 ```
@@ -491,7 +491,7 @@ The publish command generates all available stubs by default. However, each stub
 
 ## Default Field Settings
 
-One of my personal favorite features of ACF Composer is the ability to set field type as well as field group defaults. Any globally set default can of course be over-ridden by simply setting it on the individual field.
+A useful feature unique to ACF Composer is the ability to set field type as well as field group defaults. Any globally set default can of course be over-ridden by simply setting it on the individual field.
 
 ### Global
 

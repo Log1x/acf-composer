@@ -4,6 +4,7 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Exceptions\DuplicateKeyException;
 use ReflectionClass;
 use Roots\Acorn\Application;
 use Symfony\Component\Finder\Finder;
@@ -150,6 +151,30 @@ class AcfComposer
 
         $this->deferredOptions = [];
         $this->pendingComposers = [];
+
+        foreach ($this->composers as $namespace => $composers) {
+            $names = [];
+
+            foreach ($composers as $composer) {
+                $group = $composer->getFields();
+
+                $key = $group['key'] ?? $group[0]['key'] ?? null;
+
+                if (! $key) {
+                    continue;
+                }
+
+                if (isset($names[$key])) {
+                    $class = $composer::class;
+
+                    throw new DuplicateKeyException("Duplicate ACF field group key [{$key}] found in [{$class}] and [{$names[$key]}].");
+                }
+
+                $names[$key] = $composer::class;
+            }
+
+            $this->composers[$namespace] = array_values($composers);
+        }
     }
 
     /**

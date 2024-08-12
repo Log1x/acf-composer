@@ -44,17 +44,17 @@ class DummyClass extends Widget
      */
     public function fields(): array
     {
-        $DummyCamel = Builder::make('DummySnake');
+        $fields = Builder::make('DummySnake');
 
-        $DummyCamel
+        $fields
             ->addText('title');
 
-        $DummyCamel
+        $fields
             ->addRepeater('items')
                 ->addText('item')
             ->endRepeater();
 
-        return $DummyCamel->build();
+        return $fields->build();
     }
 
     /**

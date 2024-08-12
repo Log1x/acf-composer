@@ -2,7 +2,7 @@
 
 namespace Log1x\AcfComposer;
 
-use Exception;
+use Log1x\AcfComposer\Exceptions\InvalidFieldsException;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 abstract class Field extends Composer
@@ -51,7 +51,7 @@ abstract class Field extends Composer
             : $fields;
 
         if (! is_array($fields)) {
-            throw new Exception('Fields must be an array or an instance of Builder.');
+            throw new InvalidFieldsException;
         }
 
         $fields = ! empty($fields['key']) ? [$fields] : $fields;

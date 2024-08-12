@@ -2,12 +2,12 @@
 
 namespace Log1x\AcfComposer;
 
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Concerns\InteractsWithPartial;
 use Log1x\AcfComposer\Contracts\Composer as ComposerContract;
 use Log1x\AcfComposer\Contracts\Field as FieldContract;
+use Log1x\AcfComposer\Exceptions\InvalidFieldsException;
 use Roots\Acorn\Application;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
@@ -129,7 +129,7 @@ abstract class Composer implements ComposerContract, FieldContract
             : $fields;
 
         if (! is_array($fields)) {
-            throw new Exception('Fields must be an array or an instance of Builder.');
+            throw new InvalidFieldsException;
         }
 
         if ($this->defaults->has('field_group')) {
