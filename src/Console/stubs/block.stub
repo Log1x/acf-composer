@@ -19,14 +19,14 @@ class DummyClass extends Block
      *
      * @var string
      */
-    public $description = 'A simple DummyTitle block.';
+    public $description = 'DummyDescription';
 
     /**
      * The block category.
      *
      * @var string
      */
-    public $category = 'formatting';
+    public $category = 'DummyCategory';
 
     /**
      * The block icon.
@@ -47,7 +47,7 @@ class DummyClass extends Block
      *
      * @var array
      */
-    public $post_types = [];
+    public $post_types = [DummyPostTypes];
 
     /**
      * The parent block type allow list.
@@ -97,19 +97,7 @@ class DummyClass extends Block
      * @var array
      */
     public $supports = [
-        'align' => true,
-        'align_text' => false,
-        'align_content' => false,
-        'full_height' => false,
-        'anchor' => false,
-        'mode' => false,
-        'multiple' => true,
-        'jsx' => true,
-        'color' => [
-            'background' => true,
-            'text' => true,
-            'gradient' => true,
-        ],
+        DummySupports
     ];
 
     /**
