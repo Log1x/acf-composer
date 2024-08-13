@@ -285,6 +285,22 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block name.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Retrieve the block description.
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
      * Retrieve the active block style.
      */
     public function getStyle(): ?string
@@ -464,11 +480,11 @@ abstract class Block extends Composer implements BlockContract
     {
         $this->mergeAttributes();
 
-        if (empty($this->name)) {
+        if (blank($this->getName())) {
             return null;
         }
 
-        $this->slug = $this->slug ?: Str::slug(Str::kebab($this->name));
+        $this->slug = $this->slug ?: Str::slug(Str::kebab($this->getName()));
         $this->view = $this->view ?: Str::start($this->slug, 'blocks.');
         $this->namespace = $this->namespace ?? Str::start($this->slug, $this->prefix);
 
@@ -506,8 +522,8 @@ abstract class Block extends Composer implements BlockContract
 
         $settings = Collection::make([
             'name' => $this->slug,
-            'title' => $this->name,
-            'description' => $this->description,
+            'title' => $this->getName(),
+            'description' => $this->getDescription(),
             'category' => $this->category,
             'icon' => $this->getIcon(),
             'keywords' => $this->keywords,
