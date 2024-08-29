@@ -207,6 +207,8 @@ class AcfComposer
                 return;
             }
 
+            add_filter('acf/blocks/template_not_found_message', fn () => '');
+
             method_exists($composer, 'assets') && $composer->assets($block);
 
             echo $composer->render($block, $content, $is_preview, $post_id, $wp_block, $context);
