@@ -227,7 +227,10 @@ class MakeCommand extends GeneratorCommand
      */
     protected function summary()
     {
-        $this->line('');
+        if (! Str::contains($this->type, ['Block', 'Widget'])) {
+            $this->newLine();
+        }
+
         $this->line("🎉 <fg=blue;options=bold>{$this->getNameInput()}</> {$this->getType()} successfully composed.");
         $this->line("     ⮑  <fg=blue>{$this->shortenPath($this->path)}</>");
 

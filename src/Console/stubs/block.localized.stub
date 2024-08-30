@@ -8,18 +8,11 @@ use Log1x\AcfComposer\Builder;
 class DummyClass extends Block
 {
     /**
-     * The block name.
+     * The block slug.
      *
      * @var string
      */
-    public $name = 'DummyTitle';
-
-    /**
-     * The block description.
-     *
-     * @var string
-     */
-    public $description = 'DummyDescription';
+    public $slug = 'DummySnake';
 
     /**
      * The block category.
@@ -129,6 +122,22 @@ class DummyClass extends Block
         'core/heading' => ['placeholder' => 'Hello World'],
         'core/paragraph' => ['placeholder' => 'Welcome to the DummyTitle block.'],
     ];
+
+    /**
+     * The block name.
+     */
+    public function getName(): string
+    {
+        return __('DummyTitle', 'sage');
+    }
+
+    /**
+     * The block description.
+     */
+    public function getDescription(): string
+    {
+        return __('DummyDescription', 'sage');
+    }
 
     /**
      * Data to be passed to the block before rendering.
