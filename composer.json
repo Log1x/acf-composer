@@ -16,7 +16,8 @@
   },
   "require": {
     "php": "^8.0",
-    "stoutlogic/acf-builder": "^1.11"
+    "stoutlogic/acf-builder": "^1.11",
+    "laravel/prompts": "*"
   },
   "require-dev": {
     "laravel/pint": "^1.14",
