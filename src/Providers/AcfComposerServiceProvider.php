@@ -18,6 +18,10 @@ class AcfComposerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('AcfComposer', fn () => AcfComposer::make($this->app));
+
+        if (! defined('PWP_NAME')) {
+            define('PWP_NAME', 'ACF Composer');
+        }
     }
 
     /**
@@ -49,6 +53,7 @@ class AcfComposerServiceProvider extends ServiceProvider
                 Console\PartialMakeCommand::class,
                 Console\StubPublishCommand::class,
                 Console\UpgradeCommand::class,
+                Console\UsageCommand::class,
                 Console\WidgetMakeCommand::class,
             ]);
 
