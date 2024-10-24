@@ -86,7 +86,17 @@ class ExampleField extends Field
 }
 ```
 
-Proceed by checking the `Add Post` for the field to ensure things are working as intended – and then [get to work](https://github.com/Log1x/acf-builder-cheatsheet).
+Proceed by checking the `Add Post` for the field to ensure things are working as intended.
+
+### Field Builder Usage
+
+To assist with development, ACF Composer comes with a `usage` command that will let you search for registered field types. This will provide basic information about the field type as well as a usage example containing all possible options.
+
+```sh
+$ wp acorn acf:usage
+```
+
+For additional usage, you may consult the [ACF Builder Cheatsheet](https://github.com/Log1x/acf-builder-cheatsheet).
 
 ### Generating a Field Partial
 
