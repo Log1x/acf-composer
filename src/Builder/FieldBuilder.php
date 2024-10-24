@@ -35,6 +35,7 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  * @method FieldBuilder addOembed(string $name, array $args = [])
  * @method FieldBuilder addPageLink(string $name, array $args = [])
  * @method FieldBuilder addPartial(string $partial)
+ * @method FieldBuilder addPartials(array $partials)
  * @method FieldBuilder addPassword(string $name, array $args = [])
  * @method FieldBuilder addPostObject(string $name, array $args = [])
  * @method FieldBuilder addRange(string $name, array $args = [])
