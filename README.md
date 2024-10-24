@@ -263,10 +263,10 @@ class ExampleBlock extends Block
 }
 ```
 
-You may also pass `--construct` to the command above to generate a stub with the block properties set within an `attributes` method. This can be useful for localization, etc.
+You may also pass `--localize` to the command above to generate a block stub with the name and description ready for translation.
 
 ```bash
-$ wp acorn acf:block Example --construct
+$ wp acorn acf:block Example --localize
 ```
 
 When running the block generator, one difference to a generic field is an accompanied `View` is generated in the `resources/views/blocks` directory.
