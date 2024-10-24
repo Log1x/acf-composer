@@ -55,8 +55,8 @@ class UsageCommand extends Command
         }
 
         $options = collect([
-            ...$type->defaults,
-            ...$type->supports,
+            ...$type->defaults ?? [],
+            ...$type->supports ?? [],
         ])->except('escaping_html');
 
         table(['<fg=blue>Label</>', '<fg=blue>Name</>', '<fg=blue>Category</>', '<fg=blue>Options #</>', '<fg=blue>Source</>'], [[
