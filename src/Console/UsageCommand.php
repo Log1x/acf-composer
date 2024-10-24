@@ -39,14 +39,13 @@ class UsageCommand extends Command
             return $this->components->error('Advanced Custom Fields must be installed and activated to use this command.');
         }
 
-        $this->types = collect(
-            acf_get_field_types()
-        )->sortBy(fn ($type) => $type->label);
+        $this->types = $this->types();
 
         $field = $this->argument('field') ?: search(
-            label: '<fg=gray>Search for a registered</> <fg=blue>field type</>',
+            label: "<fg=gray>Search</> <fg=blue>{$this->types->count()}</> <fg=gray>registered field types</>",
             options: fn (string $value) => $this->search($value)->all(),
-            hint: "<fg=gray>Found</> <fg=blue>{$this->types->count()}</> <fg=gray>registered field types.</>"
+            hint: '<fg=blue>*</> <fg=gray>indicates a custom field type</>',
+            scroll: 8,
         );
 
         $type = $this->type($field);
@@ -60,11 +59,12 @@ class UsageCommand extends Command
             ...$type->supports,
         ])->except('escaping_html');
 
-        table(['<fg=blue>Label</>', '<fg=blue>Name</>', '<fg=blue>Category</>', '<fg=blue>Options #</>'], [[
+        table(['<fg=blue>Label</>', '<fg=blue>Name</>', '<fg=blue>Category</>', '<fg=blue>Options #</>', '<fg=blue>Source</>'], [[
             $type->label,
             $type->name,
             Str::title($type->category),
             $options->count(),
+            $type->source,
         ]]);
 
         $method = Str::of($type->name)
@@ -117,5 +117,49 @@ class UsageCommand extends Command
     protected function type(string $field): ?object
     {
         return $this->types->first(fn ($type) => Str::contains($type->label, $field, ignoreCase: true) || Str::contains($type->name, $field, ignoreCase: true));
+    }
+
+    /**
+     * Retrieve all registered field types.
+     */
+    protected function types(): Collection
+    {
+        return collect(
+            acf_get_field_types()
+        )->map(function ($type) {
+            if (Str::startsWith($type->doc_url, 'https://www.advancedcustomfields.com')) {
+                $type->source = 'Official';
+
+                return $type;
+            }
+
+            $type->label = "{$type->label} <fg=blue>*</>";
+            $type->source = $this->source($type);
+
+            return $type;
+        })->sortBy('label');
+    }
+
+    /**
+     * Attempt to retrieve the field type source.
+     */
+    protected function source(object $type): string
+    {
+        $paths = [WPMU_PLUGIN_DIR, WP_PLUGIN_DIR];
+
+        $plugin = (new \ReflectionClass($type))->getFileName();
+
+        if (! Str::contains($plugin, $paths)) {
+            return 'Unknown';
+        }
+
+        $source = Str::of($plugin)->replace($paths, '')
+            ->trim('/')
+            ->explode('/')
+            ->first();
+
+        return Str::of($source)
+            ->headline()
+            ->replace('Acf', 'ACF');
     }
 }
