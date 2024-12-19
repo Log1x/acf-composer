@@ -527,8 +527,6 @@ abstract class Block extends Composer implements BlockContract
             'category' => $this->category,
             'icon' => $this->getIcon(),
             'keywords' => $this->keywords,
-            'parent' => $this->parent,
-            'ancestor' => $this->ancestor,
             'post_types' => $this->post_types,
             'mode' => $this->mode,
             'align' => $this->align,
@@ -553,6 +551,14 @@ abstract class Block extends Composer implements BlockContract
                 echo $this->render($block, $content, $preview, $post_id, $wp_block, $context);
             },
         ]);
+
+        if (filled($this->parent)) {
+            $settings = $settings->put('parent', $this->parent);
+        }
+
+        if (filled($this->ancestor)) {
+            $settings = $settings->put('ancestor', $this->ancestor);
+        }
 
         if ($this->example !== false) {
             if (method_exists($this, 'example') && is_array($example = $this->example())) {
