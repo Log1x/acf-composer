@@ -593,10 +593,12 @@ abstract class Block extends Composer implements BlockContract
             'acf_block_version',
             'enqueue_assets',
             'mode',
+            'post_types',
             'render_callback',
             'use_post_meta',
         ])->put('acf', [
             'mode' => $this->mode,
+            'postTypes' => $this->post_types,
             'renderTemplate' => $this::class,
             'usePostMeta' => $this->usePostMeta,
         ])->put('name', $this->namespace);
