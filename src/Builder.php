@@ -99,7 +99,7 @@ class Builder extends FieldsBuilder
         }
 
         if (! is_a($partial, FieldsBuilder::class)) {
-            throw new InvalidArgumentException('The partial must return an instance of Builder.');
+            return $this;
         }
 
         return $this->addFields($partial);

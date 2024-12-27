@@ -167,4 +167,12 @@ abstract class Composer implements ComposerContract, FieldContract
             }, $value);
         })->all();
     }
+
+    /**
+     * The field group.
+     */
+    public function fields()
+    {
+        return [];
+    }
 }
