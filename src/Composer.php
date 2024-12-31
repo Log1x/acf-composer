@@ -6,12 +6,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Concerns\InteractsWithPartial;
 use Log1x\AcfComposer\Contracts\Composer as ComposerContract;
-use Log1x\AcfComposer\Contracts\Field as FieldContract;
 use Log1x\AcfComposer\Exceptions\InvalidFieldsException;
 use Roots\Acorn\Application;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-abstract class Composer implements ComposerContract, FieldContract
+abstract class Composer implements ComposerContract
 {
     use InteractsWithPartial;
 
@@ -68,29 +67,25 @@ abstract class Composer implements ComposerContract, FieldContract
      */
     public function handle(): self
     {
-        $this->beforeRegister();
+        $this->call('beforeRegister');
 
         $this->compose();
 
-        $this->afterRegister();
+        $this->call('afterRegister');
 
         return $this;
     }
 
     /**
-     * Actions to run before registering the Composer.
+     * Call a method using the application container.
      */
-    public function beforeRegister(): void
+    protected function call(string $hook): mixed
     {
-        //
-    }
+        if (! method_exists($this, $hook)) {
+            return;
+        }
 
-    /**
-     * Actions to run after registering the Composer.
-     */
-    public function afterRegister(): void
-    {
-        //
+        return $this->app->call([$this, $hook]);
     }
 
     /**
@@ -98,7 +93,7 @@ abstract class Composer implements ComposerContract, FieldContract
      */
     protected function register(?callable $callback = null): void
     {
-        if (empty($this->fields)) {
+        if (blank($this->fields)) {
             return;
         }
 
@@ -124,7 +119,9 @@ abstract class Composer implements ComposerContract, FieldContract
             return $this->composer->manifest()->get($this);
         }
 
-        $fields = is_a($fields = $this->fields(), FieldsBuilder::class)
+        $fields = $this->resolveFields();
+
+        $fields = is_a($fields, FieldsBuilder::class)
             ? $fields->build()
             : $fields;
 
@@ -140,6 +137,14 @@ abstract class Composer implements ComposerContract, FieldContract
     }
 
     /**
+     * Resolve the fields from the Composer with the container.
+     */
+    public function resolveFields(): mixed
+    {
+        return $this->call('fields') ?? [];
+    }
+
+    /**
      * Build the field group with the default field type settings.
      */
     public function build(array $fields = []): array
@@ -147,7 +152,7 @@ abstract class Composer implements ComposerContract, FieldContract
         return collect($fields)->map(function ($value, $key) {
             if (
                 ! in_array($key, $this->keys) ||
-                (Str::is($key, 'type') && ! $this->defaults->has($value))
+                ($key === 'type' && ! $this->defaults->has($value))
             ) {
                 return $value;
             }
@@ -158,7 +163,7 @@ abstract class Composer implements ComposerContract, FieldContract
                         return $this->build($field);
                     }
 
-                    if (Str::is($key, 'type') && $this->defaults->has($value)) {
+                    if ($key === 'type' && $this->defaults->has($value)) {
                         $field = array_merge($this->defaults->get($field['type'], []), $field);
                     }
                 }
@@ -166,13 +171,5 @@ abstract class Composer implements ComposerContract, FieldContract
                 return $field;
             }, $value);
         })->all();
-    }
-
-    /**
-     * The field group.
-     */
-    public function fields()
-    {
-        return [];
     }
 }

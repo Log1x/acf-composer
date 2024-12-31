@@ -12,13 +12,6 @@ use Symfony\Component\Finder\Finder;
 class AcfComposer
 {
     /**
-     * The application instance.
-     *
-     * @var \Roots\Acorn\Application
-     */
-    public $app;
-
-    /**
      * The booted state.
      */
     protected bool $booted = false;
@@ -71,9 +64,8 @@ class AcfComposer
     /**
      * Create a new Composer instance.
      */
-    public function __construct(Application $app)
+    public function __construct(protected Application $app)
     {
-        $this->app = $app;
         $this->manifest = Manifest::make($this);
     }
 
