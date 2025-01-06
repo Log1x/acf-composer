@@ -597,10 +597,12 @@ abstract class Block extends Composer implements BlockContract
             'render_callback',
             'use_post_meta',
         ])->put('acf', [
+            'blockVersion' => $this->settings()->get('acf_block_version'),
             'mode' => $this->mode,
             'postTypes' => $this->post_types,
             'renderTemplate' => $this::class,
             'usePostMeta' => $this->usePostMeta,
+            'validate' => $this->settings()->get('validate')
         ])->put('name', $this->namespace);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
