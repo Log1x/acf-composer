@@ -259,6 +259,20 @@ abstract class Block extends Composer implements BlockContract
     public $usePostMeta = false;
 
     /**
+     * The ACF block API version.
+     *
+     * @var int
+     */
+    public $blockVersion = 2;
+
+    /**
+     * Validate block fields as per the field group configuration.
+     *
+     * @var bool
+     */
+    public $validate = true;
+
+    /**
      * The block attributes.
      */
     public function attributes(): array
@@ -536,9 +550,9 @@ abstract class Block extends Composer implements BlockContract
             'supports' => $this->supports,
             'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
             'textdomain' => $this->getTextDomain(),
-            'acf_block_version' => 2,
+            'acf_block_version' => $this->blockVersion,
             'api_version' => 2,
-            'validate' => true,
+            'validate' => $this->validate,
             'use_post_meta' => $this->usePostMeta,
             'render_callback' => function (
                 $block,
@@ -598,12 +612,12 @@ abstract class Block extends Composer implements BlockContract
             'use_post_meta',
             'validate',
         ])->put('acf', [
-            'blockVersion' => $this->settings()->get('acf_block_version'),
+            'blockVersion' => $this->blockVersion,
             'mode' => $this->mode,
             'postTypes' => $this->post_types,
             'renderTemplate' => $this::class,
             'usePostMeta' => $this->usePostMeta,
-            'validate' => $this->settings()->get('validate')
+            'validate' => $this->validate,
         ])->put('name', $this->namespace);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
