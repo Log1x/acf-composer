@@ -596,6 +596,7 @@ abstract class Block extends Composer implements BlockContract
             'post_types',
             'render_callback',
             'use_post_meta',
+            'validate',
         ])->put('acf', [
             'blockVersion' => $this->settings()->get('acf_block_version'),
             'mode' => $this->mode,
