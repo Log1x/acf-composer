@@ -110,37 +110,37 @@ class UsageCommand extends Command
 
         return $this->types->map(fn ($type) => $type->label);
     }
-
+    
     /**
      * Retrieve a field type by label or name.
      */
     protected function type(string $field): ?object
     {
-        $exactMatch = $this->types->first(fn($type) => strcasecmp($type->label, $field) === 0 || strcasecmp($type->name, $field) === 0);
-
+        $exactMatch = $this->types->first(fn ($type) => strcasecmp($type->label, $field) === 0 || strcasecmp($type->name, $field) === 0);
+    
         if ($exactMatch) {
             return $exactMatch;
         }
-
-        $matches = $this->types->filter(fn($type) => strcasecmp($type->label, $field) === 0 || strcasecmp($type->name, $field) === 0
+    
+        $matches = $this->types->filter(fn ($type) => strcasecmp($type->label, $field) === 0 || strcasecmp($type->name, $field) === 0
             || Str::contains($type->label, $field, ignoreCase: true)
             || Str::contains($type->name, $field, ignoreCase: true));
-
+    
         if ($matches->isEmpty()) {
             return null;
         }
-
+    
         if ($matches->count() === 1) {
             return $matches->first();
         }
-
+    
         $selected = search(
             label: "<fg=gray>Found</> <fg=blue>{$matches->count()}</> <fg=gray>registered field types Please choose one:</>",
-            options: fn() => $matches->pluck('label', 'name')->all(),
+            options: fn () => $matches->pluck('label', 'name')->all(),
             hint: '<fg=blue>*</> <fg=gray>indicates a custom field type</>',
             scroll: 8,
         );
-
+    
         return $matches->firstWhere('name', $selected);
     }
 
