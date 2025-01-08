@@ -116,14 +116,12 @@ class UsageCommand extends Command
      */
     protected function type(string $field): ?object
     {
-        // Find exact matches
         $exactMatch = $this->types->first(fn($type) => strcasecmp($type->label, $field) === 0 || strcasecmp($type->name, $field) === 0);
 
         if ($exactMatch) {
             return $exactMatch;
         }
 
-        // Find exact and partial matches
         $matches = $this->types->filter(fn($type) => strcasecmp($type->label, $field) === 0 || strcasecmp($type->name, $field) === 0
             || Str::contains($type->label, $field, ignoreCase: true)
             || Str::contains($type->name, $field, ignoreCase: true));
@@ -136,7 +134,6 @@ class UsageCommand extends Command
             return $matches->first();
         }
 
-        // Show selection for multiple matches
         $selected = search(
             label: "<fg=gray>Found</> <fg=blue>{$matches->count()}</> <fg=gray>registered field types Please choose one:</>",
             options: fn() => $matches->pluck('label', 'name')->all(),
