@@ -4,6 +4,7 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Concerns\HasCollection;
 use Log1x\AcfComposer\Exceptions\DuplicateKeyException;
 use ReflectionClass;
 use Roots\Acorn\Application;
@@ -11,6 +12,8 @@ use Symfony\Component\Finder\Finder;
 
 class AcfComposer
 {
+    use HasCollection;
+
     /**
      * The application instance.
      *
@@ -228,7 +231,7 @@ class AcfComposer
      */
     public function registerPath(string $path, ?string $namespace = null): array
     {
-        $paths = collect(File::directories($path))
+        $paths = $this->collect(File::directories($path))
             ->filter(fn ($item) => Str::contains($item, $this->classes));
 
         if ($paths->isEmpty()) {
