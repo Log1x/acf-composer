@@ -316,7 +316,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getDefaultStyle(): array
     {
-        return collect($this->getStyles())->firstWhere('isDefault') ?? [];
+        return $this->collect($this->getStyles())->firstWhere('isDefault') ?? [];
     }
 
     /**
@@ -324,7 +324,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getStyles(): array
     {
-        $styles = collect($this->styles)->map(function ($value, $key) {
+        $styles = $this->collect($this->styles)->map(function ($value, $key) {
             if (is_array($value)) {
                 return $value;
             }
@@ -354,15 +354,15 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getInlineStyle(): string
     {
-        return collect([
+        return $this->collect([
             'padding' => ! empty($this->block->style['spacing']['padding'])
-                ? collect($this->block->style['spacing']['padding'])
+                ? $this->collect($this->block->style['spacing']['padding'])
                     ->map(fn ($value, $side) => $this->formatCss($value, $side))
                     ->implode(' ')
                 : null,
 
             'margin' => ! empty($this->block->style['spacing']['margin'])
-                ? collect($this->block->style['spacing']['margin'])
+                ? $this->collect($this->block->style['spacing']['margin'])
                     ->map(fn ($value, $side) => $this->formatCss($value, $side, 'margin'))
                     ->implode(' ')
                 : null,
@@ -378,7 +378,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getClasses(): string
     {
-        $classes = collect([
+        $classes = $this->collect([
             'slug' => Str::of($this->slug)->slug()->start('wp-block-')->toString(),
 
             'className' => $this->block->className ?? null,
@@ -452,7 +452,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function handleTemplate(array $template = []): Collection
     {
-        return collect($template)->map(function ($block, $key) {
+        return $this->collect($template)->map(function ($block, $key) {
             $name = is_numeric($key)
                 ? array_key_first((array) $block)
                 : $key;
@@ -514,7 +514,7 @@ abstract class Block extends Composer implements BlockContract
         }
 
         if ($this->supports) {
-            $this->supports = collect($this->supports)
+            $this->supports = $this->collect($this->supports)
                 ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
                 ->merge($this->supports)
                 ->all();
@@ -527,6 +527,8 @@ abstract class Block extends Composer implements BlockContract
             'category' => $this->category,
             'icon' => $this->getIcon(),
             'keywords' => $this->keywords,
+            'parent' => $this->parent ?: null,
+            'ancestor' => $this->ancestor ?: null,
             'post_types' => $this->post_types,
             'mode' => $this->mode,
             'align' => $this->align,

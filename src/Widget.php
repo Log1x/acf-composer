@@ -71,7 +71,7 @@ abstract class Widget extends Composer implements WidgetContract
         }
 
         $this->register(function () {
-            $this->widget = (object) collect(
+            $this->widget = (object) $this->collect(
                 Arr::get($GLOBALS, 'wp_registered_widgets')
             )->filter(fn ($value) => $value['name'] === $this->name)->pop();
         });
@@ -128,7 +128,7 @@ abstract class Widget extends Composer implements WidgetContract
                 echo Arr::get($args, 'before_widget');
 
                 if (! empty($this->composer->title())) {
-                    echo collect([
+                    echo $this->collect([
                         Arr::get($args, 'before_title'),
                         $this->composer->title(),
                         Arr::get($args, 'after_title'),
