@@ -69,6 +69,7 @@ use StoutLogic\AcfBuilder\LocationBuilder;
 class Builder extends FieldsBuilder
 {
     use HasCollection;
+
     /**
      * The ACF Composer instance.
      */

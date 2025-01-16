@@ -4,8 +4,8 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Exceptions\DuplicateKeyException;
 use Log1x\AcfComposer\Concerns\HasCollection;
+use Log1x\AcfComposer\Exceptions\DuplicateKeyException;
 use ReflectionClass;
 use Roots\Acorn\Application;
 use Symfony\Component\Finder\Finder;
@@ -13,7 +13,7 @@ use Symfony\Component\Finder\Finder;
 class AcfComposer
 {
     use HasCollection;
-    
+
     /**
      * The application instance.
      *

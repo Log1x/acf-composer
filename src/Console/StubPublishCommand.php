@@ -3,13 +3,13 @@
 namespace Log1x\AcfComposer\Console;
 
 use Illuminate\Filesystem\Filesystem;
-use Roots\Acorn\Console\Commands\Command;
 use Log1x\AcfComposer\Concerns\HasCollection;
+use Roots\Acorn\Console\Commands\Command;
 
 class StubPublishCommand extends Command
 {
-
     use HasCollection;
+
     /**
      * The name and signature of the console command.
      *

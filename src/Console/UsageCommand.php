@@ -5,7 +5,6 @@ namespace Log1x\AcfComposer\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-
 use Log1x\AcfComposer\Concerns\HasCollection;
 
 use function Laravel\Prompts\search;
@@ -14,6 +13,7 @@ use function Laravel\Prompts\table;
 class UsageCommand extends Command
 {
     use HasCollection;
+
     /**
      * The name and signature of the console command.
      *

@@ -10,6 +10,7 @@ use Log1x\AcfComposer\Concerns\HasCollection;
 class UpgradeCommand extends Command
 {
     use HasCollection;
+
     /**
      * The name and signature of the console command.
      *

@@ -9,6 +9,7 @@ use Log1x\AcfComposer\Concerns\HasCollection;
 class CacheCommand extends Command
 {
     use HasCollection;
+
     /**
      * The name and signature of the console command.
      *

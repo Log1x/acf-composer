@@ -4,8 +4,8 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Concerns\InteractsWithPartial;
 use Log1x\AcfComposer\Concerns\HasCollection;
+use Log1x\AcfComposer\Concerns\InteractsWithPartial;
 use Log1x\AcfComposer\Contracts\Composer as ComposerContract;
 use Log1x\AcfComposer\Contracts\Field as FieldContract;
 use Log1x\AcfComposer\Exceptions\InvalidFieldsException;
@@ -14,7 +14,7 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 
 abstract class Composer implements ComposerContract, FieldContract
 {
-    use InteractsWithPartial, HasCollection;
+    use HasCollection, InteractsWithPartial;
 
     /**
      * The ACF Composer instance.

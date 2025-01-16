@@ -10,6 +10,7 @@ use Roots\Acorn\Console\Commands\GeneratorCommand;
 class MakeCommand extends GeneratorCommand
 {
     use HasCollection;
+
     /**
      * The view stub used when generated.
      *
