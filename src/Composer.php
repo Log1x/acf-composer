@@ -4,6 +4,7 @@ namespace Log1x\AcfComposer;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Log1x\AcfComposer\Concerns\HasCollection;
 use Log1x\AcfComposer\Concerns\InteractsWithPartial;
 use Log1x\AcfComposer\Contracts\Composer as ComposerContract;
 use Log1x\AcfComposer\Contracts\Field as FieldContract;
@@ -13,7 +14,7 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
 
 abstract class Composer implements ComposerContract, FieldContract
 {
-    use InteractsWithPartial;
+    use HasCollection, InteractsWithPartial;
 
     /**
      * The ACF Composer instance.
@@ -48,7 +49,7 @@ abstract class Composer implements ComposerContract, FieldContract
         $this->composer = $composer;
         $this->app = $composer->app;
 
-        $this->defaults = collect($this->app->config->get('acf.defaults'))
+        $this->defaults = $this->collect($this->app->config->get('acf.defaults'))
             ->merge($this->defaults)
             ->mapWithKeys(fn ($value, $key) => [Str::snake($key) => $value]);
 
@@ -144,7 +145,7 @@ abstract class Composer implements ComposerContract, FieldContract
      */
     public function build(array $fields = []): array
     {
-        return collect($fields)->map(function ($value, $key) {
+        return $this->collect($fields)->map(function ($value, $key) {
             if (
                 ! in_array($key, $this->keys) ||
                 (Str::is($key, 'type') && ! $this->defaults->has($value))
