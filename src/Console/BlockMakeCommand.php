@@ -79,19 +79,19 @@ class BlockMakeCommand extends MakeCommand
 
         $category = select(
             label: 'Select the block category',
-            options: $this->collect($categories)->mapWithKeys(fn ($category) => [$category['slug'] => $category['title']]),
+            options: collect($categories)->mapWithKeys(fn ($category) => [$category['slug'] => $category['title']]),
             default: 'common',
         );
 
         $postTypes = multiselect(
             label: 'Select the supported post types',
-            options: $this->collect(
+            options: collect(
                 get_post_types(['public' => true])
             )->mapWithKeys(fn ($postType) => [$postType => Str::headline($postType)])->all(),
             hint: 'Leave empty to support all post types.',
         );
 
-        $postTypes = $this->collect($postTypes)
+        $postTypes = collect($postTypes)
             ->map(fn ($postType) => sprintf("'%s'", $postType))
             ->join(', ');
 
@@ -116,12 +116,12 @@ class BlockMakeCommand extends MakeCommand
      */
     protected function buildSupports(array $selected): string
     {
-        return $this->collect($this->supports)->map(function ($value, $key) use ($selected) {
+        return collect($this->supports)->map(function ($value, $key) use ($selected) {
             if (is_int($key)) {
                 return sprintf("'%s' => %s,", $value, in_array($value, $selected) ? 'true' : 'false');
             }
 
-            $options = $this->collect($value)
+            $options = collect($value)
                 ->map(fn ($option) => sprintf(
                     "%s'%s' => %s,",
                     Str::repeat(' ', 12),
@@ -139,9 +139,9 @@ class BlockMakeCommand extends MakeCommand
      */
     protected function getSupports(): array
     {
-        return $this->collect($this->supports)
+        return collect($this->supports)
             ->mapWithKeys(fn ($value, $key) => is_array($value)
-                ? $this->collect($value)->mapWithKeys(fn ($option) => [$option => Str::of($option)->finish(" {$key}")->headline()->toString()])->all()
+                ? collect($value)->mapWithKeys(fn ($option) => [$option => Str::of($option)->finish(" {$key}")->headline()->toString()])->all()
                 : [$value => Str::headline($value)]
             )->all();
     }
