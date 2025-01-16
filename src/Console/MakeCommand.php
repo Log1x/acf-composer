@@ -4,13 +4,10 @@ namespace Log1x\AcfComposer\Console;
 
 use Exception;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Concerns\HasCollection;
 use Roots\Acorn\Console\Commands\GeneratorCommand;
 
 class MakeCommand extends GeneratorCommand
 {
-    use HasCollection;
-
     /**
      * The view stub used when generated.
      *
@@ -171,7 +168,7 @@ class MakeCommand extends GeneratorCommand
      */
     protected function getType()
     {
-        return $this->collect(explode('\\', $this->type))->map(function ($value) {
+        return collect(explode('\\', $this->type))->map(function ($value) {
             return Str::singular(Str::slug($value));
         })->implode(' ');
     }
@@ -257,7 +254,7 @@ class MakeCommand extends GeneratorCommand
      */
     protected function shortenPath($path, $index = 3)
     {
-        return $this->collect(
+        return collect(
             explode('/', $path)
         )->slice(-$index, $index)->implode('/');
     }

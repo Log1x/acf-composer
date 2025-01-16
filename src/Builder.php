@@ -11,7 +11,6 @@ use Log1x\AcfComposer\Builder\FlexibleContentBuilder;
 use Log1x\AcfComposer\Builder\GroupBuilder;
 use Log1x\AcfComposer\Builder\RepeaterBuilder;
 use Log1x\AcfComposer\Builder\TabBuilder;
-use Log1x\AcfComposer\Concerns\HasCollection;
 use ReflectionClass;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use StoutLogic\AcfBuilder\LocationBuilder;
@@ -68,8 +67,6 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  */
 class Builder extends FieldsBuilder
 {
-    use HasCollection;
-
     /**
      * The ACF Composer instance.
      */
@@ -131,7 +128,7 @@ class Builder extends FieldsBuilder
 
         $types = config('acf.types', []);
 
-        return $this->types = $this->collect($types)->mapWithKeys(fn ($type, $key) => [
+        return $this->types = collect($types)->mapWithKeys(fn ($type, $key) => [
             Str::of($key)->studly()->start('add')->toString() => $type,
         ])->all();
     }

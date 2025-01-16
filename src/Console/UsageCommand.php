@@ -5,15 +5,12 @@ namespace Log1x\AcfComposer\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Concerns\HasCollection;
 
 use function Laravel\Prompts\search;
 use function Laravel\Prompts\table;
 
 class UsageCommand extends Command
 {
-    use HasCollection;
-
     /**
      * The name and signature of the console command.
      *
@@ -57,7 +54,7 @@ class UsageCommand extends Command
             return $this->components->error("The field type [<fg=red>{$field}</>] could not be found.");
         }
 
-        $options = $this->collect([
+        $options = collect([
             ...$type->defaults ?? [],
             ...$type->supports ?? [],
         ])->except('escaping_html');
@@ -77,7 +74,7 @@ class UsageCommand extends Command
 
         $native = method_exists('Log1x\AcfComposer\Builder', $method) ? $method : null;
 
-        $options = $this->collect($options)->map(fn ($value) => match (true) {
+        $options = collect($options)->map(fn ($value) => match (true) {
             is_string($value) => "'{$value}'",
             is_array($value) => '[]',
             is_bool($value) => $value ? 'true' : 'false',
@@ -91,7 +88,7 @@ class UsageCommand extends Command
             'native' => $native,
         ]);
 
-        $usage = $this->collect(explode("\n", $usage))
+        $usage = collect(explode("\n", $usage))
             ->map(fn ($line) => rtrim(" {$line}"))
             ->filter()
             ->implode("\n");
@@ -127,7 +124,7 @@ class UsageCommand extends Command
      */
     protected function types(): Collection
     {
-        return $this->collect(
+        return collect(
             acf_get_field_types()
         )->map(function ($type) {
             if (Str::startsWith($type->doc_url, 'https://www.advancedcustomfields.com')) {

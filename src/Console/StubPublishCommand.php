@@ -3,13 +3,10 @@
 namespace Log1x\AcfComposer\Console;
 
 use Illuminate\Filesystem\Filesystem;
-use Log1x\AcfComposer\Concerns\HasCollection;
 use Roots\Acorn\Console\Commands\Command;
 
 class StubPublishCommand extends Command
 {
-    use HasCollection;
-
     /**
      * The name and signature of the console command.
      *
@@ -56,7 +53,7 @@ class StubPublishCommand extends Command
             (new Filesystem)->makeDirectory($stubsPath.'/views', 0755, true);
         }
 
-        $files = $this->collect($this->stubs)
+        $files = collect($this->stubs)
             ->mapWithKeys(function ($stub) use ($stubsPath) {
                 return [__DIR__.'/stubs/'.$stub => $stubsPath.'/'.$stub];
             })->toArray();
