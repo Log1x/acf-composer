@@ -5,9 +5,12 @@ namespace Log1x\AcfComposer\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\AcfComposer;
+use Log1x\AcfComposer\Concerns\HasCollection;
 
 class UpgradeCommand extends Command
 {
+    use HasCollection;
+
     /**
      * The name and signature of the console command.
      *
@@ -52,7 +55,7 @@ class UpgradeCommand extends Command
 
         $this->components->info('Checking for outdated <fg=blue>ACF Composer</> classes...');
 
-        $classes = collect($this->composer->paths())->flatMap(fn ($classes, $path) => collect($classes)
+        $classes = $this->collect($this->composer->paths())->flatMap(fn ($classes, $path) => $this->collect($classes)
             ->map(fn ($class) => Str::of($class)->replace('\\', '/')->after('/')->start($path.'/')->finish('.php')->toString())
             ->all()
         )
