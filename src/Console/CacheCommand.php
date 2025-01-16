@@ -82,4 +82,16 @@ class CacheCommand extends Command
 
         $this->components->info("Successfully cached <fg=blue>{$manifest}</> field group(s) and <fg=blue>{$blocks}</> block(s).");
     }
+
+    /**
+     * Configure the command.
+     *
+     * @return void
+     */
+    public function configure()
+    {
+        $this->setAliases([
+            'acf:optimize',
+        ]);
+    }
 }

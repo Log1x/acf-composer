@@ -63,6 +63,14 @@ class AcfComposerServiceProvider extends ServiceProvider
                     'Version' => InstalledVersions::getPrettyVersion('log1x/acf-composer'),
                 ]);
             }
+
+            if (method_exists($this, 'optimizes')) {
+                $this->optimizes(
+                    optimize: 'acf:cache',
+                    clear: 'acf:clear',
+                    key: 'acf-composer',
+                );
+            }
         }
     }
 }
