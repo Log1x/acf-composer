@@ -419,9 +419,13 @@ abstract class Block extends Composer implements BlockContract
     /**
      * Retrieve the block HTML attributes.
      */
-    public function getSupportHtmlAttributes(): array
+    public function getHtmlAttributes(): array
     {
-        return once(fn () => $this->preview ? [] : (WP_Block_Supports::get_instance()?->apply_block_supports() ?? []));
+        if ($this->preview) {
+            return [];
+        }
+
+        return WP_Block_Supports::get_instance()?->apply_block_supports() ?? [];
     }
 
     /**
@@ -429,7 +433,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getInlineStyle(): string
     {
-        $supports = $this->getSupportHtmlAttributes();
+        $supports = $this->getHtmlAttributes();
 
         return $supports['style'] ?? '';
     }
@@ -439,7 +443,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getClasses(): string
     {
-        $supports = $this->getSupportHtmlAttributes();
+        $supports = $this->getHtmlAttributes();
 
         return str_replace(
             acf_slugify($this->namespace),
