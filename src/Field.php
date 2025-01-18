@@ -40,9 +40,9 @@ abstract class Field extends Composer
             return $this->composer->manifest()->get($this);
         }
 
-        $fields = $this->fields();
+        $fields = $this->resolveFields();
 
-        if (empty($fields)) {
+        if (blank($fields)) {
             return [];
         }
 

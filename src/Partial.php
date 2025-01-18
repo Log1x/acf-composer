@@ -7,13 +7,13 @@ abstract class Partial extends Composer
     /**
      * Compose and register the defined field groups with ACF.
      *
-     * @return mixed
+     * @return \StoutLogic\AcfBuilder\FieldsBuilder|void
      */
     public function compose()
     {
-        $fields = $this->fields();
+        $fields = $this->resolveFields();
 
-        if (empty($fields)) {
+        if (blank($fields)) {
             return;
         }
 
