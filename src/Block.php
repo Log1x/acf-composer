@@ -634,28 +634,29 @@ abstract class Block extends Composer implements BlockContract
      */
     public function toJson(): string
     {
-        $settings = $this->settings()->forget([
-            'acf_block_version',
-            'align',
-            'alignContent',
-            'alignText',
-            'enqueue_assets',
-            'mode',
-            'post_types',
-            'render_callback',
-            'use_post_meta',
-            'validate',
-        ])
-        ->put('acf', [
-            'blockVersion' => $this->blockVersion,
-            'mode' => $this->mode,
-            'postTypes' => $this->post_types,
-            'renderTemplate' => $this::class,
-            'usePostMeta' => $this->usePostMeta,
-            'validate' => $this->validate,
-        ])
-        ->put('name', $this->namespace)
-        ->put('attributes', $this->getSupportAttributes());
+        $settings = $this->settings()
+            ->put('name', $this->namespace)
+            ->put('attributes', $this->getSupportAttributes())
+            ->put('acf', [
+                'blockVersion' => $this->blockVersion,
+                'mode' => $this->mode,
+                'postTypes' => $this->post_types,
+                'renderTemplate' => $this::class,
+                'usePostMeta' => $this->usePostMeta,
+                'validate' => $this->validate,
+            ])
+            ->forget([
+                'acf_block_version',
+                'align',
+                'alignContent',
+                'alignText',
+                'enqueue_assets',
+                'mode',
+                'post_types',
+                'render_callback',
+                'use_post_meta',
+                'validate',
+            ]);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
     }
