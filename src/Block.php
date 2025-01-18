@@ -2,6 +2,7 @@
 
 namespace Log1x\AcfComposer;
 
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -196,6 +197,16 @@ abstract class Block extends Composer implements BlockContract
     public $align_content = '';
 
     /**
+     * The default block spacing.
+     *
+     * @var array
+     */
+    public $spacing = [
+        'padding' => null,
+        'margin' => null,
+    ];
+
+    /**
      * The supported block features.
      *
      * @var array
@@ -210,7 +221,7 @@ abstract class Block extends Composer implements BlockContract
     public $styles = [];
 
     /**
-     * The block active style.
+     * The current block style.
      *
      * @var string
      */
@@ -391,6 +402,17 @@ abstract class Block extends Composer implements BlockContract
             ];
         }
 
+        $spacing = array_filter($this->spacing);
+
+        if ($spacing) {
+            $attributes['style'] = [
+                'type' => 'object',
+                'default' => [
+                    'spacing' => $spacing,
+                ],
+            ];
+        }
+
         return $attributes;
     }
 
@@ -543,10 +565,39 @@ abstract class Block extends Composer implements BlockContract
 
         $this->register(fn () => $this->hasJson()
             ? register_block_type($this->jsonPath())
-            : acf_register_block_type($this->settings()->all())
+            : $this->registerBlockType()
         );
 
         return $this;
+    }
+
+    /**
+     * Register the block type.
+     */
+    public function registerBlockType(): void
+    {
+        $block = acf_validate_block_type($this->settings()->all());
+        $block = apply_filters('acf/register_block_type_args', $block);
+
+        if (acf_has_block_type($block['name'])) {
+            throw new Exception("Block type [{$block['name']}] is already registered.");
+        }
+
+        $block['attributes'] = array_merge(
+            acf_get_block_type_default_attributes($block),
+            $block['attributes'] ?? []
+        );
+
+        acf_get_store('block-types')->set($block['name'], $block);
+
+        $block['render_callback'] = 'acf_render_block_callback';
+
+        register_block_type(
+            $block['name'],
+            $block
+        );
+
+        add_action('enqueue_block_editor_assets', 'acf_enqueue_block_assets');
     }
 
     /**
@@ -575,6 +626,7 @@ abstract class Block extends Composer implements BlockContract
             'post_types' => $this->post_types,
             'mode' => $this->mode,
             'align' => $this->align,
+            'attributes' => $this->getSupportAttributes(),
             'alignText' => $this->align_text ?? $this->align,
             'alignContent' => $this->align_content,
             'styles' => $this->getStyles(),
@@ -636,7 +688,6 @@ abstract class Block extends Composer implements BlockContract
     {
         $settings = $this->settings()
             ->put('name', $this->namespace)
-            ->put('attributes', $this->getSupportAttributes())
             ->put('acf', [
                 'blockVersion' => $this->blockVersion,
                 'mode' => $this->mode,
