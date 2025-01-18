@@ -364,6 +364,37 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block support attributes.
+     */
+    public function getSupportAttributes(): array
+    {
+        $attributes = [];
+
+        if ($this->align) {
+            $attributes['align'] = [
+                'type' => 'string',
+                'default' => $this->align,
+            ];
+        }
+
+        if ($this->align_text) {
+            $attributes['alignText'] = [
+                'type' => 'string',
+                'default' => $this->align_text,
+            ];
+        }
+
+        if ($this->align_content) {
+            $attributes['alignContent'] = [
+                'type' => 'string',
+                'default' => $this->align_content,
+            ];
+        }
+
+        return $attributes;
+    }
+
+    /**
      * Retrieve the inline block styles.
      */
     public function getInlineStyle(): string
@@ -605,20 +636,26 @@ abstract class Block extends Composer implements BlockContract
     {
         $settings = $this->settings()->forget([
             'acf_block_version',
+            'align',
+            'alignContent',
+            'alignText',
             'enqueue_assets',
             'mode',
             'post_types',
             'render_callback',
             'use_post_meta',
             'validate',
-        ])->put('acf', [
+        ])
+        ->put('acf', [
             'blockVersion' => $this->blockVersion,
             'mode' => $this->mode,
             'postTypes' => $this->post_types,
             'renderTemplate' => $this::class,
             'usePostMeta' => $this->usePostMeta,
             'validate' => $this->validate,
-        ])->put('name', $this->namespace);
+        ])
+        ->put('name', $this->namespace)
+        ->put('attributes', $this->getSupportAttributes());
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
     }
