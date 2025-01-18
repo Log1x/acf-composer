@@ -128,7 +128,7 @@ abstract class Widget extends Composer implements WidgetContract
                 echo Arr::get($args, 'before_widget');
 
                 if (! empty($this->composer->title())) {
-                    echo $this->collect([
+                    echo $this->composer->collect([
                         Arr::get($args, 'before_title'),
                         $this->composer->title(),
                         Arr::get($args, 'after_title'),
