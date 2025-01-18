@@ -6,15 +6,15 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Log1x\AcfComposer\Concerns\FormatsCss;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 use Log1x\AcfComposer\Contracts\Block as BlockContract;
+use WP_Block_Supports;
 
 use function Roots\asset;
 
 abstract class Block extends Composer implements BlockContract
 {
-    use FormatsCss, InteractsWithBlade;
+    use InteractsWithBlade;
 
     /**
      * The block properties.
@@ -417,27 +417,21 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block HTML attributes.
+     */
+    public function getSupportHtmlAttributes(): array
+    {
+        return once(fn () => WP_Block_Supports::get_instance()->apply_block_supports());
+    }
+
+    /**
      * Retrieve the inline block styles.
      */
     public function getInlineStyle(): string
     {
-        return $this->collect([
-            'padding' => ! empty($this->block->style['spacing']['padding'])
-                ? $this->collect($this->block->style['spacing']['padding'])
-                    ->map(fn ($value, $side) => $this->formatCss($value, $side))
-                    ->implode(' ')
-                : null,
+        $supports = $this->getSupportHtmlAttributes();
 
-            'margin' => ! empty($this->block->style['spacing']['margin'])
-                ? $this->collect($this->block->style['spacing']['margin'])
-                    ->map(fn ($value, $side) => $this->formatCss($value, $side, 'margin'))
-                    ->implode(' ')
-                : null,
-
-            'color' => ! empty($this->block->style['color']['gradient'])
-                ? sprintf('background: %s;', $this->block->style['color']['gradient'])
-                : null,
-        ])->filter()->implode(' ');
+        return $supports['style'] ?? '';
     }
 
     /**
@@ -445,41 +439,13 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getClasses(): string
     {
-        $classes = $this->collect([
-            'slug' => Str::of($this->slug)->slug()->start('wp-block-')->toString(),
+        $supports = $this->getSupportHtmlAttributes();
 
-            'className' => $this->block->className ?? null,
-
-            'align' => ! empty($this->block->align)
-                ? Str::start($this->block->align, 'align')
-                : null,
-
-            'backgroundColor' => ! empty($this->block->backgroundColor)
-                ? sprintf('has-background has-%s-background-color', $this->block->backgroundColor)
-                : null,
-
-            'textColor' => ! empty($this->block->textColor)
-                ? sprintf('has-%s-color', $this->block->textColor)
-                : null,
-
-            'gradient' => ! empty($this->block->gradient)
-                ? sprintf('has-%s-gradient-background', $this->block->gradient)
-                : null,
-        ]);
-
-        if ($alignText = $this->block->alignText ?? $this->block->align_text ?? null) {
-            $classes->add(Str::start($alignText, 'align-text-'));
-        }
-
-        if ($alignContent = $this->block->alignContent ?? $this->block->align_content ?? null) {
-            $classes->add(Str::start($alignContent, 'is-position-'));
-        }
-
-        if ($this->block->fullHeight ?? $this->block->full_height ?? null) {
-            $classes->add('full-height');
-        }
-
-        return $classes->filter()->implode(' ');
+        return str_replace(
+            acf_slugify($this->namespace),
+            $this->slug,
+            $supports['class'] ?? ''
+        );
     }
 
     /**
