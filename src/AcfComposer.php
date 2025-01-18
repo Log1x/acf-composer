@@ -67,7 +67,7 @@ class AcfComposer
     /**
      * Create a new Composer instance.
      */
-    public function __construct(protected Application $app)
+    public function __construct(public Application $app)
     {
         $this->manifest = Manifest::make($this);
     }

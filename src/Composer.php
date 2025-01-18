@@ -16,11 +16,6 @@ abstract class Composer implements ComposerContract
     use HasCollection, InteractsWithPartial;
 
     /**
-     * The ACF Composer instance.
-     */
-    protected AcfComposer $composer;
-
-    /**
      * The application instance.
      */
     protected Application $app;
@@ -43,10 +38,9 @@ abstract class Composer implements ComposerContract
     /**
      * Create a new Composer instance.
      */
-    public function __construct(AcfComposer $composer)
+    public function __construct(protected AcfComposer $composer)
     {
-        $this->composer = $composer;
-        $this->app = $composer->app;
+        $this->app = $this->composer->app;
 
         $this->defaults = $this->collect($this->app->config->get('acf.defaults'))
             ->merge($this->defaults)
@@ -83,7 +77,7 @@ abstract class Composer implements ComposerContract
     protected function call(string $hook): mixed
     {
         if (! method_exists($this, $hook)) {
-            return;
+            return null;
         }
 
         return $this->app->call([$this, $hook]);
