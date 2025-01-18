@@ -53,6 +53,7 @@ class BlockMakeCommand extends MakeCommand
         'multiple',
         'jsx',
         'color' => ['background', 'text', 'gradients'],
+        'spacing' => ['padding', 'margin'],
     ];
 
     /**

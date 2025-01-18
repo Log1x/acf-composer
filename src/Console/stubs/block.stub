@@ -92,6 +92,16 @@ class DummyClass extends Block
     public $align_content = '';
 
     /**
+     * The default block spacing.
+     *
+     * @var array
+     */
+    public $spacing = [
+        'padding' => null,
+        'margin' => null,
+    ];
+
+    /**
      * The supported block features.
      *
      * @var array
