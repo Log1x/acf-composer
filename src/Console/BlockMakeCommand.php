@@ -52,7 +52,7 @@ class BlockMakeCommand extends MakeCommand
         'mode',
         'multiple',
         'jsx',
-        'color' => ['background', 'text', 'gradient'],
+        'color' => ['background', 'text', 'gradients'],
     ];
 
     /**
