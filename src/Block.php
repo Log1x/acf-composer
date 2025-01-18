@@ -421,7 +421,7 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getSupportHtmlAttributes(): array
     {
-        return once(fn () => WP_Block_Supports::get_instance()->apply_block_supports());
+        return once(fn () => $this->preview ? [] : (WP_Block_Supports::get_instance()?->apply_block_supports() ?? []));
     }
 
     /**
@@ -444,7 +444,7 @@ abstract class Block extends Composer implements BlockContract
         return str_replace(
             acf_slugify($this->namespace),
             $this->slug,
-            $supports['class'] ?? ''
+            $supports['class'] ?? "wp-block-{$this->slug}"
         );
     }
 
@@ -722,7 +722,7 @@ abstract class Block extends Composer implements BlockContract
 
         $this->classes = $this->getClasses();
         $this->style = $this->getStyle();
-        $this->inlineStyle = ! $this->preview ? $this->getInlineStyle() : '';
+        $this->inlineStyle = $this->getInlineStyle();
 
         return $this->view($this->view, ['block' => $this]);
     }
