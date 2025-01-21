@@ -443,13 +443,41 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getClasses(): string
     {
-        $supports = $this->getHtmlAttributes();
+        $classes = $this->collect([
+            'slug' => Str::of($this->slug)->slug()->start('wp-block-')->toString(),
 
-        return str_replace(
-            acf_slugify($this->namespace),
-            $this->slug,
-            $supports['class'] ?? "wp-block-{$this->slug}"
-        );
+            'className' => $this->block->className ?? null,
+
+            'align' => ! empty($this->block->align)
+                ? Str::start($this->block->align, 'align')
+                : null,
+
+            'backgroundColor' => ! empty($this->block->backgroundColor)
+                ? sprintf('has-background has-%s-background-color', $this->block->backgroundColor)
+                : null,
+
+            'textColor' => ! empty($this->block->textColor)
+                ? sprintf('has-%s-color', $this->block->textColor)
+                : null,
+
+            'gradient' => ! empty($this->block->gradient)
+                ? sprintf('has-%s-gradient-background', $this->block->gradient)
+                : null,
+        ]);
+
+        if ($alignText = $this->block->alignText ?? $this->block->align_text ?? null) {
+            $classes->add(Str::start($alignText, 'align-text-'));
+        }
+
+        if ($alignContent = $this->block->alignContent ?? $this->block->align_content ?? null) {
+            $classes->add(Str::start($alignContent, 'is-position-'));
+        }
+
+        if ($this->block->fullHeight ?? $this->block->full_height ?? null) {
+            $classes->add('full-height');
+        }
+
+        return $classes->filter()->implode(' ');
     }
 
     /**
@@ -601,7 +629,6 @@ abstract class Block extends Composer implements BlockContract
             'alignContent' => $this->align_content,
             'styles' => $this->getStyles(),
             'supports' => $this->supports,
-            'enqueue_assets' => fn ($block) => method_exists($this, 'assets') ? $this->assets($block) : null,
             'textdomain' => $this->getTextDomain(),
             'acf_block_version' => $this->blockVersion,
             'api_version' => 2,
@@ -671,7 +698,6 @@ abstract class Block extends Composer implements BlockContract
                 'align',
                 'alignContent',
                 'alignText',
-                'enqueue_assets',
                 'mode',
                 'post_types',
                 'render_callback',
@@ -736,7 +762,7 @@ abstract class Block extends Composer implements BlockContract
      *
      * @return void
      *
-     * @deprecated Use `assets($block)` instead.
+     * @deprecated Use `assets()` instead.
      */
     public function enqueue()
     {

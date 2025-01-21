@@ -193,6 +193,14 @@ class AcfComposer
      */
     protected function handleBlocks(): void
     {
+        add_action('enqueue_block_assets', function () {
+            foreach ($this->composers() as $composers) {
+                foreach ($composers as $composer) {
+                    method_exists($composer, 'assets') && $composer->assets([]);
+                }
+            }
+        });
+
         add_action('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {
             if (! class_exists($composer = $block['render_template'] ?? '')) {
                 return;
@@ -203,8 +211,6 @@ class AcfComposer
             }
 
             add_filter('acf/blocks/template_not_found_message', fn () => '');
-
-            method_exists($composer, 'assets') && $composer->assets($block);
 
             echo $composer->render($block, $content, $is_preview, $post_id, $wp_block, $context);
         }, 9, 6);
