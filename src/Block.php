@@ -443,41 +443,13 @@ abstract class Block extends Composer implements BlockContract
      */
     public function getClasses(): string
     {
-        $classes = $this->collect([
-            'slug' => Str::of($this->slug)->slug()->start('wp-block-')->toString(),
+        $supports = $this->getHtmlAttributes();
 
-            'className' => $this->block->className ?? null,
-
-            'align' => ! empty($this->block->align)
-                ? Str::start($this->block->align, 'align')
-                : null,
-
-            'backgroundColor' => ! empty($this->block->backgroundColor)
-                ? sprintf('has-background has-%s-background-color', $this->block->backgroundColor)
-                : null,
-
-            'textColor' => ! empty($this->block->textColor)
-                ? sprintf('has-%s-color', $this->block->textColor)
-                : null,
-
-            'gradient' => ! empty($this->block->gradient)
-                ? sprintf('has-%s-gradient-background', $this->block->gradient)
-                : null,
-        ]);
-
-        if ($alignText = $this->block->alignText ?? $this->block->align_text ?? null) {
-            $classes->add(Str::start($alignText, 'align-text-'));
-        }
-
-        if ($alignContent = $this->block->alignContent ?? $this->block->align_content ?? null) {
-            $classes->add(Str::start($alignContent, 'is-position-'));
-        }
-
-        if ($this->block->fullHeight ?? $this->block->full_height ?? null) {
-            $classes->add('full-height');
-        }
-
-        return $classes->filter()->implode(' ');
+        return str_replace(
+            acf_slugify($this->namespace),
+            $this->slug,
+            $supports['class'] ?? "wp-block-{$this->slug}"
+        );
     }
 
     /**
