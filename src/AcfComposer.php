@@ -193,13 +193,17 @@ class AcfComposer
      */
     protected function handleBlocks(): void
     {
-        add_action('enqueue_block_assets', function () {
+        add_action('acf/init', function () {
             foreach ($this->composers() as $composers) {
                 foreach ($composers as $composer) {
-                    method_exists($composer, 'assets') && $composer->assets([]);
+                    if (! is_a($composer, Block::class)) {
+                        continue;
+                    }
+
+                    method_exists($composer, 'assets') && $composer->assets();
                 }
             }
-        });
+        }, 101);
 
         add_action('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {
             if (! class_exists($composer = $block['render_template'] ?? '')) {
