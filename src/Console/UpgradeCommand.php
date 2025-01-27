@@ -49,8 +49,6 @@ class UpgradeCommand extends Command
             'public function enqueue($block)' => 'public function assets(array $block): void',
             'public function enqueue($block = [])' => 'public function assets(array $block): void',
             'public function enqueue()' => 'public function assets(array $block): void',
-            'public function enqueue(array $block): void' => 'public function assets(): void',
-            'public function assets(array $block): void' => 'public function assets(): void',
             '/->addFields\(\$this->get\((.*?)\)\)/' => fn ($match) => "->addPartial({$match[1]})",
             '/->addLayout\(\$this->get\((.*?)\)\)/' => fn ($match) => "->addLayout({$match[1]})",
         ];

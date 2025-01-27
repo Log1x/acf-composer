@@ -734,7 +734,7 @@ abstract class Block extends Composer implements BlockContract
      *
      * @return void
      *
-     * @deprecated Use `assets()` instead.
+     * @deprecated Use `assets($block)` instead.
      */
     public function enqueue()
     {
