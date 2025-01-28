@@ -201,7 +201,7 @@ class AcfComposer
                     }
 
                     if (is_admin() || has_block($composer->namespace)) {
-                        method_exists($composer, 'assets') && $composer->assets($composer->block);
+                        method_exists($composer, 'assets') && $composer->assets((array) $composer->block ?? []);
                     }
                 }
             }
