@@ -474,7 +474,7 @@ abstract class Block extends Composer implements BlockContract
         return str_replace(
             acf_slugify($this->namespace),
             $this->slug,
-            $supports['class'] ?? "wp-block-{$this->slug}"
+            $supports['class'] ?? ''
         );
     }
 
