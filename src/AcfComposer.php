@@ -201,10 +201,14 @@ class AcfComposer
                     }
 
                     if (is_admin() || has_block($composer->namespace)) {
-                        method_exists($composer, 'assets') && $composer->assets($composer->block);
+                        method_exists($composer, 'assets') && $composer->assets((array) $composer->block ?? []);
                     }
                 }
             }
+        });
+
+        add_action('enqueue_block_editor_assets', function () {
+            wp_add_inline_script('wp-blocks', view('acf-composer::block-editor-filters')->render());
         });
 
         add_action('acf_block_render_template', function ($block, $content, $is_preview, $post_id, $wp_block, $context) {

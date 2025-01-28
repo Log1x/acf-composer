@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\View\ComponentAttributeBag;
 use Log1x\AcfComposer\Concerns\InteractsWithBlade;
 use Log1x\AcfComposer\Contracts\Block as BlockContract;
 use WP_Block_Supports;
@@ -375,6 +376,30 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block supports.
+     */
+    public function getSupports(): array
+    {
+        $supports = $this->collect($this->supports)
+            ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
+            ->merge($this->supports);
+
+        $typography = $supports->get('typography', []);
+
+        if ($supports->has('alignText')) {
+            $typography['textAlign'] = $supports->get('alignText');
+
+            $supports->forget(['alignText', 'align_text']);
+        }
+
+        if ($typography) {
+            $supports->put('typography', $typography);
+        }
+
+        return $supports->all();
+    }
+
+    /**
      * Retrieve the block support attributes.
      */
     public function getSupportAttributes(): array
@@ -388,13 +413,6 @@ abstract class Block extends Composer implements BlockContract
             ];
         }
 
-        if ($this->align_text) {
-            $attributes['alignText'] = [
-                'type' => 'string',
-                'default' => $this->align_text,
-            ];
-        }
-
         if ($this->align_content) {
             $attributes['alignContent'] = [
                 'type' => 'string',
@@ -402,14 +420,22 @@ abstract class Block extends Composer implements BlockContract
             ];
         }
 
+        $styles = [];
+
+        if ($this->align_text) {
+            $styles['typography']['textAlign'] = $this->align_text;
+        }
+
         $spacing = array_filter($this->spacing);
 
         if ($spacing) {
+            $styles['spacing'] = $spacing;
+        }
+
+        if ($styles) {
             $attributes['style'] = [
                 'type' => 'object',
-                'default' => [
-                    'spacing' => $spacing,
-                ],
+                'default' => $styles,
             ];
         }
 
@@ -448,7 +474,7 @@ abstract class Block extends Composer implements BlockContract
         return str_replace(
             acf_slugify($this->namespace),
             $this->slug,
-            $supports['class'] ?? "wp-block-{$this->slug}"
+            $supports['class'] ?? ''
         );
     }
 
@@ -579,13 +605,6 @@ abstract class Block extends Composer implements BlockContract
             return $this->settings;
         }
 
-        if ($this->supports) {
-            $this->supports = $this->collect($this->supports)
-                ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
-                ->merge($this->supports)
-                ->all();
-        }
-
         $settings = Collection::make([
             'name' => $this->slug,
             'title' => $this->getName(),
@@ -600,7 +619,7 @@ abstract class Block extends Composer implements BlockContract
             'alignText' => $this->align_text ?? $this->align,
             'alignContent' => $this->align_content,
             'styles' => $this->getStyles(),
-            'supports' => $this->supports,
+            'supports' => $this->getSupports(),
             'textdomain' => $this->getTextDomain(),
             'acf_block_version' => $this->blockVersion,
             'api_version' => 2,
@@ -726,7 +745,15 @@ abstract class Block extends Composer implements BlockContract
         $this->style = $this->getStyle();
         $this->inlineStyle = $this->getInlineStyle();
 
-        return $this->view($this->view, ['block' => $this]);
+        $attributes = (new ComponentAttributeBag)
+            ->class($this->classes)
+            ->style($this->inlineStyle)
+            ->filter(fn ($value) => filled($value) && $value !== ';');
+
+        return $this->view($this->view, [
+            'block' => $this,
+            'attributes' => $attributes,
+        ]);
     }
 
     /**
