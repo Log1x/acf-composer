@@ -193,19 +193,19 @@ class AcfComposer
      */
     protected function handleBlocks(): void
     {
-        add_action('enqueue_block_assets', function () {
-            foreach ($this->composers() as $composers) {
-                foreach ($composers as $composer) {
-                    if (! is_a($composer, Block::class)) {
-                        continue;
-                    }
+        if (is_admin()) {
+            add_action('enqueue_block_assets', function () {
+                foreach ($this->composers() as $composers) {
+                    foreach ($composers as $composer) {
+                        if (! is_a($composer, Block::class)) {
+                            continue;
+                        }
 
-                    if (is_admin() || has_block($composer->namespace)) {
                         method_exists($composer, 'assets') && $composer->assets((array) $composer->block ?? []);
                     }
                 }
-            }
-        });
+            });
+        }
 
         add_action('enqueue_block_editor_assets', function () {
             wp_add_inline_script('wp-blocks', view('acf-composer::block-editor-filters')->render());
