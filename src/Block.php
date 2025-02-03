@@ -471,10 +471,20 @@ abstract class Block extends Composer implements BlockContract
     {
         $supports = $this->getHtmlAttributes();
 
+        $class = $supports['class'] ?? '';
+
+        if ($alignContent = $this->block->alignContent ?? $this->block->align_content ?? null) {
+            $class = "{$class} is-position-{$alignContent}";
+        }
+
+        if ($this->block->fullHeight ?? $this->block->full_height ?? null) {
+            $class = "{$class} full-height";
+        }
+
         return str_replace(
             acf_slugify($this->namespace),
             $this->slug,
-            $supports['class'] ?? ''
+            trim($class)
         );
     }
 
