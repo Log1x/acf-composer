@@ -278,6 +278,14 @@ abstract class Block extends Composer implements BlockContract
     public $blockVersion = 2;
 
     /**
+     * The ACF block API version.
+     *
+     * @var int
+     */
+    public $apiVersion = 2;
+
+
+    /**
      * Validate block fields as per the field group configuration.
      *
      * @var bool
@@ -632,7 +640,7 @@ abstract class Block extends Composer implements BlockContract
             'supports' => $this->getSupports(),
             'textdomain' => $this->getTextDomain(),
             'acf_block_version' => $this->blockVersion,
-            'api_version' => 2,
+            'api_version' => $this->apiVersion,
             'validate' => $this->validate,
             'use_post_meta' => $this->usePostMeta,
             'render_callback' => function (
