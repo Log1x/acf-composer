@@ -284,7 +284,6 @@ abstract class Block extends Composer implements BlockContract
      */
     public $apiVersion = 2;
 
-
     /**
      * Validate block fields as per the field group configuration.
      *
