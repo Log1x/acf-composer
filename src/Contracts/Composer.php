@@ -7,9 +7,7 @@ interface Composer
     /**
      * Compose the fields.
      *
-     * @param array  $args Optional arguments to pass.
-     *
      * @return mixed
      */
-    public function compose(array $args = []);
+    public function compose();
 }
