@@ -74,13 +74,15 @@ abstract class Composer implements ComposerContract
     /**
      * Call a method using the application container.
      */
-    protected function call(string $hook): mixed
+    protected function call(string $hook, array $args = []): mixed
     {
         if (! method_exists($this, $hook)) {
             return null;
         }
 
-        return $this->app->call([$this, $hook]);
+        return $this->app->call([$this, $hook], [
+            'args' => $args,
+        ]);
     }
 
     /**
@@ -134,9 +136,9 @@ abstract class Composer implements ComposerContract
     /**
      * Resolve the fields from the Composer with the container.
      */
-    public function resolveFields(): mixed
+    public function resolveFields(array $args = [])): mixed
     {
-        return $this->call('fields') ?? [];
+        return $this->call('fields', $args) ?? [];
     }
 
     /**
