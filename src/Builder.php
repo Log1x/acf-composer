@@ -113,8 +113,11 @@ class Builder extends FieldsBuilder
      */
     public function addPartials(array $partials): self
     {
-        foreach ($partials as $partial) {
-            $this->addPartial($partial);
+        foreach ($partials as $key => $value) {
+            $partial = is_string($value) ? $value : $key;
+            $args = is_array($value) ? $value : [];
+
+            $this->addPartial($partial, $args);
         }
 
         return $this;
