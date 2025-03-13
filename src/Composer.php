@@ -136,7 +136,7 @@ abstract class Composer implements ComposerContract
     /**
      * Resolve the fields from the Composer with the container.
      */
-    public function resolveFields(array $args = [])): mixed
+    public function resolveFields(array $args = []): mixed
     {
         return $this->call('fields', $args) ?? [];
     }
