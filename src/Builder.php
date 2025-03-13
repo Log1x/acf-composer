@@ -45,7 +45,7 @@ use StoutLogic\AcfBuilder\LocationBuilder;
  * @method FieldBuilder addNumber(string $name, array $args = [])
  * @method FieldBuilder addOembed(string $name, array $args = [])
  * @method FieldBuilder addPageLink(string $name, array $args = [])
- * @method FieldBuilder addPartial(string $partial)
+ * @method FieldBuilder addPartial(string $partial, array $args = [])
  * @method FieldBuilder addPartials(array $partials)
  * @method FieldBuilder addPassword(string $name, array $args = [])
  * @method FieldBuilder addPostObject(string $name, array $args = [])
@@ -91,14 +91,14 @@ class Builder extends FieldsBuilder
     /**
      * Add a partial to the field group.
      */
-    public function addPartial(string $partial): self
+    public function addPartial(string $partial, array $args = []): self
     {
         if (
             is_string($partial) &&
             is_subclass_of($partial, Partial::class) &&
             ! (new ReflectionClass($partial))->isAbstract()
         ) {
-            $partial = $partial::make($this->composer())->compose();
+            $partial = $partial::make($this->composer())->compose($args);
         }
 
         if (! is_a($partial, FieldsBuilder::class)) {
