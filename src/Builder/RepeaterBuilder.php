@@ -33,7 +33,7 @@ use StoutLogic\AcfBuilder\RepeaterBuilder as GroupBuilder;
  * @method FieldBuilder addNumber(string $name, array $args = [])
  * @method FieldBuilder addOembed(string $name, array $args = [])
  * @method FieldBuilder addPageLink(string $name, array $args = [])
- * @method FieldBuilder addPartial(string $partial)
+ * @method FieldBuilder addPartial(string $partial, array $args = [])
  * @method FieldBuilder addPartials(array $partials)
  * @method FieldBuilder addPassword(string $name, array $args = [])
  * @method FieldBuilder addPostObject(string $name, array $args = [])
