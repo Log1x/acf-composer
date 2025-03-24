@@ -39,6 +39,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default Block Settings
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define default settings to merge with your block definition
+    | during composition. Any settings defined on the block will take
+    | precedence over these defaults.
+    |
+    */
+
+    'blocks' => [
+        'apiVersion' => 2,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Generators
     |--------------------------------------------------------------------------
     |
