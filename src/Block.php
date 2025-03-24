@@ -271,18 +271,11 @@ abstract class Block extends Composer implements BlockContract
     public $usePostMeta = false;
 
     /**
-     * The ACF block API version.
+     * The block API version.
      *
-     * @var int
+     * @var int|null
      */
-    public $blockVersion = 2;
-
-    /**
-     * The ACF block API version.
-     *
-     * @var int
-     */
-    public $apiVersion = 2;
+    public $apiVersion = null;
 
     /**
      * Validate block fields as per the field group configuration.
@@ -304,12 +297,18 @@ abstract class Block extends Composer implements BlockContract
      */
     public function mergeAttributes(): void
     {
-        if (! $attributes = $this->attributes()) {
-            return;
+        foreach ($this->attributes() as $key => $value) {
+            if (! property_exists($this, $key)) {
+                continue;
+            }
+
+            $this->{$key} = $value;
         }
 
-        foreach ($attributes as $key => $value) {
-            if (! property_exists($this, $key)) {
+        $defaults = config('acf.blocks', []);
+
+        foreach ($defaults as $key => $value) {
+            if (! property_exists($this, $key) || filled($this->{$key})) {
                 continue;
             }
 
@@ -496,6 +495,14 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block API version.
+     */
+    public function getApiVersion(): int
+    {
+        return $this->apiVersion ?? 2;
+    }
+
+    /**
      * Retrieve the block text domain.
      */
     public function getTextDomain(): string
@@ -638,8 +645,8 @@ abstract class Block extends Composer implements BlockContract
             'styles' => $this->getStyles(),
             'supports' => $this->getSupports(),
             'textdomain' => $this->getTextDomain(),
-            'acf_block_version' => $this->blockVersion,
-            'api_version' => $this->apiVersion,
+            'acf_block_version' => $this->getApiVersion(),
+            'apiVersion' => $this->getApiVersion(),
             'validate' => $this->validate,
             'use_post_meta' => $this->usePostMeta,
             'render_callback' => function (
@@ -694,7 +701,7 @@ abstract class Block extends Composer implements BlockContract
         $settings = $this->settings()
             ->put('name', $this->namespace)
             ->put('acf', [
-                'blockVersion' => $this->blockVersion,
+                'blockVersion' => $this->getApiVersion(),
                 'mode' => $this->mode,
                 'postTypes' => $this->post_types,
                 'renderTemplate' => $this::class,
