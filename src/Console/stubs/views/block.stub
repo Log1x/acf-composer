@@ -1,15 +1,21 @@
-<div {{ $attributes }}>
-  @if ($items)
-    <ul>
-      @foreach ($items as $item)
-        <li>{{ $item['item'] }}</li>
-      @endforeach
-    </ul>
-  @else
-    <p>{{ $block->preview ? 'Add an item...' : 'No items found!' }}</p>
-  @endif
+@unless ($block->preview)
+  <div {{ $attributes }}>
+@endunless
 
-  <div>
-    <InnerBlocks template="{{ $block->template }}" />
-  </div>
+@if ($items)
+  <ul>
+    @foreach ($items as $item)
+      <li>{{ $item['item'] }}</li>
+    @endforeach
+  </ul>
+@else
+  <p>{{ $block->preview ? 'Add an item...' : 'No items found!' }}</p>
+@endif
+
+<div>
+  <InnerBlocks template="{{ $block->template }}" />
 </div>
+
+@unless ($block->preview)
+  </div>
+@endunless
