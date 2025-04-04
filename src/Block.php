@@ -782,8 +782,10 @@ abstract class Block extends Composer implements BlockContract
             ->filter(fn ($value) => filled($value) && $value !== ';');
 
         if (! is_admin() && method_exists($this, 'assets')) {
-            add_action('enqueue_block_assets', function () {
-                $this->assets((array) $this->block ?? []);
+            $instance = (array) ($this->block ?? []);
+
+            add_action('enqueue_block_assets', function () use ($instance): void {
+                $this->assets($instance);
             });
         }
 
