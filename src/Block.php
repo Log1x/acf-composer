@@ -397,18 +397,6 @@ abstract class Block extends Composer implements BlockContract
             ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
             ->merge($this->supports);
 
-        $typography = $supports->get('typography', []);
-
-        if ($supports->has('alignText')) {
-            $typography['textAlign'] = $supports->get('alignText');
-
-            $supports->forget(['alignText', 'align_text']);
-        }
-
-        if ($typography) {
-            $supports->put('typography', $typography);
-        }
-
         return $supports->all();
     }
 
@@ -434,10 +422,6 @@ abstract class Block extends Composer implements BlockContract
         }
 
         $styles = [];
-
-        if ($this->align_text) {
-            $styles['typography']['textAlign'] = $this->align_text;
-        }
 
         $spacing = array_filter($this->spacing);
 
@@ -488,6 +472,10 @@ abstract class Block extends Composer implements BlockContract
 
         if ($alignContent = $this->block->alignContent ?? $this->block->align_content ?? null) {
             $class = "{$class} is-position-{$alignContent}";
+        }
+
+        if ($alignText = $this->block->alignText ?? $this->block->align_text ?? null) {
+            $class = "{$class} align-text-{$alignText}";
         }
 
         if ($this->block->fullHeight ?? $this->block->full_height ?? null) {
