@@ -78,13 +78,6 @@ class DummyClass extends Block
     public $align = '';
 
     /**
-     * The default block text alignment.
-     *
-     * @var string
-     */
-    public $align_text = '';
-
-    /**
      * The default block content alignment.
      *
      * @var string
@@ -99,6 +92,15 @@ class DummyClass extends Block
     public $spacing = [
         'padding' => null,
         'margin' => null,
+    ];
+
+    /**
+     * The default block typography.
+     *
+     * @var array
+     */
+    public $typography = [
+        'textAlign' => 'center',
     ];
 
     /**

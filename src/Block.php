@@ -208,6 +208,15 @@ abstract class Block extends Composer implements BlockContract
     ];
 
     /**
+     * The default block typography.
+     *
+     * @var array
+     */
+    public $typography = [
+        'textAlign' => 'center',
+    ];
+
+    /**
      * The supported block features.
      *
      * @var array
@@ -421,12 +430,25 @@ abstract class Block extends Composer implements BlockContract
             ];
         }
 
+        if ($this->align_text) {
+            $attributes['alignText'] = [
+                'type' => 'string',
+                'default' => $this->align_text,
+            ];
+        }
+
         $styles = [];
 
         $spacing = array_filter($this->spacing);
 
         if ($spacing) {
             $styles['spacing'] = $spacing;
+        }
+
+        $typography = array_filter($this->typography);
+
+        if ($typography) {
+            $styles['typography'] = $typography;
         }
 
         if ($styles) {
