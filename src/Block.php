@@ -213,7 +213,7 @@ abstract class Block extends Composer implements BlockContract
      * @var array
      */
     public $typography = [
-        'textAlign' => 'center',
+        'textAlign' => null,
     ];
 
     /**
