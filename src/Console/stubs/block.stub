@@ -100,7 +100,7 @@ class DummyClass extends Block
      * @var array
      */
     public $typography = [
-        'textAlign' => 'center',
+        'textAlign' => null,
     ];
 
     /**
