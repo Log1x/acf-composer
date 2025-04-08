@@ -653,7 +653,7 @@ abstract class Block extends Composer implements BlockContract
             'supports' => $this->getSupports(),
             'textdomain' => $this->getTextDomain(),
             'acf_block_version' => $this->blockVersion,
-            'apiVersion' => $this->getApiVersion(),
+            'api_version' => $this->getApiVersion(),
             'validate' => $this->validate,
             'use_post_meta' => $this->usePostMeta,
             'render_callback' => function (
@@ -707,6 +707,7 @@ abstract class Block extends Composer implements BlockContract
     {
         $settings = $this->settings()
             ->put('name', $this->namespace)
+            ->put('apiVersion', $this->getApiVersion())
             ->put('acf', [
                 'blockVersion' => $this->blockVersion,
                 'mode' => $this->mode,
@@ -716,6 +717,7 @@ abstract class Block extends Composer implements BlockContract
                 'validate' => $this->validate,
             ])
             ->forget([
+                'api_version',
                 'acf_block_version',
                 'align',
                 'alignContent',
