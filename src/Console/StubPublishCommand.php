@@ -30,7 +30,7 @@ class StubPublishCommand extends Command
      * @var array
      */
     protected $stubs = [
-        'block.construct.stub',
+        'block.localized.stub',
         'block.stub',
         'field.stub',
         'options.full.stub',
