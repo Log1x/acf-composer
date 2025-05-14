@@ -36,6 +36,12 @@ $ composer require log1x/acf-composer
 
 ### Getting Started
 
+There is a chance that after installation the `acf` commands aren't present in the `wp acorn` command list. Clear your cached bootstrap files using the following command:
+
+```bash
+$ wp acorn optimize:clear
+```
+
 Start by publishing the `config/acf.php` configuration file using Acorn:
 
 ```bash
