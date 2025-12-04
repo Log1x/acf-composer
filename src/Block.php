@@ -292,6 +292,13 @@ abstract class Block extends Composer implements BlockContract
     public $validate = true;
 
     /**
+     * Enable inline editing for block fields (ACF Pro 6.7+).
+     *
+     * @var bool|null
+     */
+    public $autoInlineEditing = null;
+
+    /**
      * The block attributes.
      */
     public function attributes(): array
@@ -727,6 +734,7 @@ abstract class Block extends Composer implements BlockContract
                 'renderTemplate' => $this::class,
                 'usePostMeta' => $this->usePostMeta,
                 'validate' => $this->validate,
+                'autoInlineEditing' => $this->autoInlineEditing,
             ])
             ->forget([
                 'api_version',
