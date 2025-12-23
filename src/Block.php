@@ -720,6 +720,8 @@ abstract class Block extends Composer implements BlockContract
         $settings = $this->settings()
             ->put('name', $this->namespace)
             ->put('apiVersion', $this->getApiVersion())
+            ->put('usesContext', $this->uses_context)
+            ->put('providesContext', $this->provides_context)
             ->put('acf', [
                 'blockVersion' => $this->blockVersion,
                 'mode' => $this->mode,
@@ -739,6 +741,8 @@ abstract class Block extends Composer implements BlockContract
                 'render_callback',
                 'use_post_meta',
                 'validate',
+                'uses_context',
+                'provides_context',
             ]);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);
