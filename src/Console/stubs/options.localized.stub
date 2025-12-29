@@ -8,18 +8,20 @@ use Log1x\AcfComposer\Options as Field;
 class DummyClass extends Field
 {
     /**
-     * The option page menu name.
-     *
-     * @var string
+     * Retrieve the option page menu name.
      */
-    public $name = 'DummyTitle';
+    public function getName(): string
+    {
+        return __('DummyTitle', 'sage');
+    }
 
     /**
-     * The option page document title.
-     *
-     * @var string
+     * Retrieve the option page document title.
      */
-    public $title = 'DummyTitle | Options';
+    public function getTitle(): string
+    {
+        return __('DummyTitle', 'sage');
+    }
 
     /**
      * The option page menu position.

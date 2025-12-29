@@ -33,6 +33,7 @@ class StubPublishCommand extends Command
         'block.localized.stub',
         'block.stub',
         'field.stub',
+        'options.localized.stub',
         'options.full.stub',
         'options.stub',
         'partial.stub',
