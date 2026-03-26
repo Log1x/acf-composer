@@ -91,7 +91,7 @@ class CacheCommand extends Command
      *
      * @return void
      */
-    public function configure()
+    public function configure(): void
     {
         $this->setAliases([
             'acf:optimize',
