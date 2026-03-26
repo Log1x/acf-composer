@@ -88,8 +88,6 @@ class CacheCommand extends Command
 
     /**
      * Configure the command.
-     *
-     * @return void
      */
     public function configure(): void
     {

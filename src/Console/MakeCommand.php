@@ -3,6 +3,7 @@
 namespace Log1x\AcfComposer\Console;
 
 use Exception;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
 use Log1x\AcfComposer\Concerns\HasCollection;
 use Roots\Acorn\Console\Commands\GeneratorCommand;
@@ -77,7 +78,7 @@ class MakeCommand extends GeneratorCommand
      * @param  string  $name
      * @return string
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     protected function buildClass($name)
     {

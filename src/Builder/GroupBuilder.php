@@ -61,7 +61,7 @@ class GroupBuilder extends GroupBuilderBase
     /**
      * The fields builder instance.
      *
-     * @var \Log1x\AcfComposer\Builder
+     * @var Builder
      */
     protected $fieldsBuilder;
 
