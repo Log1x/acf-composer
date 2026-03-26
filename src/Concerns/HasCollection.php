@@ -10,7 +10,7 @@ trait HasCollection
      * Initialize a Collection instance.
      *
      * @param  string[]  $value
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function collect($value)
     {
