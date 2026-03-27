@@ -4,15 +4,15 @@
 ![Total Downloads](https://img.shields.io/packagist/dt/log1x/acf-composer.svg?style=flat-square)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/log1x/acf-composer/main.yml?branch=master&style=flat-square)
 
-ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10](https://github.com/roots/sage).
+ACF Composer is the ultimate tool for creating fields, blocks, widgets, and option pages using [ACF Builder](https://github.com/stoutlogic/acf-builder) alongside [Sage 10 and 11](https://github.com/roots/sage).
 
 ![Screenshot](https://i.imgur.com/7e7w3U9.png)
 
 ## Features
 
-- 🔧 Encourages clean structuring for creating fields with Sage 10 and ACF.
+- 🔧 Encourages clean structuring for creating fields with Sage >10x and ACF.
 - 🚀 Instantly generate working fields, blocks, widgets, partials, and option pages using CLI. Batteries included.
-- 🖼️ Fully rendered blocks and widgets using Blade with a native Sage 10 feel for passing view data.
+- 🖼️ Fully rendered blocks and widgets using Blade with a native Sage >10x feel for passing view data.
 - ⚡ Seamlessly [cache](#caching-blocks--fields) blocks to `block.json` and field groups to a manifest.
 - 📦 Automatically hooks legacy widgets with `WP_Widget` making them instantly ready to use.
 - 🛠️ Automatically sets field location on blocks, widgets, and option pages.
