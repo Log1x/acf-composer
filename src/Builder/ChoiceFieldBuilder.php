@@ -2,6 +2,7 @@
 
 namespace Log1x\AcfComposer\Builder;
 
+use Log1x\AcfComposer\Builder;
 use StoutLogic\AcfBuilder\ChoiceFieldBuilder as ChoiceFieldBuilderBase;
 
 /**
