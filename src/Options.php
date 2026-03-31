@@ -92,6 +92,22 @@ abstract class Options extends Composer
     public $settings = [];
 
     /**
+     * Retrieve the option page menu name.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Retrieve the option page document title.
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
      * Localized text displayed on the submit button.
      *
      * @return string
@@ -118,16 +134,16 @@ abstract class Options extends Composer
      */
     public function compose()
     {
-        if (empty($this->name)) {
-            return;
-        }
+        if (blank($this->getName())) {
+            return null;
+        }            
 
         if (empty($this->slug)) {
-            $this->slug = Str::slug($this->name);
+            $this->slug = Str::slug($this->getName());
         }
 
-        if (empty($this->title)) {
-            $this->title = $this->name;
+        if (blank($this->getTitle())) {
+            $this->title = $this->getName();
         }
 
         if (! Arr::has($this->fields, 'location.0.0')) {
@@ -145,9 +161,9 @@ abstract class Options extends Composer
 
             acf_add_options_page(
                 array_merge([
-                    'menu_title' => $this->name,
+                    'menu_title' => $this->getName(),
                     'menu_slug' => $this->slug,
-                    'page_title' => $this->title,
+                    'page_title' => $this->getTitle(),
                     'capability' => $this->capability,
                     'position' => $this->position,
                     'parent_slug' => $this->parent,
