@@ -735,11 +735,10 @@ abstract class Block extends Composer implements BlockContract
         $settings = $this->settings()
             ->put('name', $this->namespace)
             ->put('apiVersion', $this->getApiVersion())
-            ->put('acf', $acf)
             ->put('usesContext', $this->uses_context)
             ->put('providesContext', $this->provides_context)
             ->put('acf', [
-                'blockVersion' => $this->blockVersion,
+                'blockVersion' => $this->getBlockVersion(),
                 'mode' => $this->mode,
                 'postTypes' => $this->post_types,
                 'renderTemplate' => $this::class,
