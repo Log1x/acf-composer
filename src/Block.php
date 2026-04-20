@@ -732,21 +732,21 @@ abstract class Block extends Composer implements BlockContract
      */
     public function toJson(): string
     {
-        $acf = Collection::make([
-            'blockVersion' => $this->getBlockVersion(),
-            'mode' => $this->mode,
-            'postTypes' => $this->post_types,
-            'renderTemplate' => $this::class,
-            'usePostMeta' => $this->usePostMeta,
-            'validate' => $this->validate,
-        ])->when($this->getBlockVersion() >= 3, function (Collection $acf) {
-            return $acf->put('autoInlineEditing', $this->autoInlineEditing ?? false);
-        });
-
         $settings = $this->settings()
             ->put('name', $this->namespace)
             ->put('apiVersion', $this->getApiVersion())
             ->put('acf', $acf)
+            ->put('usesContext', $this->uses_context)
+            ->put('providesContext', $this->provides_context)
+            ->put('acf', [
+                'blockVersion' => $this->blockVersion,
+                'mode' => $this->mode,
+                'postTypes' => $this->post_types,
+                'renderTemplate' => $this::class,
+                'usePostMeta' => $this->usePostMeta,
+                'validate' => $this->validate,
+                'autoInlineEditing' => $this->autoInlineEditing ?? false,
+            ])
             ->forget([
                 'api_version',
                 'acf_block_version',
@@ -758,6 +758,8 @@ abstract class Block extends Composer implements BlockContract
                 'render_callback',
                 'use_post_meta',
                 'validate',
+                'uses_context',
+                'provides_context',
             ]);
 
         return $settings->filter()->toJson(JSON_PRETTY_PRINT);

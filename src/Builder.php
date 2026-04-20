@@ -198,7 +198,7 @@ class Builder extends FieldsBuilder
      * Add a group field.
      *
      * @param  string  $name
-     * @return \Log1x\AcfComposer\Builder\GroupBuilder
+     * @return GroupBuilder
      */
     public function addGroup($name, array $args = [])
     {
@@ -209,7 +209,7 @@ class Builder extends FieldsBuilder
      * Add a repeater field.
      *
      * @param  string  $name
-     * @return \Log1x\AcfComposer\Builder\RepeaterBuilder
+     * @return RepeaterBuilder
      */
     public function addRepeater($name, array $args = [])
     {
@@ -220,7 +220,7 @@ class Builder extends FieldsBuilder
      * Add a flexible content field.
      *
      * @param  string  $name
-     * @return \Log1x\AcfComposer\Builder\FlexibleContentBuilder
+     * @return FlexibleContentBuilder
      */
     public function addFlexibleContent($name, array $args = [])
     {
@@ -231,7 +231,7 @@ class Builder extends FieldsBuilder
      * Add a tab field.
      *
      * @param  string  $label
-     * @return \Log1x\AcfComposer\Builder\TabBuilder
+     * @return TabBuilder
      */
     public function addTab($label, array $args = [])
     {
@@ -242,7 +242,7 @@ class Builder extends FieldsBuilder
      * Add an accordion field.
      *
      * @param  string  $label
-     * @return \Log1x\AcfComposer\Builder\AccordionBuilder
+     * @return AccordionBuilder
      */
     public function addAccordion($label, array $args = [])
     {
@@ -254,7 +254,7 @@ class Builder extends FieldsBuilder
      *
      * @param  string  $name
      * @param  string  $type
-     * @return \Log1x\AcfComposer\Builder\ChoiceFieldBuilder
+     * @return ChoiceFieldBuilder
      */
     public function addChoiceField($name, $type, array $args = [])
     {
