@@ -280,9 +280,9 @@ abstract class Block extends Composer implements BlockContract
     /**
      * The internal ACF block version.
      *
-     * @var int
+     * @var int|null
      */
-    public $blockVersion = 2;
+    public $blockVersion;
 
     /**
      * Validate block fields as per the field group configuration.
@@ -290,6 +290,13 @@ abstract class Block extends Composer implements BlockContract
      * @var bool
      */
     public $validate = true;
+
+    /**
+     * Enable inline editing for block fields (ACF Pro 6.7+).
+     *
+     * @var bool|null
+     */
+    public $autoInlineEditing = null;
 
     /**
      * The block attributes.
@@ -522,6 +529,14 @@ abstract class Block extends Composer implements BlockContract
     }
 
     /**
+     * Retrieve the block version.
+     */
+    public function getBlockVersion(): int
+    {
+        return $this->blockVersion ?? 2;
+    }
+
+    /**
      * Retrieve the block text domain.
      */
     public function getTextDomain(): string
@@ -664,7 +679,7 @@ abstract class Block extends Composer implements BlockContract
             'styles' => $this->getStyles(),
             'supports' => $this->getSupports(),
             'textdomain' => $this->getTextDomain(),
-            'acf_block_version' => $this->blockVersion,
+            'acf_block_version' => $this->getBlockVersion(),
             'api_version' => $this->getApiVersion(),
             'validate' => $this->validate,
             'use_post_meta' => $this->usePostMeta,
@@ -723,12 +738,13 @@ abstract class Block extends Composer implements BlockContract
             ->put('usesContext', $this->uses_context)
             ->put('providesContext', $this->provides_context)
             ->put('acf', [
-                'blockVersion' => $this->blockVersion,
+                'blockVersion' => $this->getBlockVersion(),
                 'mode' => $this->mode,
                 'postTypes' => $this->post_types,
                 'renderTemplate' => $this::class,
                 'usePostMeta' => $this->usePostMeta,
                 'validate' => $this->validate,
+                'autoInlineEditing' => $this->autoInlineEditing ?? false,
             ])
             ->forget([
                 'api_version',
