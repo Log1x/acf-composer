@@ -627,6 +627,16 @@ abstract class Block extends Composer implements BlockContract
             $block['attributes'] ?? []
         );
 
+        // Store render_template (class name) instead of render_callback (closure)
+        // in the ACF block-types store. This ensures compatibility with both ACF Pro
+        // and SCF: SCF reads render_callback from the store and would call the closure
+        // directly, bypassing the acf_block_render_template action that acf-composer
+        // listens on. By setting render_callback to false and render_template to the
+        // block class name, SCF falls through to the render_template path and fires
+        // the action. ACF Pro ignores the store values, so this is backwards-compatible.
+        $block['render_callback'] = false;
+        $block['render_template'] = static::class;
+
         acf_get_store('block-types')->set($block['name'], $block);
 
         $block['render_callback'] = 'acf_render_block_callback';
