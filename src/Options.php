@@ -136,7 +136,7 @@ abstract class Options extends Composer
     {
         if (blank($this->getName())) {
             return null;
-        }            
+        }
 
         if (empty($this->slug)) {
             $this->slug = Str::slug($this->getName());
