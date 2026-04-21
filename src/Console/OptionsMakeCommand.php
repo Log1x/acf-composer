@@ -11,6 +11,7 @@ class OptionsMakeCommand extends MakeCommand
      */
     protected $signature = 'acf:options {name* : The name of the options page}
                             {--full : Scaffold an options page that contains the complete configuration.}
+                            {--localize : Localize the options page name and title}
                             {--force : Overwrite any existing files}';
 
     /**
@@ -43,6 +44,10 @@ class OptionsMakeCommand extends MakeCommand
     {
         if ($this->option('full')) {
             return $this->resolveStub('options.full');
+        }
+
+        if ($this->option('localize')) {
+            return $this->resolveStub('options.localized');
         }
 
         return $this->resolveStub('options');
