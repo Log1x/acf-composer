@@ -208,6 +208,15 @@ abstract class Block extends Composer implements BlockContract
     ];
 
     /**
+     * The default block typography.
+     *
+     * @var array
+     */
+    public $typography = [
+        'textAlign' => null,
+    ];
+
+    /**
      * The supported block features.
      *
      * @var array
@@ -397,18 +406,6 @@ abstract class Block extends Composer implements BlockContract
             ->mapWithKeys(fn ($value, $key) => [Str::camel($key) => $value])
             ->merge($this->supports);
 
-        $typography = $supports->get('typography', []);
-
-        if ($supports->has('alignText')) {
-            $typography['textAlign'] = $supports->get('alignText');
-
-            $supports->forget(['alignText', 'align_text']);
-        }
-
-        if ($typography) {
-            $supports->put('typography', $typography);
-        }
-
         return $supports->all();
     }
 
@@ -433,16 +430,25 @@ abstract class Block extends Composer implements BlockContract
             ];
         }
 
-        $styles = [];
-
         if ($this->align_text) {
-            $styles['typography']['textAlign'] = $this->align_text;
+            $attributes['alignText'] = [
+                'type' => 'string',
+                'default' => $this->align_text,
+            ];
         }
+
+        $styles = [];
 
         $spacing = array_filter($this->spacing);
 
         if ($spacing) {
             $styles['spacing'] = $spacing;
+        }
+
+        $typography = array_filter($this->typography);
+
+        if ($typography) {
+            $styles['typography'] = $typography;
         }
 
         if ($styles) {
@@ -488,6 +494,10 @@ abstract class Block extends Composer implements BlockContract
 
         if ($alignContent = $this->block->alignContent ?? $this->block->align_content ?? null) {
             $class = "{$class} is-position-{$alignContent}";
+        }
+
+        if ($alignText = $this->block->alignText ?? $this->block->align_text ?? null) {
+            $class = "{$class} align-text-{$alignText}";
         }
 
         if ($this->block->fullHeight ?? $this->block->full_height ?? null) {

@@ -71,18 +71,30 @@ class DummyClass extends Block
     public $align = '';
 
     /**
-     * The default block text alignment.
-     *
-     * @var string
-     */
-    public $align_text = '';
-
-    /**
      * The default block content alignment.
      *
      * @var string
      */
     public $align_content = '';
+
+    /**
+     * The default block spacing.
+     *
+     * @var array
+     */
+    public $spacing = [
+        'padding' => null,
+        'margin' => null,
+    ];
+
+    /**
+     * The default block typography.
+     *
+     * @var array
+     */
+    public $typography = [
+        'textAlign' => null,
+    ];
 
     /**
      * The supported block features.
