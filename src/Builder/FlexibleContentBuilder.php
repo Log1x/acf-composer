@@ -63,7 +63,7 @@ class FlexibleContentBuilder extends FieldBuilder
      *
      * @param  string|FieldsBuilder  $layout
      * @param  array  $args
-     * @return \Log1x\AcfComposer\Builder
+     * @return Builder
      */
     public function addLayout($layout, $args = [])
     {
