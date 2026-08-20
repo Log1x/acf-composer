@@ -124,6 +124,13 @@ class DummyClass extends Block
     ];
 
     /**
+     * Enable inline editing for block fields.
+     *
+     * @var bool|null
+     */
+    public $autoInlineEditing = null;
+
+    /**
      * The block name.
      */
     public function getName(): string
