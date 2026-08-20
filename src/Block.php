@@ -292,7 +292,7 @@ abstract class Block extends Composer implements BlockContract
     public $validate = true;
 
     /**
-     * Enable inline editing for block fields (ACF Pro 6.7+).
+     * Enable inline editing for block fields.
      *
      * @var bool|null
      */
