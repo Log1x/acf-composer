@@ -141,6 +141,13 @@ class DummyClass extends Block
     ];
 
     /**
+     * Enable inline editing for block fields.
+     *
+     * @var bool|null
+     */
+    public $autoInlineEditing = null;
+
+    /**
      * Data to be passed to the block before rendering.
      */
     public function with(): array
