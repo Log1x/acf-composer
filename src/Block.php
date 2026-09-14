@@ -264,6 +264,13 @@ abstract class Block extends Composer implements BlockContract
     public $template = [];
 
     /**
+     * The allowed inner blocks.
+     *
+     * @var array
+     */
+    public $allowed_blocks = [];
+
+    /**
      * Determine whether to save the block's data as post meta.
      *
      * @var bool
@@ -417,6 +424,14 @@ abstract class Block extends Composer implements BlockContract
         }
 
         return $supports->all();
+    }
+
+    /**
+     * Retrieve the allowed inner blocks.
+     */
+    public function getAllowedBlocks(): array
+    {
+        return $this->allowed_blocks;
     }
 
     /**
@@ -683,6 +698,7 @@ abstract class Block extends Composer implements BlockContract
             'api_version' => $this->getApiVersion(),
             'validate' => $this->validate,
             'use_post_meta' => $this->usePostMeta,
+            'allowed_blocks' => $this->getAllowedBlocks(),
             'render_callback' => function (
                 $block,
                 $content = '',
@@ -757,6 +773,7 @@ abstract class Block extends Composer implements BlockContract
                 'render_callback',
                 'use_post_meta',
                 'validate',
+                'allowed_blocks',
                 'uses_context',
                 'provides_context',
             ]);
