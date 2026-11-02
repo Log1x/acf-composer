@@ -21,7 +21,7 @@
   },
   "require-dev": {
     "laravel/pint": "^1.14",
-    "roots/acorn": "^3.0|^4.0"
+    "roots/acorn": "^6.3.0"
   },
   "extra": {
     "acorn": {
