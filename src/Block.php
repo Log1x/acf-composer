@@ -683,6 +683,7 @@ abstract class Block extends Composer implements BlockContract
             'api_version' => $this->getApiVersion(),
             'validate' => $this->validate,
             'use_post_meta' => $this->usePostMeta,
+            'auto_inline_editing' => $this->autoInlineEditing ?? false,
             'render_callback' => function (
                 $block,
                 $content = '',
@@ -757,6 +758,7 @@ abstract class Block extends Composer implements BlockContract
                 'render_callback',
                 'use_post_meta',
                 'validate',
+                'auto_inline_editing',
                 'uses_context',
                 'provides_context',
             ]);
