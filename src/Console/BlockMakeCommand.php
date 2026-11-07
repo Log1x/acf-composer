@@ -45,7 +45,6 @@ class BlockMakeCommand extends MakeCommand
      */
     protected array $supports = [
         'align',
-        'align_text',
         'align_content',
         'full_height',
         'anchor',
@@ -54,6 +53,7 @@ class BlockMakeCommand extends MakeCommand
         'jsx',
         'color' => ['background', 'text', 'gradients'],
         'spacing' => ['padding', 'margin'],
+        'typography' => ['textAlign'],
     ];
 
     /**
