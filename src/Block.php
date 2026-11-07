@@ -198,6 +198,13 @@ abstract class Block extends Composer implements BlockContract
     public $align_content = '';
 
     /**
+     * The default block layout.
+     *
+     * @var array
+     */
+    public $layout = [];
+
+    /**
      * The default block spacing.
      *
      * @var array
@@ -459,6 +466,13 @@ abstract class Block extends Composer implements BlockContract
             ];
         }
 
+        if ($this->layout) {
+            $attributes['layout'] = [
+                'type' => 'object',
+                'default' => $this->layout,
+            ];
+        }
+
         return $attributes;
     }
 
@@ -676,6 +690,7 @@ abstract class Block extends Composer implements BlockContract
             'attributes' => $this->getSupportAttributes(),
             'alignText' => $this->align_text ?? $this->align,
             'alignContent' => $this->align_content,
+            'layout' => $this->layout,
             'styles' => $this->getStyles(),
             'supports' => $this->getSupports(),
             'textdomain' => $this->getTextDomain(),
